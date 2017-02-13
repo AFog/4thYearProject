@@ -19,6 +19,17 @@ android {
     }
 }
 
+configurations {
+    all*.exclude group: 'xpp3', module: 'xpp3'
+}
+
+/*repositories {
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+    mavenCentral()
+}*/
+
 dependencies {
     //Volley Dependencie
     compile 'com.android.volley:volley:1.0.0'
@@ -29,7 +40,37 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.android.support:design:25.0.1'
     testCompile 'junit:junit:4.12'
+
+    //Smack Dependencies
+   // compile "org.igniterealtime.smack:smack-android-extensions:4.2.0"
+   // compile "org.igniterealtime.smack:smack-tcp:4.2.0"
+   // compile "org.igniterealtime.smack:smack-android-extensions:4.2.0-beta2"
+   // compile "org.igniterealtime.smack:smack-tcp:4.2.0-beta2"
+
+//    compile "org.igniterealtime.smack:smack-android:4.2.0-beta2"
+//    compile "org.igniterealtime.smack:smack-android-extensions:4.2.0-beta2"
+//    compile "org.igniterealtime.smack:smack-tcp:4.2.0-beta2"
+//    compile "org.igniterealtime.smack:smack-experimental:4.2.0-beta2"
+
+    compile "org.igniterealtime.smack:smack-android:4.1.0-alpha6"
+    compile "org.igniterealtime.smack:smack-android-extensions:4.1.0-alpha6"
+    compile "org.igniterealtime.smack:smack-tcp:4.1.0-alpha6"
+    compile "org.igniterealtime.smack:smack-experimental:4.1.0-alpha6"
+
+
+
+//    //Smack Dependencies from lib jars
+//    compile files ("libs/smack-android-4.1.9.jar")
+//    compile files ("libs/smack-android-4.1.9-javadoc.jar")
+//    compile files ("libs/smack-android-extensions-4.1.9.jar")
+//    compile files ("libs/smack-core-4.1.9.jar")
+//    compile files ("libs/smack-debug-4.1.9.jar")
+//    compile files ("libs/smack-extensions-4.1.9.jar")
+//    compile files ("libs/smack-tcp-4.1.9.jar")
+
+
 }

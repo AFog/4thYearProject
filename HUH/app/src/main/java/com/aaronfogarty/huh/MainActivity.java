@@ -1,5 +1,6 @@
 package com.aaronfogarty.huh;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -75,66 +76,21 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onTranslateClick(View view) {
+    public void goToTranslate(View view){
 
-        EditText translateEditText = (EditText) findViewById(R.id.editText);
-        final TextView textview = (TextView) findViewById(R.id.translationTestView);
-        final Typeface huhTypeface = Typeface.createFromAsset(getAssets(), "arial-unicode-ms.ttf");
-        Spinner spinner = (Spinner) findViewById(R.id.spinner2);
-        String langSelected = spinner.getSelectedItem().toString();
-        String translateLang = "";
-
-        if(langSelected.equals("Select a Language")){
-            translateLang = "en";
-        }else if(langSelected.equals("German")){
-            translateLang = "de";
-        }else if(langSelected.equals("French")){
-            translateLang = "fr";
-        }else if(langSelected.equals("Irish")) {
-            translateLang = "ga";
-        }
-
-        String inputText ="";
-        try {
-             inputText = URLEncoder.encode(translateEditText.getText().toString(), "UTF-8");
-            // translateLang = URLEncoder.encode(translateLang, "UTF-8");
-        }
-        catch (UnsupportedEncodingException i){
-             textview.setText(i.getMessage().toString());
-        }
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://an6e7or256.execute-api.us-west-2.amazonaws.com/test/huhtranslateapigateway?inputTextToTranslate="+inputText+"&inputTranslationLanguage="+translateLang;
-                     // https://an6e7or256.execute-api.us-west-2.amazonaws.com/test/huhtranslateapigateway?inputTextToTranslate=hello%20world&inputTranslationLanguage=fr
-        // Request a string response from the provided URL.
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("Lambda Response check", "Checking Lambda Result");
-                        Log.i("Lamba Response:", response);
-                        TextView textview = (TextView) findViewById(R.id.translationTestView);
-                        textview.setTypeface(huhTypeface);
-                        textview.setText(response);
-                        //TODO response text to be displayed
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                textview.setText(error.getMessage().toString());
-            }
-        }) {
-
-        };
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
-
+        Intent intent = new Intent(this, TranslationSpinner.class);
+        startActivity(intent);
     }
 
-    protected boolean isEmpty(EditText editText){
-        return editText.getText().toString().trim().length() == 0;
-}
+    public void goToJIDLogin(View view){
 
+        Intent intent = new Intent(this, JIDLoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToXMPPConnect(View view){
+
+        Intent intent = new Intent(this, XMPPConnectActivity.class);
+        startActivity(intent);
+    }
 }

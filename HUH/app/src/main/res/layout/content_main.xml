@@ -13,44 +13,82 @@
     tools:context="com.aaronfogarty.huh.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <EditText
-        android:inputType="textMultiLine"
+    <Button
         android:layout_width="wrap_content"
-        android:layout_height="110dp"
+        android:layout_height="wrap_content"
+        android:text="@string/ToJIDLogin"
+        android:onClick="goToJIDLogin"
+        android:id="@+id/button3"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="37dp"
+        android:layout_marginEnd="37dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ToTranslateButton"
+        android:onClick="goToTranslate"
+        android:id="@+id/button2"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:id="@+id/editText"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:text="@string/Translated_text_here"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/translationTestView"
-        android:layout_marginTop="42dp"
-        android:layout_below="@+id/button"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp" />
 
     <Button
-        android:text="Translate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button"
-        android:onClick="onTranslateClick"
-        android:layout_marginTop="53dp"
-        android:layout_below="@+id/spinner2"
-        android:layout_centerHorizontal="true" />
+        android:text="@string/ToXMPPConnectButton"
+        android:onClick="goToXMPPConnect"
+        android:id="@+id/button4"
+        android:layout_below="@+id/button2"
+        android:layout_alignLeft="@+id/button2"
+        android:layout_alignStart="@+id/button2"
+        android:layout_marginTop="26dp" />
 
-    <Spinner
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="67dp"
-        android:entries="@array/Languages"
-        android:id="@+id/spinner2"
-        android:layout_below="@+id/editText"
-        android:layout_centerHorizontal="true" />
+    <!--
+
+        <EditText
+            android:inputType="textMultiLine"
+            android:layout_width="wrap_content"
+            android:layout_height="110dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/editText"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:text="@string/Translated_text_here"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/translationTestView"
+            android:layout_marginTop="42dp"
+            android:layout_below="@+id/button"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:text="Translate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button"
+            android:onClick="onTranslateClick"
+            android:layout_marginTop="53dp"
+            android:layout_below="@+id/spinner2"
+            android:layout_centerHorizontal="true" />
+
+        <Spinner
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="67dp"
+            android:entries="@array/Languages"
+            android:id="@+id/spinner2"
+            android:layout_below="@+id/editText"
+            android:layout_centerHorizontal="true" />
+    -->
 
 
 </RelativeLayout>
