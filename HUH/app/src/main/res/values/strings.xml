@@ -28,5 +28,5 @@
     </string>
     <string name="title_activity_xmppconnect">XMPPConnectActivity</string>
     <string name="ConnectionStatus">Conncetion Status</string>
-    <string name="ToXMPPConnectButton">Connection Test</string>
+    <string name="ToXMPPConnectButton">Send Message</string>
 </resources>

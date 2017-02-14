@@ -16,6 +16,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.io.IOException;
@@ -80,25 +81,40 @@ public class XMPPConnectActivity extends AppCompatActivity {
                     conn2.connect();
                     conn2.login();
 
-//                    ChatManager chatManager = ChatManager.getInstanceFor(conn2);
-//                    Chat chat = chatManager.createChat("shay@win-h6g4cdgot7e.com/Spark", new ChatMessageListener() {
-//                        @Override
-//                        public void processMessage(Chat chat, Message message) {
-//
-//                        }
-//                    });
-//                        chat.sendMessage("hello!!");
-
                     ChatManager chatManager = ChatManager.getInstanceFor(conn2);
-                    Chat chat = chatManager.createChat("shay", new ChatMessageListener(){
-
-                        public void processMessage(Chat chat, Message msg){
-                            String output = chat.getParticipant() + "Message recieved: " + msg.getBody();
-                            Log.d(TAG, "inside chat");
+                    Chat chat = chatManager.createChat("shay@win-h6g4cdqot7e/Spark2.8.2", new ChatMessageListener() {
+                        @Override
+                        public void processMessage(Chat chat, Message message) {
+                            String output = chat.getParticipant() + "Message recieved: " + message.getBody();
+                            Log.d(TAG, "!!!!!!! inside chat" + output);
                         }
                     });
+                        chat.sendMessage("hello to !!");
 
-                        Log.d(TAG,"Message sent ***************************************************");
+                    try {
+                        chat.sendMessage("Howdy!");
+                    }
+                    catch (XMPPException e) {
+                        Log.d(TAG,"Message Error Delivering block ***************************************************" );
+                    }
+
+//                    ChatManager chatManager = ChatManager.getInstanceFor(conn2);
+//                    Chat chat = chatManager.createChat("shay@win-h6g4cdqot7e", new ChatMessageListener(){
+//
+//                        public void processMessage(Chat chat, Message msg){
+//
+//                            String output = chat.getParticipant() + "Message recieved: " + msg.getBody();
+//
+//                            Log.d(TAG, "!!!!!!! inside chat" + output);
+//                        }
+//                    });
+//                        chat.sendMessage("hello to Shaylor!!");
+
+//                    while(conn2.isConnected()){
+//                       // chat.sendMessage();
+//                    }
+
+                    Log.d(TAG,"Message sent ***************************************************" );
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -109,6 +125,8 @@ public class XMPPConnectActivity extends AppCompatActivity {
         TextView textview2 = (TextView) findViewById(R.id.XMPPConnectTestView);
         textview2.setText("Connected!!");
         Log.d(TAG,"Connected with server ***************************************************");
+
+
 
     }
 
