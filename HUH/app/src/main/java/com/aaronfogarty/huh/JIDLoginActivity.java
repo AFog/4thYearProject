@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -24,11 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ChatMessageListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
@@ -200,36 +195,12 @@ public class JIDLoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), ConnectedActivity.class);
                     startActivity(intent);
 
-//                    ChatManager chatManager = ChatManager.getInstanceFor(conn2);
-//                    Chat chat = chatManager.createChat("shay@win-h6g4cdgot7e.com/Spark", new ChatMessageListener() {
-//                        @Override
-//                        public void processMessage(Chat chat, Message message) {
-//
-//                        }
-//                    });
-//                        chat.sendMessage("hello!!");
-
-//                    ChatManager chatManager = ChatManager.getInstanceFor(conn2);
-//                    Chat chat = chatManager.createChat("shay", new ChatMessageListener(){
-//
-//                        public void processMessage(Chat chat, Message msg){
-//                            String output = chat.getParticipant() + "Message recieved: " + msg.getBody();
-//                            Log.d(TAG, "inside chat");
-//                        }
-//                    });
-//
-//                    Log.d(TAG,"Message sent ***************************************************");
-
                 } catch (Exception e) {
                     Log.d(TAG,"Not Connected with server ***************************************************");
                     e.printStackTrace();
                 }
             }
         }.start();
-
-//
-
-
 
     }
 
@@ -281,7 +252,7 @@ public class JIDLoginActivity extends AppCompatActivity {
 
     public void goToXMPPConnect(View view){
 
-        Intent intent = new Intent(this, XMPPConnectActivity.class);
+        Intent intent = new Intent(this, SendMessageActivity.class);
         startActivity(intent);
     }
 }

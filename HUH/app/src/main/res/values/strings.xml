@@ -1,20 +1,20 @@
 <resources>
     <string name="app_name">HUH</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Strings related to Translate -->
     <string name="translation_text_view">Enter Text to Translate</string>
     <string name="Translated_text_here">Tranlated text will appear here</string>
     <string name="ToTranslateButton">Translate</string>
-    <string name="ToJIDLogin">JID Login</string>
-
     <string-array name="Languages">
         <item>Select a Language</item>
         <item>German</item>
         <item>French</item>
         <item>Irish</item>
     </string-array>
-    <string name="title_activity_jidlogin">Sign in</string>
 
-    <!-- Strings related to login -->
+    <!-- Strings related to JIDlogin & login -->
+    <string name="ToJIDLogin">JID Login</string>
     <string name="prompt_jid">Jabber Id</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
@@ -29,4 +29,11 @@
     <string name="title_activity_xmppconnect">XMPPConnectActivity</string>
     <string name="ConnectionStatus">Conncetion Status</string>
     <string name="ToXMPPConnectButton">Send Message</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_jidlogin">Sign in</string>
+    <string name="ToLoginButton">Login</string>
+    <string name="error_invalid_email">Error invalid email</string>
+    <!--&lt;!&ndash; Strings related to login &ndash;&gt;-->
+    <!--<string name="prompt_email">JID</string>-->
+    <!--<string name="error_invalid_email">This Jid address is invalid</string>-->
 </resources>

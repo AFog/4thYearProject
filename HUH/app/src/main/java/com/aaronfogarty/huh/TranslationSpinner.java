@@ -71,7 +71,6 @@ public class TranslationSpinner extends AppCompatActivity {
                         TextView textview = (TextView) findViewById(R.id.translationTestView);
                         textview.setTypeface(huhTypeface);
                         textview.setText(response);
-                        //TODO response text to be displayed
                     }
                 }, new Response.ErrorListener() {
             @Override

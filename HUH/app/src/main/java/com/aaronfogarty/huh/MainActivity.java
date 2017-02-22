@@ -1,35 +1,16 @@
 package com.aaronfogarty.huh;
 
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,9 +69,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToXMPPConnect(View view){
+    public void goToSendMessage(View view){
 
-        Intent intent = new Intent(this, XMPPConnectActivity.class);
+        Intent intent = new Intent(this, SendMessageActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToLogin(View view){
+
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 }
