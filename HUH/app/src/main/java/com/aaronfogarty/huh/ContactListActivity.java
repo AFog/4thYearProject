@@ -1,5 +1,6 @@
 package com.aaronfogarty.huh;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class ContactListActivity extends AppCompatActivity {
 
     private RecyclerView contactsRecyclerView;
     private ContactAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class ContactListActivity extends AppCompatActivity {
             if (mContact == null)
             {
                 Log.d(TAG,"Trying to work on a null Contact object ,returning.");
+                Toast.makeText(getApplicationContext(), "HuhConnection Constructor called", Toast.LENGTH_LONG).show();
+
                 return;
             }
             contactTextView.setText(mContact.getJid());

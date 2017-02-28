@@ -27,6 +27,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static org.jivesoftware.smackx.privacy.packet.PrivacyItem.Type.jid;
@@ -70,6 +71,7 @@ public class LoginActivity extends AppCompatActivity  {
                 {
                     case HuhConnectionService.UI_AUTHENTICATED:
                         Log.d(TAG,"Got a broadcast to show the main app window");
+                        Toast.makeText(getApplicationContext(), TAG + ": Got a broadcast to show the main app window", Toast.LENGTH_LONG).show();
                         //Show the main app window
                         showProgress(false);
                         Intent i2 = new Intent(mContext,ContactListActivity.class);
@@ -90,7 +92,7 @@ public class LoginActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mJidView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+       // populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -116,48 +118,48 @@ public class LoginActivity extends AppCompatActivity  {
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
+//    private void populateAutoComplete() {
+//        if (!mayRequestContacts()) {
+//            return;
+//        }
+//
+//        //getLoaderManager().initLoader(0, null, this);
+//    }
 
-        //getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mJidView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
+//    private boolean mayRequestContacts() {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//            return true;
+//        }
+//        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+//            return true;
+//        }
+//        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+//            Snackbar.make(mJidView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+//                    .setAction(android.R.string.ok, new View.OnClickListener() {
+//                        @Override
+//                        @TargetApi(Build.VERSION_CODES.M)
+//                        public void onClick(View v) {
+//                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+//                        }
+//                    });
+//        } else {
+//            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+//        }
+//        return false;
+//    }
 
     /**
      * Callback received when a permissions request has been completed.
      */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+//                                           @NonNull int[] grantResults) {
+//        if (requestCode == REQUEST_READ_CONTACTS) {
+//            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                populateAutoComplete();
+//            }
+//        }
+//    }
 
 
     /**
@@ -176,6 +178,7 @@ public class LoginActivity extends AppCompatActivity  {
         String password = mPasswordView.getText().toString();
 
         Log.d(TAG,"Logging in with Jid: " + jid);
+        Toast.makeText(getApplicationContext(), TAG + ": Logging in with Jid: " + jid, Toast.LENGTH_LONG).show();
 
         boolean cancel = false;
         View focusView = null;
@@ -208,6 +211,11 @@ public class LoginActivity extends AppCompatActivity  {
             //showProgress(true);<<---FOR NOW WE DON'T WANT TO SEE THIS PROGRESS THING.
             //This is where the login login is fired up.
             Log.d(TAG,"Jid and password are valid ,proceeding with login.");
+            Toast.makeText(getApplicationContext(), TAG + ": Jid and password are valid ,proceeding with login. ", Toast.LENGTH_LONG).show();
+
+            Log.d(TAG,"ContactListActivity satarted");
+            Toast.makeText(getApplicationContext(), TAG + ": ContactListActivity satarted", Toast.LENGTH_LONG).show();
+
             startActivity(new Intent(this,ContactListActivity.class));
 
             //Save the credentials and login
@@ -265,6 +273,8 @@ public class LoginActivity extends AppCompatActivity  {
     private void saveCredentialsAndLogin()
     {
         Log.d(TAG,"saveCredentialsAndLogin() called.");
+        Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit()
                 .putString("xmpp_jid", mJidView.getText().toString())
@@ -273,6 +283,9 @@ public class LoginActivity extends AppCompatActivity  {
                 .commit();
 
         //Start the service
+        Log.d(TAG,"StartService called from Login.");
+        Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+
         Intent i1 = new Intent(this,HuhConnectionService.class);
         startService(i1);
 

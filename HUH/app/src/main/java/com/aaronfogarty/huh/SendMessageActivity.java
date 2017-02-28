@@ -16,6 +16,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ChatMessageListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
@@ -36,6 +37,7 @@ public class SendMessageActivity extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    ChatMessageListener messageListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +85,20 @@ public class SendMessageActivity extends AppCompatActivity {
                         public void processMessage(Chat chat, Message message) {
                             String output = chat.getParticipant() + "Message recieved: " + message.getBody();
                           //  p = chat.getParticipant() + "Message recieved: " + message.getBody();
-
+                            chat.addMessageListener(this);
                             Log.d(TAG, "!!!!!!! inside chat" + output);
                         }
                     });
 
+                    ChatManager.getInstanceFor(conn).addChatListener(new ChatManagerListener() {
+                        @Override
+                        public void chatCreated(Chat chat, boolean createdLocally) {
+
+                            //If the line below is missing ,processMessage won't be triggered and you won't receive messages.
+                            chat.addMessageListener(messageListener);
+
+                        }
+                    });
 
                     chat.sendMessage("hello to Shaylor " + chat.getParticipant());
                 } catch (Exception e) {

@@ -52,11 +52,12 @@ public class ChatActivity extends AppCompatActivity {
                     Log.d(TAG, "The client is connected to the server,Sending Message");
                     //Send the message to the server
 
+                    //BOROADCAST
                     Intent intent = new Intent(HuhConnectionService.SEND_MESSAGE);
                     intent.putExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY,
                             mChatView.getTypedString());
                     intent.putExtra(HuhConnectionService.BUNDLE_TO, contactJid);
-
+                    //Broadcasting to setupUiThreadBroadCastMessageReceiver listening for type HuhConnectionService.SEND_MESSAGE
                     sendBroadcast(intent);
 
                     //Update the chat view.
@@ -83,6 +84,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -99,7 +101,7 @@ public class ChatActivity extends AppCompatActivity {
 
                         }else
                         {
-                            Log.d(TAG,"Got a message from jid :"+from);
+                            Log.d(TAG,"Got a message from jid :"+ from);
                         }
 
                         return;

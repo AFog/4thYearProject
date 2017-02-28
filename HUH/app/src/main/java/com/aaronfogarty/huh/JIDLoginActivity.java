@@ -21,6 +21,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -169,6 +170,8 @@ public class JIDLoginActivity extends AppCompatActivity {
             showProgress(true);
             //This is where the login login is fired up.
             Log.d(TAG,"Jid and password are valid, proceed with login");
+            Toast.makeText(getApplicationContext(), TAG + ": Jid and password are valid, proceed with login", Toast.LENGTH_LONG).show();
+
         }
 
         new Thread(){

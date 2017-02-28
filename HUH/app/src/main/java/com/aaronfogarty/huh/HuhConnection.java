@@ -4,6 +4,7 @@
 package com.aaronfogarty.huh;
 
 
+        import org.jivesoftware.smack.ChatManagerListener;
         import org.jivesoftware.smack.ConnectionConfiguration;
         import org.jivesoftware.smack.XMPPConnection;
         import android.content.BroadcastReceiver;
@@ -24,11 +25,14 @@ package com.aaronfogarty.huh;
         import org.jivesoftware.smack.packet.Message;
         import org.jivesoftware.smack.tcp.XMPPTCPConnection;
         import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+        import android.widget.Toast;
 
         import java.io.IOException;
 
+        import static org.jivesoftware.smackx.privacy.packet.PrivacyItem.Type.jid;
 
-public class HuhConnection implements ConnectionListener,ChatMessageListener {
+
+public class HuhConnection implements ConnectionListener {
 
     private static final String TAG = "HuhConnection";
 
@@ -38,7 +42,7 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
     private  final String mServiceName;
     private XMPPTCPConnection mConnection;
     private BroadcastReceiver uiThreadMessageReceiver;//Receives messages from the ui thread.
-
+    private  ChatMessageListener messageListener;
 
     public static enum ConnectionState
     {
@@ -54,6 +58,7 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
     public HuhConnection( Context context)
     {
         Log.d(TAG,"HuhConnection Constructor called.");
+        Toast.makeText(context, TAG+"HuhConnection Constructor called", Toast.LENGTH_LONG).show();
         mApplicationContext = context.getApplicationContext();
         String jid = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("xmpp_jid",null);
@@ -64,7 +69,6 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
         {
             mUsername = jid.split("@")[0];
             mServiceName = "ec2-35-162-128-9.us-west-2.compute.amazonaws.com";
-
             //mServiceName = jid.split("@")[1];
         }else
         {
@@ -77,6 +81,8 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
     public void connect() throws IOException,XMPPException,SmackException
     {
         Log.d(TAG, "Connecting to server " + mServiceName);
+        Toast.makeText(mApplicationContext,TAG + "Connecting to server " + mServiceName, Toast.LENGTH_LONG).show();
+
         XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder=
                 XMPPTCPConnectionConfiguration.builder();
         builder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
@@ -91,7 +97,55 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
         mConnection = new XMPPTCPConnection(builder.build());
         mConnection.addConnectionListener(this);
         mConnection.connect();
+        //if authentication successful authenticated(XMPPConnection connection) called
         mConnection.login();
+
+        messageListener = new ChatMessageListener() {
+            @Override
+            public void processMessage(Chat chat, Message message) {
+                ///ADDED
+                Log.d(TAG,"message.getBody() :"+message.getBody());
+                Log.d(TAG,"message.getFrom() :"+message.getFrom());
+
+                String from = message.getFrom();
+                String contactJid="";
+                if ( from.contains("/"))
+                {
+                    contactJid = from.split("/")[0];
+                    Log.d(TAG,"The real jid is :" +contactJid);
+                }else
+                {
+                    contactJid=from;
+                }
+
+                //BOROADCAST
+                //Bundle up the intent and send the broadcast.
+                //  Intent intent = new Intent(HuhConnectionService.NEW_MESSAGE);
+                Intent intent = new Intent();
+                // sets keyword to listen out for for this broadcast
+                intent.setAction(HuhConnectionService.NEW_MESSAGE);
+                intent.setPackage(mApplicationContext.getPackageName());
+                intent.putExtra(HuhConnectionService.BUNDLE_FROM_JID,contactJid);
+                intent.putExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY,message.getBody());
+                //Sends out broadcast
+                mApplicationContext.sendBroadcast(intent);
+                Log.d(TAG,"Received message from :"+contactJid+" broadcast sent.");
+
+                ///ADDED
+
+            }
+        };
+
+        //The snippet below is necessary for the message listener to be attached to our connection.
+        ChatManager.getInstanceFor(mConnection).addChatListener(new ChatManagerListener() {
+            @Override
+            public void chatCreated(Chat chat, boolean createdLocally) {
+
+                //If the line below is missing ,processMessage won't be triggered and you don't receive messages.
+                chat.addMessageListener(messageListener);
+
+            }
+        });
 
         ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
         reconnectionManager.setEnabledPerDefault(true);
@@ -101,6 +155,7 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
 
     private void setupUiThreadBroadCastMessageReceiver()
     {
+        // inialise BroadcastReceiver to receive messages from the ui thread.
         uiThreadMessageReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -109,6 +164,7 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
                 if( action.equals(HuhConnectionService.SEND_MESSAGE))
                 {
                     //Send the message.
+                    //retrieves the message string from the broadcast sent by ChatActivity
                     sendMessage(intent.getStringExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY),
                             intent.getStringExtra(HuhConnectionService.BUNDLE_TO));
                 }
@@ -125,7 +181,7 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
     {
         Log.d(TAG,"Sending message to :"+ toJid);
         Chat chat = ChatManager.getInstanceFor(mConnection)
-                .createChat(toJid,this);
+                .createChat(toJid,messageListener);
         try
         {
             chat.sendMessage(body);
@@ -138,38 +194,12 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
     }
 
 
-    @Override
-    public void processMessage(Chat chat, Message message) {
-
-        Log.d(TAG,"message.getBody() :"+message.getBody());
-        Log.d(TAG,"message.getFrom() :"+message.getFrom());
-
-        String from = message.getFrom();
-        String contactJid="";
-        if ( from.contains("/"))
-        {
-            contactJid = from.split("/")[0];
-            Log.d(TAG,"The real jid is :" +contactJid);
-        }else
-        {
-            contactJid=from;
-        }
-
-        //Bundle up the intent and send the broadcast.
-        Intent intent = new Intent(HuhConnectionService.NEW_MESSAGE);
-        intent.setPackage(mApplicationContext.getPackageName());
-        intent.putExtra(HuhConnectionService.BUNDLE_FROM_JID,contactJid);
-        intent.putExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY,message.getBody());
-        mApplicationContext.sendBroadcast(intent);
-        Log.d(TAG,"Received message from :"+contactJid+" broadcast sent.");
-
-    }
-
-
 
     public void disconnect()
     {
         Log.d(TAG,"Disconnecting from serser "+ mServiceName);
+        Toast.makeText(mApplicationContext, TAG +"Disconnecting from serser "+ mServiceName, Toast.LENGTH_LONG).show();
+
         try
         {
             if (mConnection != null)
@@ -193,16 +223,30 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
 
     }
 
+    private void showContactListActivityWhenAuthenticated()
+    {
+        Intent i = new Intent(HuhConnectionService.UI_AUTHENTICATED);
+        i.setPackage(mApplicationContext.getPackageName());
+        mApplicationContext.sendBroadcast(i);
+        Log.d(TAG,"Sent the broadcast that we are authenticated");
+        Toast.makeText(mApplicationContext,TAG + ": Sent the broadcast that we are authenticated ", Toast.LENGTH_LONG).show();
+
+    }
+
     @Override
     public void connected(XMPPConnection connection) {
+        //setsm
         HuhConnectionService.sConnectionState=ConnectionState.CONNECTED;
-        Log.d(TAG,"Connected Successfully");
+        Log.d(TAG,"Connected Successfully Aaron");
+        Toast.makeText(mApplicationContext,TAG + ": Connected Successfully ", Toast.LENGTH_LONG).show();
+
     }
 
     @Override
     public void authenticated(XMPPConnection connection) {
         HuhConnectionService.sConnectionState=ConnectionState.CONNECTED;
         Log.d(TAG,"Authenticated Successfully");
+        Toast.makeText(mApplicationContext,TAG + ": Authenticated Successfully ", Toast.LENGTH_LONG).show();
         showContactListActivityWhenAuthenticated();
 
     }
@@ -211,6 +255,8 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
     public void connectionClosed() {
         HuhConnectionService.sConnectionState=ConnectionState.DISCONNECTED;
         Log.d(TAG,"Connectionclosed()");
+        Toast.makeText(mApplicationContext,TAG + ": Connectionclosed ", Toast.LENGTH_LONG).show();
+
 
     }
 
@@ -219,12 +265,13 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
         HuhConnectionService.sConnectionState=ConnectionState.DISCONNECTED;
         Log.d(TAG,"ConnectionClosedOnError, error "+ e.toString());
 
+
     }
 
     @Override
     public void reconnectingIn(int seconds) {
         HuhConnectionService.sConnectionState = ConnectionState.CONNECTING;
-        Log.d(TAG,"ReconnectingIn() ");
+        Log.d(TAG,"ReconnectingIn()");
 
     }
 
@@ -233,6 +280,7 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
         HuhConnectionService.sConnectionState = ConnectionState.CONNECTED;
         Log.d(TAG,"ReconnectionSuccessful()");
 
+
     }
 
     @Override
@@ -240,13 +288,8 @@ public class HuhConnection implements ConnectionListener,ChatMessageListener {
         HuhConnectionService.sConnectionState = ConnectionState.DISCONNECTED;
         Log.d(TAG,"ReconnectionFailed()");
 
+
     }
 
-    private void showContactListActivityWhenAuthenticated()
-    {
-        Intent i = new Intent(HuhConnectionService.UI_AUTHENTICATED);
-        i.setPackage(mApplicationContext.getPackageName());
-        mApplicationContext.sendBroadcast(i);
-        Log.d(TAG,"Sent the broadcast that we are authenticated");
-    }
+
 }

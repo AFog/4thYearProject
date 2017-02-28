@@ -26,18 +26,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TranslationSpinner" />
-        <activity
-            android:name=".JIDLoginActivity"
-            android:label="@string/title_activity_jidlogin" />
-        <activity android:name=".SendMessageActivity" />
-        <activity android:name=".ConnectedActivity" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity android:name=".ContactListActivity" />
-        <activity android:name=".ChatActivity"></activity>
-
+        <activity android:name=".TranslationSpinner" android:screenOrientation="portrait" />
+        <activity android:name=".JIDLoginActivity" android:label="@string/title_activity_jidlogin" android:screenOrientation="portrait"/>
+        <activity android:name=".SendMessageActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ConnectedActivity" android:screenOrientation="portrait" />
+        <activity android:name=".LoginActivity" android:label="@string/title_activity_login" android:screenOrientation="portrait" />
+        <activity android:name=".ContactListActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ChatActivity" android:screenOrientation="portrait"></activity>
         <service android:name=".HuhConnectionService">
 
         </service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
