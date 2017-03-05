@@ -273,7 +273,7 @@ public class LoginActivity extends AppCompatActivity  {
     private void saveCredentialsAndLogin()
     {
         Log.d(TAG,"saveCredentialsAndLogin() called.");
-        Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit()
@@ -284,7 +284,7 @@ public class LoginActivity extends AppCompatActivity  {
 
         //Start the service
         Log.d(TAG,"StartService called from Login.");
-        Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
 
         Intent i1 = new Intent(this,HuhConnectionService.class);
         startService(i1);

@@ -4,26 +4,26 @@ package com.aaronfogarty.huh;
  * Created by aaronfogartyfogarty on 16/02/2017.
  */
 
-        import android.app.Service;
-        import android.content.Intent;
-        import android.os.Handler;
-        import android.os.IBinder;
-        import android.os.Looper;
-        import android.support.annotation.Nullable;
-        import android.util.Log;
-        import android.widget.Toast;
+import android.app.Service;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.Toast;
 
 
-        import org.jivesoftware.smack.SmackException;
-        import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 
-        import java.io.IOException;
+import java.io.IOException;
 
 
 public class HuhConnectionService extends Service {
 
 
-    private static final String TAG ="HuhConnectionService";
+    private static final String TAG = "HuhConnectionService";
     public static final String UI_AUTHENTICATED = "com.aaronfogarty.huh.uiauthenticated";
     public static final String SEND_MESSAGE = "com.aaronfogarty.huh.sendmessage";
     public static final String BUNDLE_MESSAGE_BODY = "b_body";
@@ -43,19 +43,15 @@ public class HuhConnectionService extends Service {
     public HuhConnectionService() {
     }
 
-    public static HuhConnection.ConnectionState getState()
-    {
-        if (sConnectionState == null)
-        {
+    public static HuhConnection.ConnectionState getState() {
+        if (sConnectionState == null) {
             return HuhConnection.ConnectionState.DISCONNECTED;
         }
         return sConnectionState;
     }
 
-    public static HuhConnection.LoggedInState getLoggedInState()
-    {
-        if (sLoggedInState == null)
-        {
+    public static HuhConnection.LoggedInState getLoggedInState() {
+        if (sLoggedInState == null) {
             return HuhConnection.LoggedInState.LOGGED_OUT;
         }
         return sLoggedInState;
@@ -70,28 +66,24 @@ public class HuhConnectionService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG,"onCreate()");
-        Toast.makeText(getApplicationContext(),TAG +": onCreate()", Toast.LENGTH_LONG).show();
+        Log.d(TAG, "onCreate()");
+       // Toast.makeText(getApplicationContext(), TAG + ": onCreate()", Toast.LENGTH_LONG).show();
 
     }
 
-    private void initConnection()
-    {
-        Log.d(TAG,"initConnection()");
-        Toast.makeText(getApplicationContext(),TAG +": initConnection()", Toast.LENGTH_LONG).show();
+    private void initConnection() {
+        Log.d(TAG, "initConnection()");
+        //Toast.makeText(getApplicationContext(), TAG + ": initConnection()", Toast.LENGTH_LONG).show();
 
-        if( mConnection == null)
-        {
+        if (mConnection == null) {
             mConnection = new HuhConnection(this);
         }
-        try
-        {
+        try {
             mConnection.connect();
 
-        }catch (IOException |SmackException |XMPPException e)
-        {
-            Log.d(TAG,"Something went wrong while connecting ,make sure the credentials are right and try again");
-            Toast.makeText(getApplicationContext(),TAG +": Something went wrong while connecting ,make sure the credentials are right and try again", Toast.LENGTH_LONG).show();
+        } catch (IOException | SmackException | XMPPException e) {
+            Log.d(TAG, "Something went wrong while connecting ,make sure the credentials are right and try again");
+            //Toast.makeText(getApplicationContext(), TAG + ": Something went wrong while connecting ,make sure the credentials are right and try again", Toast.LENGTH_LONG).show();
 
             e.printStackTrace();
             //Stop the service all together.
@@ -101,16 +93,13 @@ public class HuhConnectionService extends Service {
     }
 
     //Starts Service thread
-    public void start()
-    {
-        Log.d(TAG," Service Start()");
-        Toast.makeText(getApplicationContext(),TAG +": Service Start()", Toast.LENGTH_LONG).show();
+    public void start() {
+        Log.d(TAG, " Service Start()");
+        //Toast.makeText(getApplicationContext(), TAG + ": Service Start()", Toast.LENGTH_LONG).show();
 
-        if(!mActive)
-        {
+        if (!mActive) {
             mActive = true;
-            if( mThread ==null || !mThread.isAlive())
-            {
+            if (mThread == null || !mThread.isAlive()) {
                 mThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -132,15 +121,13 @@ public class HuhConnectionService extends Service {
 
     }
 
-    public void stop()
-    {
-        Log.d(TAG,"stop()");
+    public void stop() {
+        Log.d(TAG, "stop()");
         mActive = false;
         mTHandler.post(new Runnable() {
             @Override
             public void run() {
-                if( mConnection != null)
-                {
+                if (mConnection != null) {
                     mConnection.disconnect();
                 }
             }
@@ -151,8 +138,8 @@ public class HuhConnectionService extends Service {
 
     @Override//Service Starts here
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG,"onStartCommand()" + mActive);
-        Toast.makeText(getApplicationContext(),TAG +": onStartCommand()", Toast.LENGTH_LONG).show();
+        Log.d(TAG, "onStartCommand()" + mActive);
+        //Toast.makeText(getApplicationContext(), TAG + ": onStartCommand()", Toast.LENGTH_LONG).show();
 
         //starts service thread
         start();
@@ -162,8 +149,8 @@ public class HuhConnectionService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG,"onDestroy()");
-        Toast.makeText(getApplicationContext(),TAG +": onDestroy()", Toast.LENGTH_LONG).show();
+        Log.d(TAG, "onDestroy()");
+        //Toast.makeText(getApplicationContext(), TAG + ": onDestroy()", Toast.LENGTH_LONG).show();
 
         super.onDestroy();
         stop();

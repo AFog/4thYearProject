@@ -16,6 +16,4 @@
         android:layout_height="match_parent">
 
     </co.devcenter.androiduilibrary.ChatView>
-
-
 </RelativeLayout>

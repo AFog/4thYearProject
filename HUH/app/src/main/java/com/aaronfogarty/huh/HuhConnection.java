@@ -58,7 +58,7 @@ public class HuhConnection implements ConnectionListener {
     public HuhConnection( Context context)
     {
         Log.d(TAG,"HuhConnection Constructor called.");
-        Toast.makeText(context, TAG+"HuhConnection Constructor called", Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, TAG+"HuhConnection Constructor called", Toast.LENGTH_LONG).show();
         mApplicationContext = context.getApplicationContext();
         String jid = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("xmpp_jid",null);
@@ -81,7 +81,7 @@ public class HuhConnection implements ConnectionListener {
     public void connect() throws IOException,XMPPException,SmackException
     {
         Log.d(TAG, "Connecting to server " + mServiceName);
-        Toast.makeText(mApplicationContext,TAG + "Connecting to server " + mServiceName, Toast.LENGTH_LONG).show();
+        //Toast.makeText(mApplicationContext,TAG + "Connecting to server " + mServiceName, Toast.LENGTH_LONG).show();
 
         XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder=
                 XMPPTCPConnectionConfiguration.builder();
@@ -198,7 +198,7 @@ public class HuhConnection implements ConnectionListener {
     public void disconnect()
     {
         Log.d(TAG,"Disconnecting from serser "+ mServiceName);
-        Toast.makeText(mApplicationContext, TAG +"Disconnecting from serser "+ mServiceName, Toast.LENGTH_LONG).show();
+        //Toast.makeText(mApplicationContext, TAG +"Disconnecting from serser "+ mServiceName, Toast.LENGTH_LONG).show();
 
         try
         {
@@ -229,7 +229,7 @@ public class HuhConnection implements ConnectionListener {
         i.setPackage(mApplicationContext.getPackageName());
         mApplicationContext.sendBroadcast(i);
         Log.d(TAG,"Sent the broadcast that we are authenticated");
-        Toast.makeText(mApplicationContext,TAG + ": Sent the broadcast that we are authenticated ", Toast.LENGTH_LONG).show();
+        //Toast.makeText(mApplicationContext,TAG + ": Sent the broadcast that we are authenticated ", Toast.LENGTH_LONG).show();
 
     }
 
@@ -238,7 +238,7 @@ public class HuhConnection implements ConnectionListener {
         //setsm
         HuhConnectionService.sConnectionState=ConnectionState.CONNECTED;
         Log.d(TAG,"Connected Successfully Aaron");
-        Toast.makeText(mApplicationContext,TAG + ": Connected Successfully ", Toast.LENGTH_LONG).show();
+        //Toast.makeText(mApplicationContext,TAG + ": Connected Successfully ", Toast.LENGTH_LONG).show();
 
     }
 
@@ -246,7 +246,7 @@ public class HuhConnection implements ConnectionListener {
     public void authenticated(XMPPConnection connection) {
         HuhConnectionService.sConnectionState=ConnectionState.CONNECTED;
         Log.d(TAG,"Authenticated Successfully");
-        Toast.makeText(mApplicationContext,TAG + ": Authenticated Successfully ", Toast.LENGTH_LONG).show();
+        //Toast.makeText(mApplicationContext,TAG + ": Authenticated Successfully ", Toast.LENGTH_LONG).show();
         showContactListActivityWhenAuthenticated();
 
     }
@@ -255,7 +255,7 @@ public class HuhConnection implements ConnectionListener {
     public void connectionClosed() {
         HuhConnectionService.sConnectionState=ConnectionState.DISCONNECTED;
         Log.d(TAG,"Connectionclosed()");
-        Toast.makeText(mApplicationContext,TAG + ": Connectionclosed ", Toast.LENGTH_LONG).show();
+        //Toast.makeText(mApplicationContext,TAG + ": Connectionclosed ", Toast.LENGTH_LONG).show();
 
 
     }

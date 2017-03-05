@@ -84,7 +84,7 @@ public class SendMessageActivity extends AppCompatActivity {
                         @Override
                         public void processMessage(Chat chat, Message message) {
                             String output = chat.getParticipant() + "Message recieved: " + message.getBody();
-                          //  p = chat.getParticipant() + "Message recieved: " + message.getBody();
+                            //  p = chat.getParticipant() + "Message recieved: " + message.getBody();
                             chat.addMessageListener(this);
                             Log.d(TAG, "!!!!!!! inside chat" + output);
                         }

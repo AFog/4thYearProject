@@ -68,7 +68,7 @@ public class ContactListActivity extends AppCompatActivity {
             if (mContact == null)
             {
                 Log.d(TAG,"Trying to work on a null Contact object ,returning.");
-                Toast.makeText(getApplicationContext(), "HuhConnection Constructor called", Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(), "HuhConnection Constructor called", Toast.LENGTH_LONG).show();
 
                 return;
             }
