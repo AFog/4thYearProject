@@ -33,6 +33,9 @@
     <string name="title_activity_jidlogin">Sign in</string>
     <string name="ToLoginButton">Login</string>
     <string name="error_invalid_email">Error invalid email</string>
+    <string name="ToContactsButton">Contacts</string>
+    <string name="goToContactsListViewButton">ListView</string>
+    <string name="goToRegisterViewButton">Register</string>
     <!--&lt;!&ndash; Strings related to login &ndash;&gt;-->
     <!--<string name="prompt_email">JID</string>-->
     <!--<string name="error_invalid_email">This Jid address is invalid</string>-->

@@ -84,6 +84,7 @@ public class ContactListActivity extends AppCompatActivity {
 
         public ContactAdapter( List<Contact> contactList)
         {
+
             mContacts = contactList;
         }
 

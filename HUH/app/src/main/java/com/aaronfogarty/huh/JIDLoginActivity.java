@@ -27,6 +27,7 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.iqregister.AccountManager;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -181,7 +182,7 @@ public class JIDLoginActivity extends AppCompatActivity {
                     XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                             .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                             .setSendPresence(true)
-                            .setUsernameAndPassword(jid, password )
+                            .setUsernameAndPassword("admin", "admin" )
                             .setServiceName("ec2-35-162-128-9.us-west-2.compute.amazonaws.com")
                             .setHost("ec2-35-162-128-9.us-west-2.compute.amazonaws.com") //WIN-H6G4CDQOT7E win-h6g4cdq0t7e
                             .setPort(5222)
@@ -191,7 +192,9 @@ public class JIDLoginActivity extends AppCompatActivity {
                     AbstractXMPPConnection conn2 = new XMPPTCPConnection(config);
 
                     conn2.connect();
-                    conn2.login();
+                    AccountManager accountManager = AccountManager.getInstance(conn2);
+                    accountManager.createAccount("Tom", "Tom");
+                    //conn2.login();
                     //showProgress(false);
 
                     Log.d(TAG,"Connected with server ***************************************************");

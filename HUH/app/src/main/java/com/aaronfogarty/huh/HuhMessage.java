@@ -32,4 +32,5 @@ public class HuhMessage implements  Serializable{
         msgid += "-" + String.format("%02d", new Random().nextInt(100));
 
     }
+
 }

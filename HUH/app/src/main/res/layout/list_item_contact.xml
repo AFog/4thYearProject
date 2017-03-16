@@ -1,15 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:id="@+id/contactNameText">
+
+    <ImageView
+        android:layout_width="80dp"
+        app:srcCompat="@drawable/goomba"
+        android:id="@+id/contactsRowImage"
+        android:layout_height="80dp"
+        android:layout_margin="5dp" />
 
     <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/contact_jid"
-        android:layout_width="match_parent"
-        android:layout_height="53dp"
-        android:gravity="center"
-        android:text="user@example.com"
-        android:textSize="20dp"/>
-
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:textSize="36sp" />
 </LinearLayout>
+
+
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+    <!--<ImageView-->
+        <!--android:layout_width="80dp"-->
+        <!--app:srcCompat="@drawable/goomba"-->
+        <!--android:id="@+id/imageView3"-->
+        <!--android:layout_height="80dp"-->
+        <!--android:layout_margin="5dp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/contact_jid"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="70dp"-->
+        <!--android:gravity="center"-->
+        <!--android:text="user@example.com"-->
+        <!--android:textSize="35dp"/>-->
+
+
+<!--</LinearLayout>-->
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/contact_jid"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="53dp"-->
+        <!--android:gravity="center"-->
+        <!--android:text="user@example.com"-->
+        <!--android:textSize="20dp"/>-->
+
+<!--</LinearLayout><?xml version="1.0" encoding="utf-8"?>-->

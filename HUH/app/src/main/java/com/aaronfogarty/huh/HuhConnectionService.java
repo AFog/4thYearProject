@@ -30,6 +30,11 @@ public class HuhConnectionService extends Service {
     public static final String BUNDLE_TO = "b_to";
     public static final String NEW_MESSAGE = "com.aaronfogarty.huh.newmessage";
     public static final String BUNDLE_FROM_JID = "b_from";
+    public static final String UI_UNAVAILABLE = "com.aaronfogarty.huh.unavailable";
+    public static final String UI_AVAILABLE = "com.aaronfogarty.huh.available";
+    public static final String UNAVAILABLE_MESSAGE = "com.aaronfogarty.huh.unavailablemessage";
+    public static final String UNAVAILABLE_MESSAGE_ARRAYLIST = "com.aaronfogarty.huh.unavailablemessage";
+
 
     public static HuhConnection.ConnectionState sConnectionState;
     public static HuhConnection.LoggedInState sLoggedInState;

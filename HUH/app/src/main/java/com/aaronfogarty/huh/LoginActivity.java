@@ -56,34 +56,37 @@ public class LoginActivity extends AppCompatActivity  {
     @Override
     protected void onPause() {
         super.onPause();
-        this.unregisterReceiver(mBroadcastReceiver);
+        //this.unregisterReceiver(mBroadcastReceiver);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
+//        Log.d(TAG,"1Got a broadcast to show the main app window");
+//
+//        mBroadcastReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//
+//                String action = intent.getAction();
+//                switch (action)
+//                {
+//                    case HuhConnectionService.UI_AUTHENTICATED:
+//                        Log.d(TAG,"Got a broadcast to show the main app window");
+//                        Toast.makeText(getApplicationContext(), TAG + ": Got a broadcast to show the main app window", Toast.LENGTH_LONG).show();
+//                        //Show the main app window
+//                        showProgress(false);
+//                        Intent i2 = new Intent(mContext,ContactListActivity.class);
+//                        startActivity(i2);
+//                        break;
+//                }
+//
+//            }
+//        };
+//        IntentFilter filter = new IntentFilter(HuhConnectionService.UI_AUTHENTICATED);
+//        this.registerReceiver(mBroadcastReceiver, filter);
+//        Log.d(TAG,"2Got a broadcast to show the main app window");
 
-                String action = intent.getAction();
-                switch (action)
-                {
-                    case HuhConnectionService.UI_AUTHENTICATED:
-                        Log.d(TAG,"Got a broadcast to show the main app window");
-                        Toast.makeText(getApplicationContext(), TAG + ": Got a broadcast to show the main app window", Toast.LENGTH_LONG).show();
-                        //Show the main app window
-                        showProgress(false);
-                        Intent i2 = new Intent(mContext,ContactListActivity.class);
-                        startActivity(i2);
-                        finish();
-                        break;
-                }
-
-            }
-        };
-        IntentFilter filter = new IntentFilter(HuhConnectionService.UI_AUTHENTICATED);
-        this.registerReceiver(mBroadcastReceiver, filter);
     }
 
     @Override
@@ -178,7 +181,8 @@ public class LoginActivity extends AppCompatActivity  {
         String password = mPasswordView.getText().toString();
 
         Log.d(TAG,"Logging in with Jid: " + jid);
-        Toast.makeText(getApplicationContext(), TAG + ": Logging in with Jid: " + jid, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), TAG + ": Logging in with Jid: " + jid, Toast.LENGTH_LONG).show();
+        Log.d(TAG,"Logging in with Name:" + mJidView.getText() + "Logging in with Password: " + password);
 
         boolean cancel = false;
         View focusView = null;
@@ -211,17 +215,37 @@ public class LoginActivity extends AppCompatActivity  {
             //showProgress(true);<<---FOR NOW WE DON'T WANT TO SEE THIS PROGRESS THING.
             //This is where the login login is fired up.
             Log.d(TAG,"Jid and password are valid ,proceeding with login.");
-            Toast.makeText(getApplicationContext(), TAG + ": Jid and password are valid ,proceeding with login. ", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), TAG + ": Jid and password are valid ,proceeding with login. ", Toast.LENGTH_LONG).show();
 
-            Log.d(TAG,"ContactListActivity satarted");
-            Toast.makeText(getApplicationContext(), TAG + ": ContactListActivity satarted", Toast.LENGTH_LONG).show();
-
+            Log.d(TAG,"ContactListActivity started");
+            //Toast.makeText(getApplicationContext(), TAG + ": ContactListActivity started", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this,ContactListActivity.class));
 
             //Save the credentials and login
             saveCredentialsAndLogin();
 
         }
+    }
+
+    private void saveCredentialsAndLogin()
+    {
+        Log.d(TAG,"saveCredentialsAndLogin() called.");
+        //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit()
+                .putString("xmpp_jid", mJidView.getText().toString())
+                .putString("xmpp_password", mPasswordView.getText().toString())
+                .putBoolean("xmpp_logged_in",true)
+                .commit();
+
+        //Start the service
+        Log.d(TAG,"StartService called from Login.");
+        //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+        Intent i1 = new Intent(this,HuhConnectionService.class);
+        startService(i1);
+        finish();
+
     }
 
     private boolean isEmailValid(String email) {
@@ -270,24 +294,5 @@ public class LoginActivity extends AppCompatActivity  {
         }
     }
 
-    private void saveCredentialsAndLogin()
-    {
-        Log.d(TAG,"saveCredentialsAndLogin() called.");
-        //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.edit()
-                .putString("xmpp_jid", mJidView.getText().toString())
-                .putString("xmpp_password", mPasswordView.getText().toString())
-                .putBoolean("xmpp_logged_in",true)
-                .commit();
-
-        //Start the service
-        Log.d(TAG,"StartService called from Login.");
-        //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
-
-        Intent i1 = new Intent(this,HuhConnectionService.class);
-        startService(i1);
-
-    }
 }

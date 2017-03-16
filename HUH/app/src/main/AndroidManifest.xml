@@ -26,21 +26,42 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TranslationSpinner" android:screenOrientation="portrait" />
-        <activity android:name=".JIDLoginActivity" android:label="@string/title_activity_jidlogin" android:screenOrientation="portrait"/>
-        <activity android:name=".SendMessageActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".ConnectedActivity" android:screenOrientation="portrait" />
-        <activity android:name=".LoginActivity" android:label="@string/title_activity_login" android:screenOrientation="portrait" />
-        <activity android:name=".ContactListActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".ChatActivity" android:screenOrientation="portrait"></activity>
-        <service android:name=".HuhConnectionService">
+        <activity
+            android:name=".TranslationSpinner"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".JIDLoginActivity"
+            android:label="@string/title_activity_jidlogin"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SendMessageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ConnectedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ContactListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ChatActivity"
+            android:screenOrientation="portrait" />
 
-        </service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <service android:name=".HuhConnectionService" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity android:name=".ContactsListActivity" />
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>
