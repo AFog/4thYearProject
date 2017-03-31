@@ -54,6 +54,7 @@ public class ChatActivity extends AppCompatActivity {
     private String messageLog;
     private String userJid;
     private String FILENAME;
+    private int count;
     //HashSet<HuhMessage> ChatHistoryList;
     List<HuhMessage> ChatHistoryList;
     List<HuhMessage> cachedEntries;
@@ -70,6 +71,12 @@ public class ChatActivity extends AppCompatActivity {
         i.setPackage(getApplication().getPackageName());
         getApplication().sendBroadcast(i);
         Log.d(TAG, "BROADCAST: (onCreate()Sent the broadcast that we are Unvailable to HuhConnection broadCastAvailabilityReceiver()");
+
+        Intent i1 = new Intent(HuhConnectionService.OFFLINE_MESSAGES);
+        i.setPackage(getApplication().getPackageName());
+        getApplication().sendBroadcast(i1);
+        Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast are there any offline messages? to HuhConnection broadCastAvailabilityReceiver()");
+
 
         // Reading from SharedPreferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -155,6 +162,12 @@ public class ChatActivity extends AppCompatActivity {
         i.setPackage(getApplication().getPackageName());
         getApplication().sendBroadcast(i);
         Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast that we are Available to HuhConnection broadCastAvailabilityReceiver()");
+
+        count++;
+        Intent i1 = new Intent(HuhConnectionService.OFFLINE_MESSAGES);
+        i.setPackage(getApplication().getPackageName());
+        getApplication().sendBroadcast(i1);
+        Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast, are there any offline messages? to HuhConnection broadCastAvailabilityReceiver() count" + count);
 
        processUnavailableMessages();
 //        Log.d(TAG, "*************************processUnavailableMessages()");
@@ -324,11 +337,11 @@ public class ChatActivity extends AppCompatActivity {
             for (HuhMessage entry : cachedEntries) {
                 //Log.d(TAG, "line 231" + entry.sender);
                // Log.d(TAG, "INSIDES ReadList line 233" + entry.sender);
-                if(entry.isMine == true){
+                if(entry.isMine){
                     ChatMessage cm = new ChatMessage(entry.body, 12, ChatMessage.Status.SENT);
                     mChatView.sendMessage(cm);
                 }
-                if (entry.isMine == false){
+                if (!entry.isMine){
                     mChatView.receiveMessage("Sender: " + entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
                 }
 
@@ -404,5 +417,7 @@ public class ChatActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(HuhConnectionService.UNAVAILABLE_MESSAGE);
         registerReceiver(unavailableBroadcastReceiver, filter);
     }
+
+
 
 }

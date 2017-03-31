@@ -34,6 +34,7 @@ public class HuhConnectionService extends Service {
     public static final String UI_AVAILABLE = "com.aaronfogarty.huh.available";
     public static final String UNAVAILABLE_MESSAGE = "com.aaronfogarty.huh.unavailablemessage";
     public static final String UNAVAILABLE_MESSAGE_ARRAYLIST = "com.aaronfogarty.huh.unavailablemessage";
+    public static final String OFFLINE_MESSAGES = "com.aaronfogarty.huh.offlinemessages";
 
 
     public static HuhConnection.ConnectionState sConnectionState;

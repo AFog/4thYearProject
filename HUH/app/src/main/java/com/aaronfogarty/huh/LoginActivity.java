@@ -182,7 +182,7 @@ public class LoginActivity extends AppCompatActivity  {
 
         Log.d(TAG,"Logging in with Jid: " + jid);
         //Toast.makeText(getApplicationContext(), TAG + ": Logging in with Jid: " + jid, Toast.LENGTH_LONG).show();
-        Log.d(TAG,"Logging in with Name:" + mJidView.getText() + "Logging in with Password: " + password);
+        Log.d(TAG,"Logging in with Name: " + mJidView.getText() + " Logging in with Password: " + password);
 
         boolean cancel = false;
         View focusView = null;

@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -35,11 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static android.R.id.message;
-import static android.provider.Telephony.Mms.Part.FILENAME;
 import static org.jivesoftware.smack.packet.Presence.Type.unavailable;
-import static org.jivesoftware.smack.packet.RosterPacket.ItemType.from;
-import static org.jivesoftware.smackx.pubsub.AccessModel.presence;
 
 
 public class HuhConnection implements ConnectionListener {
@@ -56,7 +51,7 @@ public class HuhConnection implements ConnectionListener {
     private ChatMessageListener messageListener;
     boolean isFlexRetrievalSuppoart;
     private boolean isAvailable;
-    private boolean isLogdeIn;
+    private boolean isGettingOfflineMessages;
     //List<Message> unavailableMessages;
     private static List<String> unavailableMessages;
 
@@ -114,8 +109,8 @@ public class HuhConnection implements ConnectionListener {
         mConnection.connect();
         //if authentication successful authenticated(XMPPConnection connection) method called
         mConnection.login();
-        isLogdeIn = true;
-        Log.d(TAG, "**************** isLogged @login: " + isLogdeIn);
+        isGettingOfflineMessages = true;
+        Log.d(TAG, "**************** isLogged @login: " + isGettingOfflineMessages);
 
         Presence presence = new Presence(unavailable);
         try {
@@ -133,23 +128,25 @@ public class HuhConnection implements ConnectionListener {
             @Override
             public void processMessage(Chat chat, Message message) {
 
+            //    if(isAvailable == true) {
 
-                Log.d(TAG, "message.getBody() :" + message.getBody());
-                Log.d(TAG, "message.getFrom() :" + message.getFrom());
-                //Log.d(TAG, "message.getExtension(\"x\",\"jabber:x:delay\") :" + message.getExtension("x", "jabber:x:delay"));
+                    Log.d(TAG, "MESSAGEmessage.getBody() :" + message.getBody());
+                    Log.d(TAG, "message.getFrom() :" + message.getFrom());
+                    //Log.d(TAG, "message.getExtension(\"x\",\"jabber:x:delay\") :" + message.getExtension("x", "jabber:x:delay"));
 
-                Log.d(TAG, "**************** isLoggedIn before if: " + isLogdeIn);
-                if(isLogdeIn == true) {
-                //offlineMessages(message);
-                    isLogdeIn = false;
-                }
-                Log.d(TAG, "**************** isLoggedIn after if: " + isLogdeIn);
+                    Log.d(TAG, "**************** isGettingOfflineMessages if, before: " + isGettingOfflineMessages);
+                    if (isGettingOfflineMessages == true) {
+                        offlineMessages(message);
+                        isGettingOfflineMessages = false;
+                    }
+                    Log.d(TAG, "**************** isGettingOfflineMessages if, after: " + isGettingOfflineMessages);
+
+                    if (isAvailable){
+                        unavailableMessages(message);
+                    }
 
 
-                unavailableMessages(message);
-
-
-                String from = message.getFrom();
+                    String from = message.getFrom();
                     String contactJid = "";
                     if (from.contains("/")) {
                         contactJid = from.split("/")[0];
@@ -159,22 +156,24 @@ public class HuhConnection implements ConnectionListener {
                     }
 
                     mConnection.setPacketReplyTimeout(0);
-                     Log.d(TAG, "^^^^^^^^^^^^^**************** iaAvailable before broadcast: " + isAvailable);
+                    Log.d(TAG, "^^^^^^^^^^^^^**************** iaAvailable before broadcast: " + isAvailable);
 
-                    ///ADDED
-                    //BOROADCAST
-                    //Data within intent to send in a broadcast.
-                    //  Intent intent = new Intent(HuhConnectionService.NEW_MESSAGE);
-                    Intent ArraySendintent = new Intent();
-                    // sets keyword to listen out for for this broadcast
-                    ArraySendintent.setAction(HuhConnectionService.UNAVAILABLE_MESSAGE);
-                    ArraySendintent.setPackage(mApplicationContext.getPackageName());
-                    ArraySendintent.putStringArrayListExtra(HuhConnectionService.UNAVAILABLE_MESSAGE_ARRAYLIST, (ArrayList<String>) unavailableMessages);
 
-                    //Sends out broadcast
-                    mApplicationContext.sendBroadcast(ArraySendintent);
-                    Log.d(TAG, "BROADCAST: Unavailable Message ArrayList broadcast sent.");
-                    /////
+                  //  broadcastunAvailableArray();
+//                    ///ADDED
+//                    //BOROADCAST
+//                    //Data within intent to send in a broadcast.
+//                    //  Intent intent = new Intent(HuhConnectionService.NEW_MESSAGE);
+//                    Intent ArraySendintent = new Intent();
+//                    // sets keyword to listen out for for this broadcast
+//                    ArraySendintent.setAction(HuhConnectionService.UNAVAILABLE_MESSAGE);
+//                    ArraySendintent.setPackage(mApplicationContext.getPackageName());
+//                    ArraySendintent.putStringArrayListExtra(HuhConnectionService.UNAVAILABLE_MESSAGE_ARRAYLIST, (ArrayList<String>) unavailableMessages);
+//
+//                    //Sends out broadcast
+//                    mApplicationContext.sendBroadcast(ArraySendintent);
+//                    Log.d(TAG, "BROADCAST: Unavailable Message ArrayList broadcast sent.");
+//                    /////
 
                     //BOROADCAST
                     //Data within intent to send in a broadcast.
@@ -189,7 +188,7 @@ public class HuhConnection implements ConnectionListener {
                     //Sends out broadcast
                     mApplicationContext.sendBroadcast(intent);
                     Log.d(TAG, "BROADCAST:(connect()) message from :" + contactJid + " broadcast sent to ChatActivity onResume()");
-
+              //  }
                 }
         };
         //This allows for the message listener to be attached to the connection.
@@ -204,11 +203,10 @@ public class HuhConnection implements ConnectionListener {
         });
 
 
-
-
-    ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
+        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
         reconnectionManager.setEnabledPerDefault(true);
         reconnectionManager.enableAutomaticReconnection();
+
 
     }
 
@@ -255,6 +253,11 @@ public class HuhConnection implements ConnectionListener {
                     } catch (SmackException.NotConnectedException e) {
                         e.printStackTrace();
                     }
+                    if(!unavailableMessages.isEmpty()) {
+                        broadcastunAvailableArray();
+                        unavailableMessages.clear();
+                    }
+
                 }
                 if(action.equals(HuhConnectionService.UI_UNAVAILABLE)){
                     isAvailable = false;
@@ -265,6 +268,9 @@ public class HuhConnection implements ConnectionListener {
                     } catch (SmackException.NotConnectedException e) {
                         e.printStackTrace();
                     }
+                   // if(isGettingOfflineMessages){
+                      //  broadcastunAvailableArray();
+                  //  }
 
                 }
             }
@@ -274,6 +280,22 @@ public class HuhConnection implements ConnectionListener {
         filter.addAction(HuhConnectionService.UI_UNAVAILABLE);
         mApplicationContext.registerReceiver(uiAvailabilityReciever, filter);
     }
+//
+//    public void offlineMessageCheckReciever() {
+//
+//        Log.d(TAG, "offlineMessageCheckReciever() ");
+//        // inialise BroadcastReceiver to receive messages from the ui thread ChatActivity to check availability.
+//        uiAvailabilityReciever = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                //Check if the Intents purpose is to send the message.
+//                String action = intent.getAction();
+//                if (action.equals(HuhConnectionService.OFFLINE_MESSAGES)) {
+//                    broadcastunAvailableArray();
+//                }
+//            }
+//        };
+//    }
 
     private void sendMessage(String body, String toJid) {
         Log.d(TAG, "Sending message to :" + toJid);
@@ -292,17 +314,21 @@ public class HuhConnection implements ConnectionListener {
         Log.d(TAG, "*******************offLineMessages()");
 
         try {
+            mConnection.setPacketReplyTimeout(0);
+
             OfflineMessageManager offlineManager = new OfflineMessageManager(mConnection);
-            if (0 == offlineManager.getMessageCount()) {
-                Log.d(TAG, "No offline messages found on server");
-            }
-            else {
+//            if (0 == offlineManager.getMessageCount()) {
+//                Log.d(TAG, "No offline messages found on server");
+//            }
+//            else {
+            mConnection.setPacketReplyTimeout(0);
 
             Iterator<Message> it = (Iterator<Message>) offlineManager.getMessages();
             Log.d(TAG, String.valueOf(offlineManager.supportsFlexibleRetrieval()));
             Log.d(TAG, "Number of offline messages:: " + offlineManager.getMessageCount());
             Map<String, ArrayList<Message>> offlineMsgs = new HashMap<String, ArrayList<Message>>();
             while (it.hasNext()) {
+                mConnection.setPacketReplyTimeout(0);
                 org.jivesoftware.smack.packet.Message message1 = it.next();
                 Log.d(TAG, "receive offline messages, the Received from [" + message1.getFrom() + "] the message:" + message1.getBody());
                 String fromUser = message1.getFrom().split("/")[0];
@@ -319,7 +345,7 @@ public class HuhConnection implements ConnectionListener {
             offlineManager.deleteMessages();
 //            Presence presence = new Presence(Presence.Type.available);
 //            mConnection.sendPacket(presence);
-        }
+        //}
         } catch (Exception e) {
             Log.e("CATCH", "OFFLINE");
             e.printStackTrace();
@@ -439,5 +465,21 @@ public class HuhConnection implements ConnectionListener {
 
     }
 
+    public void broadcastunAvailableArray(){
 
+        ///ADDED
+        //BOROADCAST
+        //Data within intent to send in a broadcast.
+        //  Intent intent = new Intent(HuhConnectionService.NEW_MESSAGE);
+        Intent ArraySendintent = new Intent();
+        // sets keyword to listen out for for this broadcast
+        ArraySendintent.setAction(HuhConnectionService.UNAVAILABLE_MESSAGE);
+        ArraySendintent.setPackage(mApplicationContext.getPackageName());
+        ArraySendintent.putStringArrayListExtra(HuhConnectionService.UNAVAILABLE_MESSAGE_ARRAYLIST, (ArrayList<String>) unavailableMessages);
+
+        //Sends out broadcast
+        mApplicationContext.sendBroadcast(ArraySendintent);
+        Log.d(TAG, "BROADCAST: Unavailable Message ArrayList broadcast sent.");
+        /////
+    }
 }
