@@ -34,7 +34,8 @@ public class HuhConnectionService extends Service {
     public static final String UI_AVAILABLE = "com.aaronfogarty.huh.available";
     public static final String UNAVAILABLE_MESSAGE = "com.aaronfogarty.huh.unavailablemessage";
     public static final String UNAVAILABLE_MESSAGE_ARRAYLIST = "com.aaronfogarty.huh.unavailablemessage";
-    public static final String OFFLINE_MESSAGES = "com.aaronfogarty.huh.offlinemessages";
+    public static final String OFFLINE_MESSAGE = "com.aaronfogarty.huh.offlineemessage";
+    public static final String OFFLINE_MESSAGE_ARRAYLIST = "com.aaronfogarty.huh.offlineemessage";
 
 
     public static HuhConnection.ConnectionState sConnectionState;
@@ -92,7 +93,7 @@ public class HuhConnectionService extends Service {
             //Toast.makeText(getApplicationContext(), TAG + ": Something went wrong while connecting ,make sure the credentials are right and try again", Toast.LENGTH_LONG).show();
 
             e.printStackTrace();
-            //Stop the service all together.
+            //Stops the service completely
             stopSelf();
         }
 
@@ -114,7 +115,7 @@ public class HuhConnectionService extends Service {
                         mTHandler = new Handler();
 
                         initConnection();
-                        //THE CODE HERE RUNS IN A BACKGROUND THREAD.
+                        //this is the code that runs in background
                         Looper.loop();
 
                     }
@@ -150,7 +151,7 @@ public class HuhConnectionService extends Service {
         //starts service thread
         start();
         return Service.START_STICKY;
-        //RETURNING START_STICKY CAUSES OUR CODE TO STICK AROUND WHEN THE APP ACTIVITY HAS DIED. Restarts this service if app fails.
+        //RETURNING START_STICKY CAUSES CODE TO STICK AROUND WHEN THE APP ACTIVITY HAS DIED. Restarts this service if app fails.
     }
 
     @Override

@@ -39,6 +39,8 @@ import co.devcenter.androiduilibrary.models.ChatMessage;
 import static android.R.attr.entries;
 import static android.R.attr.process;
 import static android.R.id.list;
+import static com.aaronfogarty.huh.HuhConnectionService.OFFLINE_MESSAGE_ARRAYLIST;
+import static com.aaronfogarty.huh.HuhConnectionService.UNAVAILABLE_MESSAGE_ARRAYLIST;
 import static org.jivesoftware.smack.packet.RosterPacket.ItemType.from;
 import static org.jivesoftware.smackx.privacy.packet.PrivacyItem.Type.jid;
 
@@ -51,14 +53,15 @@ public class ChatActivity extends AppCompatActivity {
     private SendButton mSendButton;
     private BroadcastReceiver mBroadcastReceiver;
     private BroadcastReceiver unavailableBroadcastReceiver;
+    private BroadcastReceiver offlineBroadcastReceiver;
     private String messageLog;
     private String userJid;
     private String FILENAME;
-    private int count;
     //HashSet<HuhMessage> ChatHistoryList;
     List<HuhMessage> ChatHistoryList;
     List<HuhMessage> cachedEntries;
     List<String> unavailableMessages;
+    List<String> offlineMessages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +74,6 @@ public class ChatActivity extends AppCompatActivity {
         i.setPackage(getApplication().getPackageName());
         getApplication().sendBroadcast(i);
         Log.d(TAG, "BROADCAST: (onCreate()Sent the broadcast that we are Unvailable to HuhConnection broadCastAvailabilityReceiver()");
-
-        Intent i1 = new Intent(HuhConnectionService.OFFLINE_MESSAGES);
-        i.setPackage(getApplication().getPackageName());
-        getApplication().sendBroadcast(i1);
-        Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast are there any offline messages? to HuhConnection broadCastAvailabilityReceiver()");
-
 
         // Reading from SharedPreferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -97,6 +94,8 @@ public class ChatActivity extends AppCompatActivity {
                 Log.d(TAG, "User is typing has stopped typing");
             }
         });
+
+
 
         mSendButton = mChatView.getSendButton();
         mSendButton.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +139,11 @@ public class ChatActivity extends AppCompatActivity {
         FILENAME = "Chat.History" + userJid + contactJid;
         Log.d(TAG, "(onCreate) Creating a file name for chatHistory. FILENAME: " + FILENAME);
         setTitle(displayJid);
+
+       // processUnavailableMessages();
+        processOfflineMessages();
+        unregisterReceiver(offlineBroadcastReceiver);
+
         chatHistory();
 
     }
@@ -149,6 +153,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(mBroadcastReceiver);
         unregisterReceiver(unavailableBroadcastReceiver);
+        unregisterReceiver(offlineBroadcastReceiver);
+
         Intent i = new Intent(HuhConnectionService.UI_UNAVAILABLE);
         i.setPackage(getApplication().getPackageName());
         getApplication().sendBroadcast(i);
@@ -163,13 +169,8 @@ public class ChatActivity extends AppCompatActivity {
         getApplication().sendBroadcast(i);
         Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast that we are Available to HuhConnection broadCastAvailabilityReceiver()");
 
-        count++;
-        Intent i1 = new Intent(HuhConnectionService.OFFLINE_MESSAGES);
-        i.setPackage(getApplication().getPackageName());
-        getApplication().sendBroadcast(i1);
-        Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast, are there any offline messages? to HuhConnection broadCastAvailabilityReceiver() count" + count);
-
        processUnavailableMessages();
+       processOfflineMessages();
 //        Log.d(TAG, "*************************processUnavailableMessages()");
 //
 //        //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
@@ -337,11 +338,11 @@ public class ChatActivity extends AppCompatActivity {
             for (HuhMessage entry : cachedEntries) {
                 //Log.d(TAG, "line 231" + entry.sender);
                // Log.d(TAG, "INSIDES ReadList line 233" + entry.sender);
-                if(entry.isMine){
+                if(entry.isMine == true){
                     ChatMessage cm = new ChatMessage(entry.body, 12, ChatMessage.Status.SENT);
                     mChatView.sendMessage(cm);
                 }
-                if (!entry.isMine){
+                if (entry.isMine == false){
                     mChatView.receiveMessage("Sender: " + entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
                 }
 
@@ -392,7 +393,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 switch (action) {
                     case HuhConnectionService.UNAVAILABLE_MESSAGE:
-                        unavailableMessages = intent.getStringArrayListExtra(HuhConnectionService.UNAVAILABLE_MESSAGE);
+                        unavailableMessages = intent.getStringArrayListExtra(UNAVAILABLE_MESSAGE_ARRAYLIST);
 
                         //if (from.equals(contactJid)) {
                             for (String body : unavailableMessages) {
@@ -402,7 +403,7 @@ public class ChatActivity extends AppCompatActivity {
                                 //writeMessageToChatHistory(body);
                                 //Saves message to internal storage
                                 writeToChatHistoryList(contactJid, userJid, body, false);
-                                mChatView.receiveMessage("processUnavailableMessages: " + body);
+                                //mChatView.receiveMessage("processUnavailableMessages: " + body);
                             }
 
 //                        } else {
@@ -418,6 +419,43 @@ public class ChatActivity extends AppCompatActivity {
         registerReceiver(unavailableBroadcastReceiver, filter);
     }
 
+    public void processOfflineMessages(){
+        Log.d(TAG, "processOfflineMessages()");
 
+        //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
+        offlineMessages = new ArrayList<String>();
 
+        offlineBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                Log.d(TAG, "processOfflineMessages()++++++++++++++++++++++++++++++working");
+if(intent.hasExtra(UNAVAILABLE_MESSAGE_ARRAYLIST)){
+    Log.d(TAG, "processOfflineMessages()++++++++++++++YESSSSSS");
+
+}
+                switch (action) {
+                    case HuhConnectionService.OFFLINE_MESSAGE:
+                        offlineMessages = intent.getStringArrayListExtra(OFFLINE_MESSAGE_ARRAYLIST);
+
+                            if (!offlineMessages.isEmpty()) {
+                                for (String body : offlineMessages) {
+
+                                    Log.d(TAG, "processOfflineMessages() message: " + body);
+
+                                    //writeMessageToChatHistory(body);
+                                    //Saves message to internal storage
+                                    writeToChatHistoryList(contactJid, userJid, body, false);
+                                    mChatView.receiveMessage("processOfflineMessages: " + body);
+                                }
+                            }
+
+                }
+
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(HuhConnectionService.OFFLINE_MESSAGE);
+        registerReceiver(offlineBroadcastReceiver, filter);
+    }
 }
