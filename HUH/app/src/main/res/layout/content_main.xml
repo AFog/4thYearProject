@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:text="@string/ToJIDLogin"
         android:onClick="goToJIDLogin"
-        android:id="@+id/button3"
+        android:id="@+id/buuttonw"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -56,8 +56,8 @@
         android:id="@+id/button1"
         android:layout_alignBaseline="@+id/button4"
         android:layout_alignBottom="@+id/button4"
-        android:layout_alignRight="@+id/button3"
-        android:layout_alignEnd="@+id/button3" />
+        android:layout_alignRight="@+id/buuttonw"
+        android:layout_alignEnd="@+id/buuttonw" />
 
     <Button
         android:text="@string/ToContactsButton"

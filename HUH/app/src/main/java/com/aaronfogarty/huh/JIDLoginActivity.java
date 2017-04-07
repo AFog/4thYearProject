@@ -262,4 +262,3 @@ public class JIDLoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 }
-

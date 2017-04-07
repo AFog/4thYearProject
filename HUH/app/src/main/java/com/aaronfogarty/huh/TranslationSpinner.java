@@ -1,16 +1,13 @@
 package com.aaronfogarty.huh;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,6 +19,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//import com.google.gson.Gson;
 
 public class TranslationSpinner extends AppCompatActivity {
 
@@ -36,6 +34,7 @@ public class TranslationSpinner extends AppCompatActivity {
     public void setTranslatedText(String inputText){
         translatedText = inputText;
     }
+
 
 
     @Override
@@ -68,11 +67,9 @@ public class TranslationSpinner extends AppCompatActivity {
 //      //  translateText("hello world", "French");
 //
 //        try {
-//
-//            Log.d("inputTextbeforeencode: ", translateEditText.getText().toString());
 //            inputText = URLEncoder.encode(translateEditText.getText().toString(), "UTF-8");
-//            translateLang = URLEncoder.encode(translateLang, "UTF-8");
-//            //inputText =  inputText.replaceAll("%0A","+++");
+//            // translateLang = URLEncoder.encode(translateLang, "UTF-8");
+//           // inputText =  inputText.replaceAll("%0A","+++");
 //            Log.d("inputText: ", inputText);
 //        }
 //        catch (UnsupportedEncodingException i){
@@ -95,9 +92,9 @@ public class TranslationSpinner extends AppCompatActivity {
 //                        Log.i("Lamba Response:", response);
 //                        TextView textview = (TextView) findViewById(R.id.translationTestView);
 //                        textview.setTypeface(huhTypeface);
-//                        //String outputText = response.replaceAll("%0A", "\n");
+//                        String outputText = response.replaceAll("%0A", "\n");
 //                        textview.setText(response);
-//                        Log.d("outputText: ", response);
+//                        Log.d("outputText: ", outputText);
 //
 //                    }
 //                }, new Response.ErrorListener() {
@@ -118,58 +115,58 @@ public class TranslationSpinner extends AppCompatActivity {
         EditText translateEditText = (EditText) findViewById(R.id.editText);
 //        final TextView textview = (TextView) findViewById(R.id.translationTestView);
 //        final Typeface huhTypeface = Typeface.createFromAsset(getAssets(), "arial-unicode-ms.ttf");
-       String inputText = translateEditText.getText().toString();
+        String inputText = translateEditText.getText().toString();
         Log.d("translateText input", inputText);
 
-            translateText(inputText,"ja");
+        translateText(inputText,"ja");
 
     }
 
 
 
-        public void translateText(String text, String toLanguage) {
+    public void translateText(String text, String toLanguage) {
 
-            RequestQueue queue = Volley.newRequestQueue(this);
-            final TextView textview = (TextView) findViewById(R.id.translationTestView);
-            final Typeface huhTypeface = Typeface.createFromAsset(getAssets(), "arial-unicode-ms.ttf");
-            String url = "https://iueh1tvfn3.execute-api.us-west-2.amazonaws.com/tranlateenpointbeta/";
-            final String output = "";
-            Log.d("translateText()", "++++++++++++++++++++");
+        RequestQueue queue = Volley.newRequestQueue(this);
+        final TextView textview = (TextView) findViewById(R.id.translationTestView);
+        final Typeface huhTypeface = Typeface.createFromAsset(getAssets(), "arial-unicode-ms.ttf");
+        String url = "https://iueh1tvfn3.execute-api.us-west-2.amazonaws.com/tranlateenpointbeta/";
+        final String output = "";
+        Log.d("translateText()", "++++++++++++++++++++");
 
-            JSONObject jsonBody = new JSONObject();
-            try {
-                jsonBody.put("translatedText", text);
-                jsonBody.put("targetLanguage", toLanguage);
-                jsonBody.put("sourceLanguage", toLanguage);
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("translatedText", text);
+            jsonBody.put("targetLanguage", toLanguage);
+            jsonBody.put("sourceLanguage", toLanguage);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String requestBody = jsonBody.toString();
-            Log.d("RequestBody", requestBody);
-            //
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String requestBody = jsonBody.toString();
+        Log.d("RequestBody", requestBody);
+        //
 
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                    (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
 
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                Log.d("translateText", "response: " + response.toString());
-                                JSONObject jsonObject = new JSONObject(response.toString());
-                                Log.d("translateText()", response.toString());
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d("translateText", "response: " + response.toString());
+                            JSONObject jsonObject = new JSONObject(response.toString());
+                            Log.d("translateText()", response.toString());
 
-                              //  String translatedText = jsonObject.getString("translatedText");
-                               // String tolanguage = jsonObject.get("targetLanguage").toString();
-                             //   String sourceLanguage = jsonObject.get("detectedSourceLanguage").toString();
+                            //  String translatedText = jsonObject.getString("translatedText");
+                            // String tolanguage = jsonObject.get("targetLanguage").toString();
+                            //   String sourceLanguage = jsonObject.get("detectedSourceLanguage").toString();
 
-                                String translatedText = response.getString("translatedText");
-                               // String tolanguage = response.get("targetLanguage").toString();
-                                String sourceLanguage = response.getString("detectedSourceLanguage");
+                            String translatedText = response.getString("translatedText");
+                            // String tolanguage = response.get("targetLanguage").toString();
+                            String sourceLanguage = response.getString("detectedSourceLanguage");
 
-                               Log.d("translateText()", "get response: " + translatedText + " detectedSourceLanguage: " + sourceLanguage);
+                            Log.d("translateText()", "get response: " + translatedText + " detectedSourceLanguage: " + sourceLanguage);
 
-                                textview.setText(translatedText);
+                            textview.setText(translatedText);
 
                         } catch (JSONException e) {
                             Log.d("Trans JSON ex: ", e.getMessage());
@@ -177,23 +174,23 @@ public class TranslationSpinner extends AppCompatActivity {
                         catch(Exception e){
                             Log.d("Translation Exception ", e.getMessage());
                             e.printStackTrace();
-                      }
-
                         }
-                    }, new Response.ErrorListener() {
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.i("Trans Exception ", error.getMessage());
+                    }
+                }, new Response.ErrorListener() {
 
-                        }
-                    });
-            //
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Trans Exception ", error.getMessage());
 
-            queue.add(jsObjRequest);
+                    }
+                });
+        //
 
-            //return output;
-        }
+        queue.add(jsObjRequest);
+
+        //return output;
+    }
 
     public String translateMessageText(String text, String toLanguage) {
 

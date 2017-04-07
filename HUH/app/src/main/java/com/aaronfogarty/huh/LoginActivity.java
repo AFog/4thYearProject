@@ -4,12 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Build;
 import android.os.Bundle;
 import android.telecom.ConnectionService;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -28,6 +32,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+//import org.apache.pig.impl.util.ObjectSerializer;
+import org.jivesoftware.smack.Roster;
+
+import java.io.IOException;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static android.Manifest.permission.READ_CONTACTS;
 import static org.jivesoftware.smackx.privacy.packet.PrivacyItem.Type.jid;
@@ -50,7 +64,7 @@ public class LoginActivity extends AppCompatActivity  {
     private View mLoginFormView;
     private BroadcastReceiver mBroadcastReceiver;
     private Context mContext;
-
+    private ArrayList<RosterContact> phoneNumbers;
 
 
     @Override
@@ -95,7 +109,8 @@ public class LoginActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mJidView = (AutoCompleteTextView) findViewById(R.id.email);
-       // populateAutoComplete();
+        populateAutoComplete();
+
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -121,48 +136,48 @@ public class LoginActivity extends AppCompatActivity  {
         mProgressView = findViewById(R.id.login_progress);
     }
 
-//    private void populateAutoComplete() {
-//        if (!mayRequestContacts()) {
-//            return;
-//        }
-//
-//        //getLoaderManager().initLoader(0, null, this);
-//    }
+    private void populateAutoComplete() {
+        if (!mayRequestContacts()) {
+            return;
+        }
 
-//    private boolean mayRequestContacts() {
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-//            return true;
-//        }
-//        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-//            return true;
-//        }
-//        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-//            Snackbar.make(mJidView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-//                    .setAction(android.R.string.ok, new View.OnClickListener() {
-//                        @Override
-//                        @TargetApi(Build.VERSION_CODES.M)
-//                        public void onClick(View v) {
-//                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-//                        }
-//                    });
-//        } else {
-//            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-//        }
-//        return false;
-//    }
+        //getLoaderManager().initLoader(0, null, this);
+    }
+
+    private boolean mayRequestContacts() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+            Snackbar.make(mJidView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+        return false;
+    }
 
     /**
      * Callback received when a permissions request has been completed.
      */
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        if (requestCode == REQUEST_READ_CONTACTS) {
-//            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                populateAutoComplete();
-//            }
-//        }
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_READ_CONTACTS) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                populateAutoComplete();
+            }
+        }
+    }
 
 
     /**
@@ -229,6 +244,9 @@ public class LoginActivity extends AppCompatActivity  {
 
     private void saveCredentialsAndLogin()
     {
+        //retrieves contacts from phone and save to shared prefs
+        phoneContacts();
+        /////
         Log.d(TAG,"saveCredentialsAndLogin() called.");
         //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
 
@@ -246,6 +264,68 @@ public class LoginActivity extends AppCompatActivity  {
         startService(i1);
         finish();
 
+    }
+
+    public void phoneContacts(){
+        Log.d(TAG,"Getting phone Contacts" );
+
+        phoneNumbers = new ArrayList<RosterContact>();
+        ContentResolver cr = getContentResolver();
+        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null);
+
+        if (cur.getCount() > 0) {
+            while (cur.moveToNext()) {
+                String id = cur.getString(
+                        cur.getColumnIndex(ContactsContract.Contacts._ID));
+                String name = cur.getString(cur.getColumnIndex(
+                        ContactsContract.Contacts.DISPLAY_NAME));
+
+                if (cur.getInt(cur.getColumnIndex(
+                        ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                    Cursor pCur = cr.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
+                            new String[]{id}, null);
+                    while (pCur.moveToNext()) {
+                        String phoneNo = pCur.getString(pCur.getColumnIndex(
+                                ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                        if (phoneNo.length() > 10) {
+
+                            //Log.d(TAG, "Fixing length Name: " + name + ", Phone No: " + phoneNo);
+                            phoneNo = phoneNo.replace("+353", "0");
+                            phoneNo = phoneNo.replace(" ", "");
+                            phoneNo = phoneNo.replaceAll("\\s+", "");
+                           // Log.d(TAG, "Fixed length Name: " + name + ", Phone No: " + phoneNo);
+
+                        }
+                        RosterContact tempContact = new RosterContact(name, phoneNo);
+                        if (!phoneNumbers.contains(tempContact)) {
+                            phoneNumbers.add(tempContact);
+                            Log.d(TAG, "Name: " + name + ", Phone No: " + phoneNo);
+                        }
+                    }
+                    pCur.close();
+                }
+            }
+        }
+        savePhnoneNumbersList(phoneNumbers);
+    }
+
+    public void savePhnoneNumbersList(ArrayList<RosterContact> t) {
+        Log.d(TAG,"Saveing phonenumbers to arraylist to preference" );
+
+        // saves phonenumbers arraylist to preference
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        try {
+            prefs.edit()
+            .putString("PhoneContacts", ObjectSerializer.serialize(phoneNumbers))
+            .commit();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
     }
 
     private boolean isEmailValid(String email) {

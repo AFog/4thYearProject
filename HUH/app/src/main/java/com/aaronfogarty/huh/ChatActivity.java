@@ -5,30 +5,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.telecom.ConnectionService;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.packet.Message;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
-import java.io.BufferedReader;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
 
 import co.devcenter.androiduilibrary.ChatView;
@@ -36,13 +36,8 @@ import co.devcenter.androiduilibrary.ChatViewEventListener;
 import co.devcenter.androiduilibrary.SendButton;
 import co.devcenter.androiduilibrary.models.ChatMessage;
 
-import static android.R.attr.entries;
-import static android.R.attr.process;
-import static android.R.id.list;
 import static com.aaronfogarty.huh.HuhConnectionService.OFFLINE_MESSAGE_ARRAYLIST;
 import static com.aaronfogarty.huh.HuhConnectionService.UNAVAILABLE_MESSAGE_ARRAYLIST;
-import static org.jivesoftware.smack.packet.RosterPacket.ItemType.from;
-import static org.jivesoftware.smackx.privacy.packet.PrivacyItem.Type.jid;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
@@ -62,6 +57,15 @@ public class ChatActivity extends AppCompatActivity {
     List<HuhMessage> cachedEntries;
     List<String> unavailableMessages;
     List<String> offlineMessages;
+    private String translatedText;
+
+    public String getTranslatedText(){
+        return translatedText;
+    }
+    public void setTranslatedText(String inputText){
+        translatedText = inputText;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +88,14 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void userIsTyping() {
                 //Here you know that the user is typing
-                Log.d(TAG, "User is typing");
+                //Log.d(TAG, "User is typing");
 
             }
 
             @Override
             public void userHasStoppedTyping() {
                 //Here you know that the user has stopped typing.
-                Log.d(TAG, "User is typing has stopped typing");
+                //Log.d(TAG, "User is typing has stopped typing");
             }
         });
 
@@ -171,81 +175,56 @@ public class ChatActivity extends AppCompatActivity {
 
        processUnavailableMessages();
        processOfflineMessages();
-//        Log.d(TAG, "*************************processUnavailableMessages()");
-//
-//        //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
-//        unavailableBroadcastReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                String action = intent.getAction();
-//                switch (action) {
-//                    case HuhConnectionService.UNAVAILABLE_MESSAGE:
-//                        unavailableMessages = intent.getStringArrayListExtra(HuhConnectionService.UNAVAILABLE_MESSAGE);
-//                        Log.d(TAG, "processUnavailableMessages() Receiver working!!!!*********************************************");
-//
-//                       //if (from.equals(contactJid)) {
-//                           if (true) {
-//
-//                               for (String body : unavailableMessages) {
-//                                   Calendar cal = Calendar.getInstance();
-//                                   SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-//
-//                                Log.d(TAG, "processUnavailableMessages() message: " + body + sdf.format(cal.getTime()) );
-//
-//                                //writeMessageToChatHistory(body);
-//                                //Saves message to internal storage
-//                                writeToChatHistoryList(contactJid, userJid, body, false);
-//                                mChatView.receiveMessage("processUnavailableMessages: " + body);
-//                            }
-//
-//                        } else {
-//                            Log.d(TAG, "Got a message from jid :" + from);
-//                        }
-//
-//                        return;
-//                }
-//
-//            }
-//        };
-//
-//        IntentFilter filter1 = new IntentFilter(HuhConnectionService.UNAVAILABLE_MESSAGE);
-//        registerReceiver(unavailableBroadcastReceiver, filter1);
-
-        /////
-        //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
-        mBroadcastReceiver = new BroadcastReceiver() {
+///START
+        Runnable r = new Runnable() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage()");
-                String action = intent.getAction();
-                switch (action) {
-                    case HuhConnectionService.NEW_MESSAGE:
-                        String from = intent.getStringExtra(HuhConnectionService.BUNDLE_FROM_JID);
-                        String body = intent.getStringExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY);
-                        messageLog = body;
-                        if (from.equals(contactJid)) {
+            public void run() {
+                //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
+                mBroadcastReceiver = new BroadcastReceiver() {
+                    //String body ="";
 
-                            //writeMessageToChatHistory(body);
-                            //Saves message to internal storage
-                            writeToChatHistoryList(contactJid, userJid, body, false);
-                            TranslationSpinner t = new TranslationSpinner();
-                            t.translateMessageText(body, "fr");
-                            mChatView.receiveMessage(body);
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() " );
+                        String action = intent.getAction();
+                        switch (action) {
+                            case HuhConnectionService.NEW_MESSAGE:
+                                String from = intent.getStringExtra(HuhConnectionService.BUNDLE_FROM_JID);
+                                //body = translateMessageText(intent.getStringExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY),"fr");
+                                String body = intent.getStringExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY);
+                                Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() MESSAGE: " + body);
+                                messageLog = body;
 
-                        } else {
-                            Log.d(TAG, "Got a message from jid :" + from);
+                                // String transtext = translateMessageText(body,"ja");
+                                //   Log.d(TAG, "_____________________________---------------------______________________transtext :" + transtext);
+
+                                if (from.equals(contactJid)) {
+                                    //String transtext = translateMessageText(body,"fr");
+
+                                    //writeMessageToChatHistory(body);
+                                    //Saves message to internal storage
+                                    writeToChatHistoryList(contactJid, userJid, body, false);
+                                    mChatView.receiveMessage(body);
+                                } else {
+                                    Log.d(TAG, "Got a message from jid :" + from);
+                                }
+
+                                return;
                         }
 
-                        return;
-                }
+                    }
+                };
 
+                IntentFilter filter = new IntentFilter(HuhConnectionService.NEW_MESSAGE);
+                registerReceiver(mBroadcastReceiver, filter);
             }
         };
 
-        IntentFilter filter = new IntentFilter(HuhConnectionService.NEW_MESSAGE);
-        registerReceiver(mBroadcastReceiver, filter);
+        Thread t = new Thread(r);
+        t.start();
 
 
+///END
     }
 
 //    //writes messages as strings to file, NOT USED
@@ -293,7 +272,6 @@ public class ChatActivity extends AppCompatActivity {
 //        }
 //
 //    }
-
     public static void writeObject(Context context, String file, Object object) throws IOException {
         FileOutputStream fos = context.openFileOutput(file, Context.MODE_PRIVATE);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -459,5 +437,67 @@ if(intent.hasExtra(UNAVAILABLE_MESSAGE_ARRAYLIST)){
 
         IntentFilter filter = new IntentFilter(HuhConnectionService.OFFLINE_MESSAGE);
         registerReceiver(offlineBroadcastReceiver, filter);
+    }
+
+    public String translateMessageText(String text, String toLanguage) {
+
+        String output ="";
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url = "https://iueh1tvfn3.execute-api.us-west-2.amazonaws.com/tranlateenpointbeta/";
+            Log.d("translateText()", "");
+
+            JSONObject jsonBody = new JSONObject();
+            try {
+                jsonBody.put("translatedText", text);
+                jsonBody.put("targetLanguage", toLanguage);
+                jsonBody.put("sourceLanguage", toLanguage);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String requestBody = jsonBody.toString();
+            Log.d("RequestBody", requestBody);
+            //
+
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Log.d("translateText", "response: " + response.toString());
+                                JSONObject jsonObject = new JSONObject(response.toString());
+
+                                String translatedText = response.getString("translatedText");
+                                // String tolanguage = response.get("targetLanguage").toString();
+                                String sourceLanguage = response.getString("detectedSourceLanguage");
+                                setTranslatedText(translatedText);
+                                Log.d("translateText()", "get response: " + translatedText + " detectedSourceLanguage: " + sourceLanguage);
+
+                            } catch (JSONException e) {
+                                Log.d("Trans JSON ex: ", e.getMessage());
+                            } catch (Exception e) {
+                                Log.d("Translation Exception ", e.getMessage());
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i("Trans Exception ", error.getMessage());
+
+                        }
+                    });
+            //
+
+            queue.add(jsObjRequest);
+
+            output = getTranslatedText();
+            translatedText = "";
+
+
+        return output;
     }
 }
