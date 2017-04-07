@@ -228,6 +228,8 @@ public class ChatActivity extends AppCompatActivity {
                             //writeMessageToChatHistory(body);
                             //Saves message to internal storage
                             writeToChatHistoryList(contactJid, userJid, body, false);
+                            TranslationSpinner t = new TranslationSpinner();
+                            t.translateMessageText(body, "fr");
                             mChatView.receiveMessage(body);
 
                         } else {

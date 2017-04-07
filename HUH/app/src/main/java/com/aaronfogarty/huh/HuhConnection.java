@@ -83,7 +83,6 @@ public class HuhConnection implements ConnectionListener {
 
     public void connect() throws IOException, XMPPException, SmackException {
         Log.d(TAG, "Connecting to server " + mServiceName);
-        SmackConfiguration.DEBUG_ENABLED = true;
 
         //Toast.makeText(mApplicationContext,TAG + "Connecting to server " + mServiceName, Toast.LENGTH_LONG).show();
 
