@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -19,9 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.telecom.ConnectionService;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,20 +27,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 //import org.apache.pig.impl.util.ObjectSerializer;
-import org.jivesoftware.smack.Roster;
 
 import java.io.IOException;
-import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static org.jivesoftware.smackx.privacy.packet.PrivacyItem.Type.jid;
 
 /**
  * A login screen that offers login via email/password.
@@ -112,7 +101,7 @@ public class LoginActivity extends AppCompatActivity  {
         populateAutoComplete();
 
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (EditText) findViewById(R.id.registerPassword);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -196,7 +185,7 @@ public class LoginActivity extends AppCompatActivity  {
         String password = mPasswordView.getText().toString();
 
         Log.d(TAG,"Logging in with Jid: " + jid);
-        //Toast.makeText(getApplicationContext(), TAG + ": Logging in with Jid: " + jid, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), TAG + ": Logging in with Jid: " + jidPhoneNumber, Toast.LENGTH_LONG).show();
         Log.d(TAG,"Logging in with Name:" + mJidView.getText() + "Logging in with Password: " + password);
 
         boolean cancel = false;
@@ -219,7 +208,7 @@ public class LoginActivity extends AppCompatActivity  {
 //            focusView = mJidView;
 //            cancel = true;
 //        }
-
+cancel=true;
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.

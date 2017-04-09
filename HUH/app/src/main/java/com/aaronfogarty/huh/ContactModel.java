@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by aaronfogartyfogarty on 15/02/2017.
  */
@@ -33,7 +35,7 @@ public class ContactModel {
     {
         mContacts = new ArrayList<>();
         populateWithInitialContacts(context);
-       // getPhoneContacts();
+        //getPhoneContacts();
 
     }
 
@@ -61,22 +63,5 @@ public class ContactModel {
     public List<Contact> getContacts()
     {
         return mContacts;
-    }
-
-    public void getPhoneContacts(){
-        ArrayList<RosterContact> phoneContacts = new ArrayList<>();
-        // load Phone Contacts from preference
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        try {
-            phoneContacts = (ArrayList<RosterContact>) ObjectSerializer.deserialize(prefs.getString("PhoneContacts", ObjectSerializer.serialize(new ArrayList<RosterContact>())));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        for (RosterContact c:phoneContacts) {
-            //mContacts.add(new Contact(c.getJid()));
-            Log.d(TAG, "returned roster contacts: \nUser: " + c.getJid() + "\nPhoneNumber: " + c.getphoneNumber());
-        }
     }
 }

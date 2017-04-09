@@ -96,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
             if (jid != null) {
                 mUsername = "admin";
                 mServiceName = "ec2-35-162-128-9.us-west-2.compute.amazonaws.com";
-                //mServiceName = jid.split("@")[1];
+                //mServiceName = jidPhoneNumber.split("@")[1];
             } else {
                 mUsername = "";
                 mServiceName = "";
@@ -169,9 +169,9 @@ public class RegisterActivity extends AppCompatActivity {
             e.getMessage();
         }
 
-        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
-        reconnectionManager.setEnabledPerDefault(true);
-        reconnectionManager.enableAutomaticReconnection();
+//        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
+//        reconnectionManager.setEnabledPerDefault(true);
+//        reconnectionManager.enableAutomaticReconnection();
 
     }
 

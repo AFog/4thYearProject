@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToJIDLogin(View view){
 
-        Intent intent = new Intent(this, JIDLoginActivity.class);
+        Intent intent = new Intent(this, RegistrationActivity.class);
         startActivity(intent);
     }
 

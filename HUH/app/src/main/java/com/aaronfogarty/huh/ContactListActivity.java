@@ -2,6 +2,8 @@ package com.aaronfogarty.huh;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ContactListActivity extends AppCompatActivity {
@@ -31,11 +35,35 @@ public class ContactListActivity extends AppCompatActivity {
         contactsRecyclerView = (RecyclerView) findViewById(R.id.contact_list_recycler_view);
         contactsRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
 
-        ContactModel model = ContactModel.get(getBaseContext());
-        List<Contact> contacts = model.getContacts();
+//        ContactModel model = ContactModel.get(getBaseContext());
+//        List<Contact> contacts = model.getContacts();
+
+  //      ContactModel model = ContactModel.get(getBaseContext());
+          List<Contact> contacts = getPhoneContacts();
 
         mAdapter = new ContactAdapter(contacts);
         contactsRecyclerView.setAdapter(mAdapter);
+    }
+
+    public List<Contact> getPhoneContacts(){
+        ArrayList<RosterContact> phoneContacts = new ArrayList<>();
+        List<Contact> contacts = new ArrayList<>();
+
+        // load Phone Contacts from preference
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        try {
+            phoneContacts = (ArrayList<RosterContact>) ObjectSerializer.deserialize(prefs.getString("huhContacts", ObjectSerializer.serialize(new ArrayList<RosterContact>())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        for (RosterContact c:phoneContacts) {
+            Contact temp = new Contact(c.getphoneNumber());
+            contacts.add(temp);
+            Log.d(TAG, "returned roster contacts: \nUser: " + c.getJid() + "\nPhoneNumber: " + c.getphoneNumber());
+        }
+        return contacts;
     }
 
     //innner class

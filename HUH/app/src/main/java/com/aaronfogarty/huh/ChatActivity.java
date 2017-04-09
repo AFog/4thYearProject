@@ -206,7 +206,7 @@ public class ChatActivity extends AppCompatActivity {
                                     writeToChatHistoryList(contactJid, userJid, body, false);
                                     mChatView.receiveMessage(body);
                                 } else {
-                                    Log.d(TAG, "Got a message from jid :" + from);
+                                    Log.d(TAG, "Got a message from jidPhoneNumber :" + from);
                                 }
 
                                 return;
@@ -387,7 +387,7 @@ public class ChatActivity extends AppCompatActivity {
                             }
 
 //                        } else {
-//                            Log.d(TAG, "Got a message from jid :" + from);
+//                            Log.d(TAG, "Got a message from jidPhoneNumber :" + from);
 //                        }
 
                 }

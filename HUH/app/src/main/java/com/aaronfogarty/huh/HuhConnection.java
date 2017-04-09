@@ -68,7 +68,7 @@ public class HuhConnection implements ConnectionListener {
     private final String mPassword;
     private final String mServiceName;
     private XMPPTCPConnection mConnection;
-     private BroadcastReceiver uiThreadMessageReceiver;//Receives messages from the ui thread.
+    private BroadcastReceiver uiThreadMessageReceiver;//Receives messages from the ui thread.
     private BroadcastReceiver uiAvailabilityReciever;
     private ChatMessageListener messageListener;
     boolean isFlexRetrievalSuppoart;
@@ -79,6 +79,7 @@ public class HuhConnection implements ConnectionListener {
     private String translatedText;
     private String baseLanguage = "ja";
     private static List<RosterContact> huhContacts;
+    boolean isHuhUser;
 
     public String getTranslatedText(){
         return translatedText;
@@ -108,7 +109,7 @@ public class HuhConnection implements ConnectionListener {
         if (jid != null) {
             mUsername = jid.split("@")[0];
             mServiceName = "ec2-35-162-128-9.us-west-2.compute.amazonaws.com";
-            //mServiceName = jid.split("@")[1];
+            //mServiceName = jidPhoneNumber.split("@")[1];
         } else {
             mUsername = "";
             mServiceName = "";
@@ -156,12 +157,12 @@ public class HuhConnection implements ConnectionListener {
         subscribe.setTo("jojo@win-h6g4cdqot7e");
         mConnection.sendPacket(subscribe);
  //END
-        Log.d(TAG, "account attributes: ");
-        AccountManager accountManager = AccountManager.getInstance(mConnection);
-        Set<String> entries =  accountManager.getAccountAttributes();
-        for (String entry : entries) {
-            Log.d(TAG, "Attributes: " + entry);
-        }
+//        Log.d(TAG, "account attributes: ");
+//        AccountManager accountManager = AccountManager.getInstance(mConnection);
+//        Set<String> entries =  accountManager.getAccountAttributes();
+//        for (String entry : entries) {
+//            Log.d(TAG, "Attributes: " + entry);
+//        }
 
 //START
         Log.d(TAG, "Does jojo exist?: " + checkIfUserExists("jojo"));
@@ -231,7 +232,7 @@ public class HuhConnection implements ConnectionListener {
                 String contactJid = "";
                 if (from.contains("/")) {
                     contactJid = from.split("/")[0];
-                    Log.d(TAG, "The real jid is :" + contactJid);
+                    Log.d(TAG, "The real jidPhoneNumber is :" + contactJid);
                 } else {
                     contactJid = from;
                 }
@@ -586,9 +587,13 @@ public class HuhConnection implements ConnectionListener {
 
         //check if phone contact exists on the openfire server and adds it to huhContacts ArrayList if it does
         for (RosterContact c: phoneContacts) {
-            boolean isHuhUser = checkIfUserExists(c.getphoneNumber());
-            if(isHuhUser) {
+            isHuhUser = checkIfUserExists(c.getphoneNumber());
+            Log.d(TAG, "Is huh user: " + isHuhUser);
+
+            if(isHuhUser == true) {
                 huhContacts.add(c);
+                Log.d(TAG, "Adding to huhContacts: Phone" + c.getphoneNumber() + " Name: " + c.getJid());
+
                 //subscribes to that user allowing communication
 //                Presence subscribe = new Presence(Presence.Type.subscribe);
 //                subscribe.setTo(c.getphoneNumber() + "@win-h6g4cdqot7e");
@@ -597,6 +602,7 @@ public class HuhConnection implements ConnectionListener {
 //                } catch (SmackException.NotConnectedException e) {
 //                    e.printStackTrace();
 //                }
+                isHuhUser = false;
             }
 
         }
@@ -610,6 +616,26 @@ public class HuhConnection implements ConnectionListener {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+
+        for (RosterContact c: huhContacts) {
+                Log.d(TAG, "huhContacts: Phone" + c.getphoneNumber() + " Name: " + c.getJid());
+        }
+    }
+
+    public ArrayList<RosterContact> gethuhContacts(){
+
+        ArrayList<RosterContact> phoneContacts = new ArrayList<RosterContact>();
+        // load Phone Contacts from preference
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mApplicationContext);
+        try {
+            phoneContacts = (ArrayList<RosterContact>) ObjectSerializer.deserialize(prefs.getString("huhContacts", ObjectSerializer.serialize(new ArrayList<RosterContact>())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return phoneContacts;
+
     }
 
     public void displayhuhContacts(){
@@ -636,12 +662,13 @@ public class HuhConnection implements ConnectionListener {
 
         if (data.getRows() != null) {
             for (ReportedData.Row row: data.getRows()) {
-                for (String value: row.getValues("jid")) {
+                for (String value: row.getValues("jidPhoneNumber")) {
                     Log.i("USER EXISTS", " " + value);
+                    return true;
+
                 }
             }
             Toast.makeText( mApplicationContext,"Username Exists", Toast.LENGTH_SHORT).show();
-            return true;
         }
 
         } catch (SmackException.NoResponseException e) {

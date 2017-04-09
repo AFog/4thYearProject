@@ -14,12 +14,12 @@
     </string-array>
 
     <!-- Strings related to JIDlogin & login -->
-    <string name="ToJIDLogin">JID Login</string>
+    <string name="ToJIDLogin">Register</string>
     <string name="prompt_jid">Jabber Id</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_jid">This JID is invalid</string>
+    <string name="error_invalid_jid">Phone Number is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
@@ -36,7 +36,11 @@
     <string name="ToContactsButton">Contacts</string>
     <string name="goToContactsListViewButton">ListView</string>
     <string name="goToRegisterViewButton">Register</string>
-    <!--&lt;!&ndash; Strings related to login &ndash;&gt;-->
-    <!--<string name="prompt_email">JID</string>-->
-    <!--<string name="error_invalid_email">This Jid address is invalid</string>-->
+    <string name="title_activity_registration">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">emailHere</string>
+    <string name="registerJid">Enter your Phone Number</string>
+    <string name="register">Register</string>
+
 </resources>
