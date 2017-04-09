@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/res/merged/debug/mipmap-hdpi/ic_launcher.png",
+        "source": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/res/merged/debug/mipmap-hdpi/splash_icon.png",
+        "source": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/src/main/res/mipmap-hdpi/splash_icon.png"
+    }
+]
