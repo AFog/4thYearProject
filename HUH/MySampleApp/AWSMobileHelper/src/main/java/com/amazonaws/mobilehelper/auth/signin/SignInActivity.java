@@ -9,14 +9,17 @@ package com.amazonaws.mobilehelper.auth.signin;
 //
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 
 import com.amazonaws.mobilehelper.auth.IdentityProviderType;
 import com.amazonaws.mobilehelper.auth.IdentityManager;
@@ -24,6 +27,8 @@ import com.amazonaws.mobilehelper.auth.IdentityProvider;
 
 import com.amazonaws.mobilehelper.R;
 import com.amazonaws.mobilehelper.auth.SignInResultHandler;
+
+import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * Activity for handling Sign-in with an Identity Provider.
@@ -121,4 +126,6 @@ public class SignInActivity extends Activity {
             SignInManager.dispose();
         }
     }
+
+
 }

@@ -96,33 +96,35 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        startServiceandLogin();
+
         // Set up the login form.
-        mJidView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
-
-
-        mPasswordView = (EditText) findViewById(R.id.registerPassword);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        Button mJidSignInButton = (Button) findViewById(R.id.jid1_sign_in_button);
-        mJidSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+      //  mJidView = (AutoCompleteTextView) findViewById(R.id.email);
+//        //populateAutoComplete();
+//
+//
+//        mPasswordView = (EditText) findViewById(R.id.registerPassword);
+//        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+//                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+//                    attemptLogin();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+//
+//        Button mJidSignInButton = (Button) findViewById(R.id.jid1_sign_in_button);
+//        mJidSignInButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                attemptLogin();
+//            }
+//        });
+//
+//        mLoginFormView = findViewById(R.id.login_form);
+//        mProgressView = findViewById(R.id.register_progress);
     }
 
     private void populateAutoComplete() {
@@ -191,24 +193,6 @@ public class LoginActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-//        // Check for a valid password, if the user entered one.
-//        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-//            mPasswordView.setError(getString(R.string.error_invalid_password));
-//            focusView = mPasswordView;
-//            cancel = true;
-//        }
-//
-//        // Check for a valid email address.
-//        if (TextUtils.isEmpty(email)) {
-//            mJidView.setError(getString(R.string.error_field_required));
-//            focusView = mJidView;
-//            cancel = true;
-//        } else if (!isEmailValid(email)) {
-//            mJidView.setError(getString(R.string.error_invalid_jid));
-//            focusView = mJidView;
-//            cancel = true;
-//        }
-
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -226,15 +210,15 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(this,ContactListActivity.class));
 
             //Save the credentials and login
-            saveCredentialsAndLogin();
-
+          //  saveCredentialsAndLogin();
+            // startServiveandLogin();
         }
     }
 
     private void saveCredentialsAndLogin()
     {
         //retrieves contacts from phone and save to shared prefs
-        phoneContacts();
+        //phoneContacts();
         /////
         Log.d(TAG,"saveCredentialsAndLogin() called.");
         //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
@@ -245,6 +229,19 @@ public class LoginActivity extends AppCompatActivity {
                 .putString("xmpp_password", mPasswordView.getText().toString())
                 .putBoolean("xmpp_logged_in",true)
                 .commit();
+
+        //Start the service
+        Log.d(TAG,"StartService called from Login.");
+        //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+        Intent i1 = new Intent(this,HuhConnectionService.class);
+        startService(i1);
+        finish();
+
+    }
+    private void startServiceandLogin()
+    {
+        //retrieves contacts from phone and save to shared prefs
+        phoneContacts();
 
         //Start the service
         Log.d(TAG,"StartService called from Login.");

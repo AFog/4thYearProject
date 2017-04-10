@@ -8,11 +8,18 @@
 //
 package com.mysampleapp;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobilehelper.auth.IdentityManager;
@@ -23,6 +30,8 @@ import com.amazonaws.mobilehelper.auth.StartupAuthResultHandler;
 import com.amazonaws.mobilehelper.auth.signin.AuthException;
 import com.amazonaws.mobilehelper.auth.signin.ProviderAuthException;
 
+import static android.Manifest.permission.READ_CONTACTS;
+
 /**
  * Splash Activity is the start-up activity that appears until a delay is expired
  * or the user taps the screen.  When the splash activity starts, various app
@@ -31,6 +40,11 @@ import com.amazonaws.mobilehelper.auth.signin.ProviderAuthException;
 public class SplashActivity extends Activity {
 
     private static final String LOG_TAG = SplashActivity.class.getSimpleName();
+
+    private static final int REQUEST_READ_CONTACTS = 0;
+    private AutoCompleteTextView mJidView;
+    private boolean hasContactsPermission;
+
 
     private final StartupAuthResultHandler authResultHandler = new StartupAuthResultHandler() {
         @Override
@@ -60,6 +74,7 @@ public class SplashActivity extends Activity {
                         providerAuthException.getProvider().getDisplayName()), providerAuthException);
                 }
 
+
                 doMandatorySignIn(identityManager);
                 return;
             }
@@ -75,6 +90,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+
         AWSMobileClient.initializeMobileClientIfNecessary(getApplicationContext());
         final IdentityManager identityManager = AWSMobileClient.defaultMobileClient().getIdentityManager();
 
@@ -83,8 +99,9 @@ public class SplashActivity extends Activity {
     }
 
     private void doMandatorySignIn(final IdentityManager identityManager) {
-        identityManager.signInOrSignUp(SplashActivity.this, new SignInHandler());
-        SplashActivity.this.finish();
+
+            identityManager.signInOrSignUp(SplashActivity.this, new SignInHandler());
+            SplashActivity.this.finish();
     }
 
     /** Go to the main activity. */
@@ -102,4 +119,6 @@ public class SplashActivity extends Activity {
             .expireSignInTimeout();
         return true;
     }
+
+
 }

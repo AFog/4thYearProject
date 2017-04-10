@@ -10,6 +10,8 @@ package com.mysampleapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -37,7 +39,10 @@ public class SignInHandler extends DefaultSignInResultHandler {
 
         }
 
-        goMain(callingActivity);
+        //TODO: Register to Openfire here
+
+        gotToRegistration(callingActivity);
+        //goMain(callingActivity);
     }
 
     @Override
@@ -52,4 +57,50 @@ public class SignInHandler extends DefaultSignInResultHandler {
         callingActivity.startActivity(new Intent(callingActivity, MainActivity.class)
             .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
+
+    private void gotToRegistration(final Activity callingActivity) {
+
+
+        boolean reistered = false;
+        try {
+            String jidPhoneNumber = PreferenceManager.getDefaultSharedPreferences(callingActivity)
+                    .getString("xmpp_jid", null);
+            jidPhoneNumber = jidPhoneNumber.replace("+353", "0");
+            jidPhoneNumber = jidPhoneNumber.replace(" ", "");
+            jidPhoneNumber = jidPhoneNumber.replaceAll("\\s+", "");
+            String password = PreferenceManager.getDefaultSharedPreferences(callingActivity)
+                    .getString("xmpp_password", null);
+            reistered = PreferenceManager.getDefaultSharedPreferences(callingActivity).getBoolean("xmpp_logged_in", false);
+
+            Log.d("SignInHgoToRegistration", "Check if user exists: jidPhoneNumber" + jidPhoneNumber);
+            Log.d("SignInHgoToRegistration", "Check if user exists: Registered: " + reistered);
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
+        if(!reistered) {
+            callingActivity.startActivity(new Intent(callingActivity, RegistrationActivity.class));
+            updateRegistrationStaus(true, callingActivity);
+        }
+        else{
+            goMain(callingActivity);
+        }
+
+    }
+
+    private void updateRegistrationStaus(boolean registered, final Activity callingActivity )
+    {
+        /////
+        Log.d("SignUpActivity","saveCredentialsAndLogin() called.");
+        //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(callingActivity);
+        prefs.edit()
+                .putBoolean("xmpp_logged_in",registered)
+                .commit();
+
+    }
+
+
+
 }

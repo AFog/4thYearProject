@@ -8,10 +8,15 @@
 //
 package com.mysampleapp;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,14 +28,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.amazonaws.mobile.AWSMobileClient;
 import com.amazonaws.mobilehelper.auth.IdentityManager;
+import com.huh.RegistrationActivity;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.HomeDemoFragment;
 import com.mysampleapp.navigation.NavigationDrawer;
+
+import static android.Manifest.permission.READ_CONTACTS;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     /** Class name for log messages. */
@@ -55,6 +64,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Bundle fragmentBundle;
 
     private Button   signOutButton;
+
+    private AutoCompleteTextView mJidView;
+
+    private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
      * Initializes the Toolbar for use with the activity.
@@ -126,6 +139,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ///Start
+        //Asks permission for contacts
+//        populateAutoComplete();
+//        gotToRegistration();
+
+        ///End
+
+
+
+
+
         // Obtain a reference to the mobile client. It is created in the Application class,
         // but in case a custom Application class is not used, we initialize it here if necessary.
         AWSMobileClient.initializeMobileClientIfNecessary(this);
@@ -141,6 +165,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setupToolbar(savedInstanceState);
 
         setupNavigationMenu(savedInstanceState);
+    }
+
+    private void gotToRegistration() {
+        Intent intent = new Intent(this, RegistrationActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -243,4 +272,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public Bundle getFragmentBundle() {
         return this.fragmentBundle;
     }
+
+    private void populateAutoComplete() {
+        if (!mayRequestContacts()) {
+            return;
+        }
+
+        //getLoaderManager().initLoader(0, null, this);
+    }
+
+    private boolean mayRequestContacts() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+            Snackbar.make(mJidView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+        return false;
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_READ_CONTACTS) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                populateAutoComplete();
+            }
+        }
+    }
+
 }

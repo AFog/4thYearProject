@@ -1,22 +1,22 @@
 [
     {
-        "merged": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/notification_action_tombstone.xml",
-        "source": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.1/res/layout-v21/notification_action_tombstone.xml"
+        "merged": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/place_autocomplete_fragment.xml",
+        "source": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.0.1/res/layout-v21/place_autocomplete_fragment.xml"
     },
     {
-        "merged": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/notification_action.xml",
-        "source": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.1/res/layout-v21/notification_action.xml"
+        "merged": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/notification_template_icon_group.xml",
+        "source": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.1/res/layout-v21/notification_template_icon_group.xml"
     },
     {
-        "merged": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/place_autocomplete_fragment.xml",
-        "source": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-places/10.0.1/res/layout-v21/place_autocomplete_fragment.xml"
+        "merged": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/notification_action_tombstone.xml",
+        "source": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.1/res/layout-v21/notification_action_tombstone.xml"
     },
     {
-        "merged": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/notification_template_icon_group.xml",
-        "source": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.1/res/layout-v21/notification_template_icon_group.xml"
+        "merged": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/notification_template_custom_big.xml",
+        "source": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.1/res/layout-v21/notification_template_custom_big.xml"
     },
     {
-        "merged": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/notification_template_custom_big.xml",
-        "source": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.1/res/layout-v21/notification_template_custom_big.xml"
+        "merged": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/res/merged/debug/layout-v21/notification_action.xml",
+        "source": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.1/res/layout-v21/notification_action.xml"
     }
 ]

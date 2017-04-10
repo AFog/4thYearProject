@@ -8,15 +8,28 @@
 //
 package com.amazonaws.mobilehelper.auth.signin.userpools;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 
 import com.amazonaws.mobilehelper.R;
 import com.amazonaws.mobilehelper.auth.signin.CognitoUserPoolsSignInProvider;
+import com.amazonaws.mobilehelper.auth.signin.SignInActivity;
 import com.amazonaws.mobilehelper.util.ViewHelper;
+
+import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * Activity to prompt for account sign up information.
@@ -25,8 +38,15 @@ public class SignUpActivity extends Activity {
     /** Log tag. */
     private static final String LOG_TAG = SignUpActivity.class.getSimpleName();
 
+
+    private static final int REQUEST_READ_CONTACTS = 0;
+    private AutoCompleteTextView mJidView;
+    private boolean hasContactsPermission;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        populateAutoComplete();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
     }
@@ -40,14 +60,17 @@ public class SignUpActivity extends Activity {
         final String password = ViewHelper.getEditTextStringValue(this, R.id.signup_password);
         final String givenName = ViewHelper.getEditTextStringValue(this, R.id.signup_username);
         final String email = ViewHelper.getEditTextStringValue(this, R.id.signup_email);
-        final String phone = ViewHelper.getEditTextStringValue(this, R.id.signup_phone);
+        String getphone = ViewHelper.getEditTextStringValue(this, R.id.signup_phone);
+        String newPhone = getphone.replaceFirst("0", "");
+        final String phone = "+353" + newPhone;
 
         Log.d(LOG_TAG, "username = " + username);
         Log.d(LOG_TAG, "given_name = " + givenName);
         Log.d(LOG_TAG, "email = " + email);
-        Log.d(LOG_TAG, "phone = " + phone);
+        Log.d(LOG_TAG, "phone = " +  phone);
 
-        Log.d(LOG_TAG, "Save Credentials her ");
+        //TODO: Save Credentials here
+        saveCredentialsForLogin(phone,password);
 
         final Intent intent = new Intent();
         intent.putExtra(CognitoUserPoolsSignInProvider.AttributeKeys.USERNAME, username);
@@ -60,4 +83,72 @@ public class SignUpActivity extends Activity {
 
         finish();
     }
+
+    private void saveCredentialsForLogin(String phone, String password )
+    {
+        /////
+        Log.d("SignUpActivity","saveCredentialsAndLogin() called.");
+        //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit()
+                .putString("xmpp_jid", phone )
+                .putString("xmpp_password", password)
+                .putBoolean("xmpp_logged_in",false)
+                .commit();
+
+    }
+
+    private void populateAutoComplete() {
+        if (!mayRequestContacts()) {
+            return;
+        }
+        //getLoaderManager().initLoader(0, null, this);
+    }
+
+    private boolean mayRequestContacts() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        }
+        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+            Snackbar.make(mJidView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        @TargetApi(Build.VERSION_CODES.M)
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+                        }
+                    });
+        } else {
+            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
+        }
+        return false;
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_READ_CONTACTS) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                populateAutoComplete();
+            }
+        }
+    }
+
+
+
+
+
+    //            setContentView(R.layout.activity_sign_up);
+  //  finish();
+    //  setContentView(R.layout.activity_sign_in);
+
+
+
 }

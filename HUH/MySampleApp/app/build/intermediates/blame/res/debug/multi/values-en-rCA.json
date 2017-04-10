@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-en-rCA/values-en-rCA.xml",
+        "outputFile": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-en-rCA/values-en-rCA.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 154
                 },
                 "from": {
-                    "file": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/10.0.1/res/values-en-rCA/values.xml",
+                    "file": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/10.0.1/res/values-en-rCA/values.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 0,

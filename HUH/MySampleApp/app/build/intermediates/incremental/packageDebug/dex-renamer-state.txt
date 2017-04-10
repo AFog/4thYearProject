@@ -1,7 +1,7 @@
-#Sun Apr 09 13:57:02 IST 2017
-base.0=/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main
-renamed.1=classes2.dex
-renamed.0=classes.dex
-file.1=/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes2.dex
-base.1=/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main
-file.0=/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex
+#Mon Apr 10 19:50:27 IST 2017
+base.0=/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex
+base.1=/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main
+file.0=/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes2.dex

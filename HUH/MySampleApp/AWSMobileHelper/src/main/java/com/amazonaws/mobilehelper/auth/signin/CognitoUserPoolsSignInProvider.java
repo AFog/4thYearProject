@@ -11,6 +11,8 @@ package com.amazonaws.mobilehelper.auth.signin;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -151,7 +153,10 @@ public class CognitoUserPoolsSignInProvider implements SignInProvider {
             Log.d(LOG_TAG, "Password change succeeded.");
             ViewHelper.showDialog(activity, activity.getString(R.string.title_activity_forgot_password),
                     activity.getString(R.string.password_change_success));
+
+            saveCredentialsForLogin(username,String.valueOf(TEXT_VIEW_FORGOT_PASSWORD_ID));
         }
+
 
         @Override
         public void getResetCode(final ForgotPasswordContinuation continuation) {
@@ -175,6 +180,21 @@ public class CognitoUserPoolsSignInProvider implements SignInProvider {
         activity.startActivityForResult(intent, VERIFICATION_REQUEST_CODE);
     }
 
+
+    private void saveCredentialsForLogin(String phone, String password )
+    {
+        /////
+        Log.d(LOG_TAG,"saveCredentialsAndLogin() called. Password reset");
+        //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit()
+                .putString("xmpp_jid", phone )
+                .putString("xmpp_password", password)
+                .putBoolean("xmpp_logged_in",true)
+                .commit();
+
+    }
     /**
      * Handle callbacks from the Sign Up flow.
      */
@@ -218,9 +238,9 @@ public class CognitoUserPoolsSignInProvider implements SignInProvider {
 //                    activity.getString(R.string.sign_up_confirm_success));
 //            Log.i(LOG_TAG, "Confirmed.");
 
-            Log.e(LOG_TAG, "Confirmed.");
-            ViewHelper.showDialog(activity, "Confirmed.","Sign up Confirmed");
-            Toast.makeText(context, "Sign up failed", Toast.LENGTH_LONG).show();
+//            Log.e(LOG_TAG, "Confirmed.");
+//            ViewHelper.showDialog(activity, "Confirmed.","Sign up Confirmed");
+//            Toast.makeText(context, "Sign up confirmed", Toast.LENGTH_LONG).show();
             //TODO: Add registration here
 
         }
@@ -228,8 +248,8 @@ public class CognitoUserPoolsSignInProvider implements SignInProvider {
         @Override
         public void onFailure(Exception exception) {
             Log.e(LOG_TAG, "Failed to confirm user.", exception);
-            ViewHelper.showDialog(activity, activity.getString(R.string.title_activity_sign_up_confirm),
-                    activity.getString(R.string.sign_up_confirm_failed) + " " + exception);
+//            ViewHelper.showDialog(activity, activity.getString(R.string.title_activity_sign_up_confirm),
+//                    activity.getString(R.string.sign_up_confirm_failed) + " " + exception);
 
             Log.e(LOG_TAG, "Failed to confirm user.");
             ViewHelper.showDialog(activity, "Failed.","Failed to confirm user.");
@@ -629,4 +649,5 @@ public class CognitoUserPoolsSignInProvider implements SignInProvider {
         // Cognito User Pools SDK handles user details refresh when token is refreshed.
         getToken();
     }
+
 }

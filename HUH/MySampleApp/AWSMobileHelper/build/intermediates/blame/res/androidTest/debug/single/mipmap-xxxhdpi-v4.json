@@ -1,10 +1,10 @@
 [
     {
-        "merged": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/AWSMobileHelper/build/intermediates/res/merged/androidTest/debug/mipmap-xxxhdpi-v4/button_login.png",
-        "source": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/AWSMobileHelper/build/intermediates/bundles/debug/res/mipmap-xxxhdpi-v4/button_login.png"
+        "merged": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/AWSMobileHelper/build/intermediates/res/merged/androidTest/debug/mipmap-xxxhdpi-v4/button_login_pressed.png",
+        "source": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/AWSMobileHelper/build/intermediates/bundles/debug/res/mipmap-xxxhdpi-v4/button_login_pressed.png"
     },
     {
-        "merged": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/AWSMobileHelper/build/intermediates/res/merged/androidTest/debug/mipmap-xxxhdpi-v4/button_login_pressed.png",
-        "source": "/Users/aaronfogartyfogarty/Documents/college/Transfer/HuhApplication-aws-my-sample-app-android (1)/MySampleApp/AWSMobileHelper/build/intermediates/bundles/debug/res/mipmap-xxxhdpi-v4/button_login_pressed.png"
+        "merged": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/AWSMobileHelper/build/intermediates/res/merged/androidTest/debug/mipmap-xxxhdpi-v4/button_login.png",
+        "source": "/Users/aaronfogartyfogarty/Documents/college/4thYearProject/HUH/MySampleApp/AWSMobileHelper/build/intermediates/bundles/debug/res/mipmap-xxxhdpi-v4/button_login.png"
     }
 ]

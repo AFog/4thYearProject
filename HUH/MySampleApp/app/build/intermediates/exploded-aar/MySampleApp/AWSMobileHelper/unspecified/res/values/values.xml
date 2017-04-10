@@ -29,7 +29,8 @@
     <string name="mfa_header">MFA verification is required to authenticate.</string>
     <string name="password_change_failed">Password change failed.</string>
     <string name="password_change_success">Password change succeeded.</string>
-    <string name="phone_number_text">Phone number (+15551234567)</string>
+    <string name="permission_rationale">\"Contacts permissions are needed to use huh.\"</string>
+    <string name="phone_number_text">Mobile phone number </string>
     <string name="sign_in_canceled_message_format">"Sign-in with %s canceled."</string>
     <string name="sign_in_email">Email</string>
     <string name="sign_in_failure_dialog_title">Sign-In Error</string>

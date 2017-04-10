@@ -27,6 +27,7 @@ import com.amazonaws.mobilehelper.auth.IdentityManager;
 import com.amazonaws.mobilehelper.auth.IdentityProvider;
 import com.huh.ChatActivity;
 import com.huh.LoginActivity;
+import com.huh.RegistrationActivity;
 import com.mysampleapp.R;
 import com.mysampleapp.demo.DemoConfiguration;
 import com.mysampleapp.demo.DemoInstructionFragment;
@@ -219,7 +220,7 @@ public class NavigationDrawer {
 
     //TODO: Add method for Menu Selections here
     public void showLogin(){
-            Intent myIntent = new Intent(this.containingActivity, LoginActivity.class);
+            Intent myIntent = new Intent(this.containingActivity, RegistrationActivity.class);
             this.containingActivity.startActivity(myIntent);
         }
 

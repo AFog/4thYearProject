@@ -101,8 +101,13 @@ public class HuhConnection implements ConnectionListener {
         mApplicationContext = context.getApplicationContext();
         String jid = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("xmpp_jid", null);
+        jid = jid.replace("+353", "0");
+        jid = jid.replace(" ", "");
+        jid = jid.replaceAll("\\s+", "");
         mPassword = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("xmpp_password", null);
+
+        Log.d(TAG, "Logging in with Name: " + jid + " Password"  + mPassword);
 
         if (jid != null) {
             mUsername = jid.split("@")[0];
@@ -201,7 +206,7 @@ public class HuhConnection implements ConnectionListener {
 //        }
         Log.d(TAG, "Create contacts" );
         //getPhoneContacts();
-        createHuhContacts();
+      //  createHuhContacts();
        // displayhuhContacts();
 ////END
 
@@ -585,7 +590,8 @@ public class HuhConnection implements ConnectionListener {
 
         //check if phone contact exists on the openfire server and adds it to huhContacts ArrayList if it does
         for (RosterContact c: phoneContacts) {
-            isHuhUser = checkIfUserExists(c.getphoneNumber());
+            //isHuhUser = checkIfUserExists(c.getphoneNumber());
+            checkIfUserExists2(c.getphoneNumber());
             Log.d(TAG, "Is huh user: " + isHuhUser);
 
             if(isHuhUser == true) {
@@ -680,6 +686,47 @@ public class HuhConnection implements ConnectionListener {
 
         return false;
 
+    }
+
+    public void checkIfUserExists2(String user){
+        UserSearchManager search = new UserSearchManager(mConnection);
+        Form searchForm = null;
+        try {
+            searchForm = search
+                    .getSearchForm("search." + mConnection.getServiceName());
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
+
+        Form answerForm = searchForm.createAnswerForm();
+        answerForm.setAnswer("Username", true);
+        answerForm.setAnswer("search", user);
+        ReportedData data = null;
+        try {
+            data = search
+                    .getSearchResults(answerForm, "search." + mConnection.getServiceName());
+        } catch (SmackException.NoResponseException e) {
+            e.printStackTrace();
+        } catch (XMPPException.XMPPErrorException e) {
+            e.printStackTrace();
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
+
+        if (data.getRows() != null) {
+            for (ReportedData.Row row: data.getRows()) {
+                for (String value: row.getValues("jid")) {
+                    Log.i("Iteartor values......", " " + value);
+                    isHuhUser = true;
+
+                }
+            }
+            //  Toast.makeText(mApplicationContext, "Username Exists", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public String translateMessageText2(String text, String toLanguage) {

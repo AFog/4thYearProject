@@ -85,7 +85,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name="com.huh.ContactsListActivity" />
-        <activity android:name="com.huh.RegisterActivity" />
+        <!--<activity android:name="com.huh.RegisterActivity" />-->
 
     </application>
 </manifest>

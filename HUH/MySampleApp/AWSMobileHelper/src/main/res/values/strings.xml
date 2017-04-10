@@ -27,7 +27,7 @@
     <string name="username_text">Username</string>
     <string name="given_name_text">Given name</string>
     <string name="email_address_text">Email address</string>
-    <string name="phone_number_text">Phone number (+15551234567)</string>
+    <string name="phone_number_text">Mobile phone number </string>
     <string name="sign_up_header">Enter the following information to sign up.</string>
     <string name="sign_up_confirm_code">Confirmation code</string>
     <string name="sign_up_confirm_text">Confirm</string>
@@ -42,4 +42,5 @@
     <string name="login_failed">Login failed.</string>
     <string name="sign_up_confirm_success">Sign up confirmation succeeded.</string>
     <string name="sign_up_confirm_failed">Sign up confirmation failed.</string>
+    <string name="permission_rationale">\"Contacts permissions are needed to use huh.\"</string>
 </resources>
