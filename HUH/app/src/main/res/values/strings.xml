@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">HUH</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings related to Translate -->
+    <string name="translation_text_view">Enter Text to Translate</string>
+    <string name="Translated_text_here">Tranlated text will appear here</string>
+    <string name="ToTranslateButton">Translate</string>
+    <string-array name="Languages">
+        <item>Select a Language</item>
+        <item>German</item>
+        <item>French</item>
+        <item>Irish</item>
+    </string-array>
+
+    <!-- Strings related to JIDlogin & login -->
+    <string name="ToJIDLogin">Register</string>
+    <string name="prompt_jid">Jabber Id</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_jid">Phone Number is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_xmppconnect">XMPPConnectActivity</string>
+    <string name="ConnectionStatus">Conncetion Status</string>
+    <string name="ToXMPPConnectButton">Send Message</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_jidlogin">Sign in</string>
+    <string name="ToLoginButton">Login</string>
+    <string name="error_invalid_email">Error invalid email</string>
+    <string name="ToContactsButton">Contacts</string>
+    <string name="goToContactsListViewButton">ListView</string>
+    <string name="goToRegisterViewButton">Register</string>
+    <string name="title_activity_registration">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">emailHere</string>
+    <string name="registerJid">Enter your Phone Number</string>
+    <string name="register">Register</string>
+
+</resources>
