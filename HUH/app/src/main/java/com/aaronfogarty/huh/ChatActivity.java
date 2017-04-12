@@ -227,51 +227,6 @@ public class ChatActivity extends AppCompatActivity {
 ///END
     }
 
-//    //writes messages as strings to file, NOT USED
-//    public void writeMessageToChatHistory(String msg) {
-//        messageLog = msg + "\n";
-//        try {
-//            if (messageLog != null)
-//
-//            {
-//                FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_APPEND);
-//                fos.write(messageLog.getBytes());
-//                fos.close();
-//                Log.d(TAG, "****WRITE CHATHISTORY*** :" + messageLog);
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    //reads messages as strings from file and displays, NOT USED
-//    public void readMessageFromChatHistory(String file) {
-//
-//
-//        try {
-//            String line;
-//            FileInputStream in = openFileInput(file);
-//
-//            InputStreamReader inputStreamReader = new InputStreamReader(in);
-//            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//            StringBuilder sb = new StringBuilder();
-//            while ((line = bufferedReader.readLine()) != null) {
-//                sb.append(line + "\n");
-//
-//
-//                //Log.d(TAG, "****READ CHATHISTORY*** :" + line);
-//                mChatView.receiveMessage("recall " + line);
-//
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
     public static void writeObject(Context context, String file, Object object) throws IOException {
         FileOutputStream fos = context.openFileOutput(file, Context.MODE_PRIVATE);
         ObjectOutputStream oos = new ObjectOutputStream(fos);

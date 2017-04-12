@@ -30,7 +30,7 @@ public class ContactsListActivity extends AppCompatActivity {
         Contact contact3 = new Contact("aaron@win-h6g4cdqot7e");
         mContacts.add(contact3);
 
-        String[] contacts = {"Aaron", "Shay", "Dean"};
+        //String[] contacts = {"Aaron", "Shay", "Dean"};
         //converts list contact to list items, simple_list_item_1 is a basic format
         //ListAdapter contactsAdapter = new ArrayAdapter<Contact>(this, android.R.layout.simple_list_item_1, mContacts);
        // ListAdapter contactsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contacts);

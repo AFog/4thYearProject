@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -34,7 +33,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.Roster;
@@ -57,7 +55,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -77,6 +74,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     boolean isHuhUser;
     private Thread registerUserTread;
     private Thread createHuhContactsThread;
+    private Thread checkUserNameAvailableThread;
     private BroadcastReceiver mBroadcastReceiver;
     private String mUsername = "admin";
     private String mPassword = "admin";
@@ -86,13 +84,17 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     private Map<String, String> attributes;
     private ArrayList<RosterContact> phoneNumbers;
     private List<RosterContact> huhContacts;
-    private Handler registerUserHnadler;
+    private Handler registerUserHandler;
     private Handler createHuhContactshandler;
+    private Handler checkUserNameAvailableHandler;
+    private Handler checkUserNameAvailableHandler2;
     private SharedPreferences prefs;
     private Context mApplicationContext;
+    private Boolean isUserNameAvailable;
 
     // UI references.
     private TextView reisterTextView;
+    private TextView userNameAvailTextView;
     private ProgressBar progressBar;
     private AutoCompleteTextView mJidView;
     private EditText mPasswordView;
@@ -104,16 +106,18 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
+        //mApplicationContext = getApplicationContext();
         //initialise huhContacts
         huhContacts = new ArrayList<>();
-
+        isUserNameAvailable = false;
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         // Set up the register form.
 
         progressBar = (ProgressBar) findViewById(R.id.registration_progress);
         reisterTextView = (TextView)findViewById(R.id.registrationoutput);
+        userNameAvailTextView = (TextView)findViewById(R.id.userNotAvailableText);
+
         mJidView = (AutoCompleteTextView) findViewById(R.id.registerJid);
         //get permisssion to use phone contacts
         populateAutoComplete();
@@ -133,22 +137,56 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+
+
         Button mJidSignInButton = (Button) findViewById(R.id.jid_register_in_button);
         mJidSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Button attempt register ");
+//                isUserNameAvailable = true;
+//                mLoginFormView.setVisibility(View.GONE);
+//                progressBar.setVisibility(View.VISIBLE);
+//                reisterTextView.setVisibility(View.VISIBLE);
+//                userNameAvailTextView.setVisibility(View.GONE);
 
-                attempRegister();
-                mLoginFormView.setVisibility(View.INVISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                reisterTextView.setVisibility(View.VISIBLE);
+//                checkUserNameAvailableHandler = new Handler() {
+//                    @Override
+//                    public void handleMessage(Message msg) {
+//                        progressBar.setVisibility(View.GONE);
+//                        reisterTextView.setVisibility(View.GONE);
+//                        mLoginFormView.setVisibility(View.VISIBLE);
+//                        userNameAvailTextView.setVisibility(View.VISIBLE);
+//
+//                        if (isUserNameAvailable) {
+//
+//                            Log.d(TAG, "RegisterNew User Handler ");
+//
+//                            attempRegister();
+//                            mLoginFormView.setVisibility(View.GONE);
+//                            progressBar.setVisibility(View.VISIBLE);
+//                            reisterTextView.setVisibility(View.VISIBLE);
+//                        }
+//                        else{
+//
+//                            Toast.makeText(getApplication(), "Number is already Registered", Toast.LENGTH_LONG).show();
+//
+//                        }
+//                    }
+//                };
+                    attempRegister();
+                    mLoginFormView.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    reisterTextView.setVisibility(View.VISIBLE);
 
             }
         });
 
+
+
+
         //when registration completes create contacts
-        registerUserHnadler = new Handler() {
+        registerUserHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Log.d(TAG, "RegisterNew User Handler ");
@@ -162,8 +200,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             public void handleMessage(Message msg) {
                 Log.d(TAG, "Create Huh Contacts  Handler Saving huhContsct to shared prefs ");
                 reisterTextView.setText("Contact list built... logging in");
-                startServiceAndLogin();
-            }
+                saveCredentialsAndGoToLogin();            }
         };
 
     }
@@ -304,6 +341,78 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
     }
 
+    public Boolean checkUserNameAvailable() {
+        Runnable registerUserRun = new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+
+                    Log.d(TAG, "Connecting to server " + mServiceName);
+                    XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder =
+                            XMPPTCPConnectionConfiguration.builder();
+                    builder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+                    builder.setServiceName(mServiceName);
+                    builder.setUsernameAndPassword(mUsername, mPassword);
+                    builder.setRosterLoadedAtLogin(true);
+                    builder.setResource("Huh");
+
+                    SASLMechanism mechanism = new SASLDigestMD5Mechanism();
+                    SASLAuthentication.registerSASLMechanism(mechanism);
+                    SASLAuthentication.blacklistSASLMechanism("SCRAM-SHA-1");
+                    SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
+
+                    mConnection = new XMPPTCPConnection(builder.build());
+                    //Listens fo connection events and calls connevction listener method based on result
+                    //mConnection.addConnectionListener((ConnectionListener) mApplicationContext);
+                    mConnection.connect();
+                    //if authentication successful authenticated(XMPPConnection connection) method called
+
+                    mConnection.login();
+
+                    AccountManager accountManager = AccountManager.getInstance(mConnection);
+                    Log.d(TAG, "CREATE ACCOUNT: supports creation : - " + accountManager.supportsAccountCreation());
+
+                    try {
+                        accountManager.createAccount(jidPhoneNumber, password);
+                        isUserNameAvailable = true;
+                    } catch (SmackException.NoResponseException e) {
+                        Log.d(TAG, "CREATE ACCOUNT: NoResponseException " + e.getMessage());
+                        e.printStackTrace();
+                        e.getMessage();
+                        isUserNameAvailable = false;
+                        Log.d(TAG, "User already exists " + isUserNameAvailable);
+
+                    } catch (XMPPException.XMPPErrorException e) {
+                        Log.d(TAG, "CREATE ACCOUNT: XMPPErrorException " + e.getMessage());
+                        e.printStackTrace();
+                        e.getMessage();
+                        Log.d(TAG, "User Names available ");
+                        isUserNameAvailable = false;
+                    } catch (SmackException.NotConnectedException e) {
+                        Log.d(TAG, "CREATE ACCOUNT: NotConnectedException " + e.getMessage());
+                        e.printStackTrace();
+                        e.getMessage();
+                    }
+
+                    if(isUserNameAvailable) {
+                        mConnection.disconnect();
+                    }
+
+                } catch (Exception e) {
+                    Log.d(TAG, "Not Connected with server ***************************************************");
+                    e.printStackTrace();
+                }
+                checkUserNameAvailableHandler.sendEmptyMessage(0);
+            }
+        };
+
+        checkUserNameAvailableThread = new Thread(registerUserRun);
+        checkUserNameAvailableThread.start();
+
+       return isUserNameAvailable;
+    }
+
     public boolean registerNewUser() throws IOException, XMPPException, SmackException {
 
         Runnable registerUserRun = new Runnable() {
@@ -348,12 +457,12 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
                         Log.d(TAG, "CREATE ACCOUNT: XMPPErrorException " + e.getMessage());
                         e.printStackTrace();
                         e.getMessage();
+                        Log.d(TAG, "User already exists");
                     } catch (SmackException.NotConnectedException e) {
                         Log.d(TAG, "CREATE ACCOUNT: NotConnectedException " + e.getMessage());
                         e.printStackTrace();
                         e.getMessage();
                     }
-
 //                    Log.d(TAG,"Connected with server ***************************************************");
 //                    Intent intent = new Intent(getApplicationContext(), ConnectedActivity.class);
 //                    startActivity(intent);
@@ -369,7 +478,8 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
                     Log.d(TAG, "Not Connected with server ***************************************************");
                     e.printStackTrace();
                 }
-                registerUserHnadler.sendEmptyMessage(0);
+                    registerUserHandler.sendEmptyMessage(0);
+
             }
         };
 
@@ -596,12 +706,20 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         prefs.edit()
                 .putString("xmpp_jid", mJidView.getText().toString())
                 .putString("xmpp_password", mPasswordView.getText().toString())
+                .putString("language", "en")
                 .putBoolean("xmpp_logged_in",true)
                 .putBoolean("xmpp_user_registered",true)
                 .commit();
 
 //        Intent intent = new Intent(this, LoginActivity.class);
 //        startActivity(intent);
+//        finish();
+
+        //Start the service
+        Log.d(TAG,"StartService called from Registration.");
+        //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+        Intent i1 = new Intent(this,HuhConnectionService.class);
+        startService(i1);
         finish();
     }
 

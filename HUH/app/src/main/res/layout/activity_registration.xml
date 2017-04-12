@@ -11,6 +11,20 @@
     tools:context="com.aaronfogarty.huh.RegistrationActivity">
 
     <!-- Login progress -->
+
+    <TextView
+        android:id="@+id/userNotAvailableText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_above="@+id/registration_progress"
+        android:text="This number is already registered with Huh"
+        android:textColor="@color/text_color"
+        android:visibility="gone"
+        />
+
+
     <ProgressBar
         android:id="@+id/registration_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -35,9 +49,11 @@
         />
 
     <ScrollView
+
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/registration_progress">
 
         <LinearLayout
             android:id="@+id/jid_login_form"
@@ -87,4 +103,5 @@
 
         </LinearLayout>
     </ScrollView>
+
 </LinearLayout>

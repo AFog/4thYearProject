@@ -99,4 +99,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void goToLanguages(View view){
+
+        Intent intent = new Intent(this, LanguageSelectActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToPersonView(View view){
+
+        Intent intent = new Intent(this, PersonalityInsightsActivity.class);
+        startActivity(intent);
+    }
 }

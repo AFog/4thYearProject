@@ -6,7 +6,7 @@
     <string name="translation_text_view">Enter Text to Translate</string>
     <string name="Translated_text_here">Tranlated text will appear here</string>
     <string name="ToTranslateButton">Translate</string>
-    <string-array name="Languages">
+    <string-array name="Languages1">
         <item>Select a Language</item>
         <item>German</item>
         <item>French</item>
@@ -42,5 +42,7 @@
     <string name="prompt_email">emailHere</string>
     <string name="registerJid">Enter your Phone Number</string>
     <string name="register">Register</string>
+    <string name="goToLanguagesButton">Language Select</string>
+    <string name="goToPeron">Person</string>
 
 </resources>
