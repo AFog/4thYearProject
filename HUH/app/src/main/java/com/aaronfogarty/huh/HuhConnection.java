@@ -82,7 +82,7 @@ public class HuhConnection implements ConnectionListener {
     private static List<String> unavailableMessages;
     private static List<String> offlineMessages;
     private String translatedText;
-    private String baseLanguage = "ja";
+    private String baseLanguage;
     private static List<RosterContact> huhContacts;
     boolean isHuhUser;
 
@@ -110,6 +110,8 @@ public class HuhConnection implements ConnectionListener {
                 .getString("xmpp_jid", null);
         mPassword = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("xmpp_password", null);
+        baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+                .getString("language", "en");
 
         if (jid != null) {
             mUsername = jid.split("@")[0];
@@ -727,6 +729,9 @@ public class HuhConnection implements ConnectionListener {
     }
 
     public String translateMessageText2(String text, String toLanguage) {
+
+        baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+                .getString("language", "en");
 
         String output = "";
 

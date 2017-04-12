@@ -51,20 +51,19 @@ public class LanguageSelectActivity extends AppCompatActivity {
 
                         Log.d("names ", languageName.get(position));
                         Log.d("iso ", languageIso.get(position));
-                        saveLanguageSelect();
+                        saveLanguageSelect(languageIso.get(position));
                     }
                 }
         );
     }
-    private void saveLanguageSelect() {
+    private void saveLanguageSelect(String language) {
 
         Log.d("Language select: ","saveLanguageSelect() called.");
         //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit()
-                .putString("language", "en")
-                .putBoolean("xmpp_logged_in",true)
+                .putString("language",language)
                 .commit();
 
     }
