@@ -52,8 +52,10 @@ public class ChatActivity extends AppCompatActivity {
     private String messageLog;
     private String userJid;
     private String FILENAME;
+    private String PERSONHISTORYFILE;
     //HashSet<HuhMessage> ChatHistoryList;
     List<HuhMessage> ChatHistoryList;
+    List<String> personChatHistoryList;
     List<HuhMessage> cachedEntries;
     List<String> unavailableMessages;
     List<String> offlineMessages;
@@ -122,6 +124,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     //Saves message to internal storage
                     writeToChatHistoryList(userJid,contactJid, mChatView.getTypedString(), true);
+                    writeToPersonHistory(mChatView.getTypedString());
                     //Update the chat view.
                     mChatView.sendMessage();
 
@@ -141,6 +144,7 @@ public class ChatActivity extends AppCompatActivity {
             displayJid = contactJid.split("@")[0];
         }
         FILENAME = "Chat.History" + userJid + contactJid;
+        PERSONHISTORYFILE = "CHhst.History" + userJid;
         Log.d(TAG, "(onCreate) Creating a file name for chatHistory. FILENAME: " + FILENAME);
         setTitle(displayJid);
 
@@ -246,24 +250,29 @@ public class ChatActivity extends AppCompatActivity {
     //Saves message to internal storage
     public void writeToChatHistoryList(String sender, String receiver, String msg, boolean isMine) {
 
-        //Log.d(TAG, "INSIDES WRITELIST line 244, Body: " + msg);
-        // HashSet<HuhMessage> ChatHistoryList = new HashSet<HuhMessage>();
-//        if(userJid == receiver){
-//            isMine = true;
-//        }
-
         HuhMessage m = new HuhMessage(sender,receiver, msg, isMine);
         ChatHistoryList.add(m);
         try {
             // Save the list of entries to internal storage
             ChatActivity.writeObject(this, FILENAME, ChatHistoryList);
-
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         }
 
     }
 
+    public void writeToPersonHistory(String msg){
+        Log.d(TAG,"saving message to personal history");
+
+        personChatHistoryList.add(msg);
+        try {
+            // Save the list of entries to internal storage
+            ChatActivity.writeObject(this, FILENAME, personChatHistoryList);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+    }
     //Reads message from internal storage
     public void readFromChatHistoryList() {
         try {
