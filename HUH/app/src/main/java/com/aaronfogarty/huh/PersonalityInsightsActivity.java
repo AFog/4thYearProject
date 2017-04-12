@@ -23,16 +23,21 @@ public class PersonalityInsightsActivity extends AppCompatActivity {
 //    ObjectNode outterNode = nodeFactory.objectNode();
 
     private Context mApplicationContext;
-    private List<HuhMessage> cachedEntries;
+    private List<String> personChatHistoryList;
     private String chatHistory;
     private String FILENAME;
     private String TAG = "PersonalityInsights ";
-
+    private String PERSONHISTORYFILE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personality_insights);
+        FILENAME = getUserHistoryFileName();
+
+
+        readFromChatHistoryList();
+
 
 //        objectNode.put("content", "test values");
 //        arrayNode.add(objectNode);
@@ -69,19 +74,13 @@ public class PersonalityInsightsActivity extends AppCompatActivity {
     public void readFromChatHistoryList() {
         try {
             // Retrieve the list from internal storage
-            cachedEntries = (List<HuhMessage>) readObject(this, FILENAME);
+            personChatHistoryList = (List<String>) readObject(this, FILENAME);
             // Display the items from the list retrieved.
-            for (HuhMessage entry : cachedEntries) {
-                //Log.d(TAG, "line 231" + entry.sender);
-                // Log.d(TAG, "INSIDES ReadList line 233" + entry.sender);
-                if(entry.isMine == true){
-                    chatHistory = chatHistory+ ". "+ entry.body;
-                }
-                if (entry.isMine == false){
-                    //if message not the users do something
-                }
-
+            for (String entry : personChatHistoryList) {
+                Log.d(TAG,"PersonHistory entry: " + entry);
+                chatHistory = chatHistory + "." + entry;
             }
+            Log.d(TAG,"PersonHistory file: " + chatHistory);
 
         } catch (ClassNotFoundException | IOException e) {
             Log.e(TAG, e.getMessage());
@@ -89,10 +88,13 @@ public class PersonalityInsightsActivity extends AppCompatActivity {
 
     }
 
-    public void getUserHistoryFileName(){
-        mApplicationContext =  getApplicationContext();
+    public String getUserHistoryFileName(){
+        mApplicationContext = getApplicationContext();
         String jid = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("xmpp_jid", null);
+        PERSONHISTORYFILE = "Chat.History" + jid;
+
+        return PERSONHISTORYFILE;
     }
 
 }

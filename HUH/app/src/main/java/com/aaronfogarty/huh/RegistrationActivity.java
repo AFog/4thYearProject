@@ -182,7 +182,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             @Override
             public void handleMessage(Message msg) {
                 Log.d(TAG, "RegisterNew User Handler ");
-                reisterTextView.setText("Huh Account Created list list built... Builing contact list, please wait");
+                reisterTextView.setText("Huh Account Created... Builing contact list, please wait");
 
                 createHuhContacts();
             }

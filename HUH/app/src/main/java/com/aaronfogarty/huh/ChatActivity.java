@@ -144,7 +144,7 @@ public class ChatActivity extends AppCompatActivity {
             displayJid = contactJid.split("@")[0];
         }
         FILENAME = "Chat.History" + userJid + contactJid;
-        PERSONHISTORYFILE = "CHhst.History" + userJid;
+        PERSONHISTORYFILE = "Chat.History" + userJid;
         Log.d(TAG, "(onCreate) Creating a file name for chatHistory. FILENAME: " + FILENAME);
         setTitle(displayJid);
 
@@ -153,6 +153,7 @@ public class ChatActivity extends AppCompatActivity {
         unregisterReceiver(offlineBroadcastReceiver);
 
         chatHistory();
+        personChatHistory();
 
     }
 
@@ -267,7 +268,7 @@ public class ChatActivity extends AppCompatActivity {
         personChatHistoryList.add(msg);
         try {
             // Save the list of entries to internal storage
-            ChatActivity.writeObject(this, FILENAME, personChatHistoryList);
+            ChatActivity.writeObject(this, PERSONHISTORYFILE, personChatHistoryList);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -309,6 +310,25 @@ public class ChatActivity extends AppCompatActivity {
                 // Retrieve the list from internal storage
                 ChatHistoryList = (List<HuhMessage>) readObject(this, FILENAME);
                 Log.d(TAG, "Initialising ChatHistory with file " + FILENAME);
+            }
+
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        readFromChatHistoryList();
+    }
+
+    public void personChatHistory() {
+        try {
+            if (!fileExistance(PERSONHISTORYFILE)) {
+                personChatHistoryList = new ArrayList<String>();
+                Log.d(TAG, "Creating NEW PersonChatHistory " + PERSONHISTORYFILE);
+
+            } else {
+                // Retrieve the list from internal storage
+                personChatHistoryList = (List<String>) readObject(this, PERSONHISTORYFILE);
+                Log.d(TAG, "Initialising PersonChatHistory with file " + PERSONHISTORYFILE);
             }
 
         } catch (ClassNotFoundException | IOException e) {
