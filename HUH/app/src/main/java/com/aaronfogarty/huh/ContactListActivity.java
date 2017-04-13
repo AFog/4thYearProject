@@ -26,7 +26,6 @@ public class ContactListActivity extends AppCompatActivity {
     private RecyclerView contactsRecyclerView;
     private ContactAdapter mAdapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,40 +37,17 @@ public class ContactListActivity extends AppCompatActivity {
         ContactModel model = ContactModel.get(getBaseContext());
         List<Contact> contacts = model.getContacts();
 
-  //      ContactModel model = ContactModel.get(getBaseContext());
-  //        List<Contact> contacts = getPhoneContacts();
-
         mAdapter = new ContactAdapter(contacts);
         contactsRecyclerView.setAdapter(mAdapter);
     }
 
-    public List<Contact> getPhoneContacts(){
-        ArrayList<RosterContact> phoneContacts = new ArrayList<>();
-        List<Contact> contacts = new ArrayList<>();
 
-        // load Phone Contacts from preference
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        try {
-            phoneContacts = (ArrayList<RosterContact>) ObjectSerializer.deserialize(prefs.getString("huhContacts", ObjectSerializer.serialize(new ArrayList<RosterContact>())));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        for (RosterContact c:phoneContacts) {
-            Contact temp = new Contact(c.getphoneNumber());
-            contacts.add(temp);
-            Log.d(TAG, "returned roster contacts: \nUser: " + c.getJid() + "\nPhoneNumber: " + c.getphoneNumber());
-        }
-        return contacts;
-    }
 
-    //innner class
     private class ContactHolder extends RecyclerView.ViewHolder
     {
         private TextView contactTextView;
         private Contact mContact;
-        public ContactHolder (View itemView)
+        public ContactHolder ( View itemView)
         {
             super(itemView);
 
@@ -85,6 +61,8 @@ public class ContactListActivity extends AppCompatActivity {
                             ,ChatActivity.class);
                     intent.putExtra("EXTRA_CONTACT_JID",mContact.getJid());
                     startActivity(intent);
+
+
                 }
             });
         }
@@ -96,8 +74,6 @@ public class ContactListActivity extends AppCompatActivity {
             if (mContact == null)
             {
                 Log.d(TAG,"Trying to work on a null Contact object ,returning.");
-               // Toast.makeText(getApplicationContext(), "HuhConnection Constructor called", Toast.LENGTH_LONG).show();
-
                 return;
             }
             contactTextView.setText(mContact.getJid());
@@ -105,14 +81,13 @@ public class ContactListActivity extends AppCompatActivity {
         }
     }
 
-//innner class
+
     private class ContactAdapter extends RecyclerView.Adapter<ContactHolder>
     {
         private List<Contact> mContacts;
 
         public ContactAdapter( List<Contact> contactList)
         {
-
             mContacts = contactList;
         }
 

@@ -48,7 +48,6 @@ public class LanguageSelectActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String languageSelected = String.valueOf(parent.getItemAtPosition(position));
                         Toast.makeText(LanguageSelectActivity.this,languageSelected,Toast.LENGTH_SHORT).show();
-
                         Log.d("names ", languageName.get(position));
                         Log.d("iso ", languageIso.get(position));
                         saveLanguageSelect(languageIso.get(position));

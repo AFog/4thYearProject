@@ -43,7 +43,7 @@ public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
 
 
-    private String contactJid, displayJid;
+    private String contactJid, contactJidDis, displayJid;
     private ChatView mChatView;
     private SendButton mSendButton;
     private BroadcastReceiver mBroadcastReceiver;
@@ -139,10 +139,15 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         //initialise contactJid
         contactJid = intent.getStringExtra("EXTRA_CONTACT_JID");
-        if( contactJid != null)
+        Log.d(TAG, "broadcast contact from listview: " + contactJid);
+        contactJidDis = intent.getStringExtra("EXTRA_CONTACT_DISPLAY");
+        Log.d(TAG, "broadcast contact from listview: " + contactJidDis);
+
+        if( contactJidDis != null)
         {
-            displayJid = contactJid.split("@")[0];
+            displayJid = contactJidDis.split("@")[0];
         }
+
         FILENAME = "Chat.History" + userJid + contactJid;
         PERSONHISTORYFILE = "Chat.History" + userJid;
         Log.d(TAG, "(onCreate) Creating a file name for chatHistory. FILENAME: " + FILENAME);

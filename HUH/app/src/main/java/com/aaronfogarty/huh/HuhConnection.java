@@ -773,7 +773,6 @@ public class HuhConnection implements ConnectionListener {
             JSONObject jsonObject = new JSONObject(response.toString());
 
             String translatedText = response.getString("translatedText");
-            // String tolanguage = response.get("targetLanguage").toString();
             String sourceLanguage = response.getString("detectedSourceLanguage");
             setTranslatedText(translatedText);
             Log.d("translateText()", "get response: " + translatedText + " detectedSourceLanguage: " + sourceLanguage);

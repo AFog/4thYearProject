@@ -44,5 +44,7 @@
     <string name="register">Register</string>
     <string name="goToLanguagesButton">Language Select</string>
     <string name="goToPeron">Person</string>
+    <string name="title_activity_contacts">Contacts</string>
+    <string name="registerJidConfirm">Re-enter your phone number</string>
 
 </resources>

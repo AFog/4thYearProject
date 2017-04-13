@@ -226,7 +226,7 @@ public class LoginActivity extends AppCompatActivity  {
 
             Log.d(TAG,"ContactListActivity started");
             //Toast.makeText(getApplicationContext(), TAG + ": ContactListActivity started", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this,ContactListActivity.class));
+            startActivity(new Intent(this,MainActivity.class));
 
             //Save the credentials and login
             saveCredentialsAndLogin();

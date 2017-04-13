@@ -141,35 +141,34 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         mJidSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Log.d(TAG, "Button attempt register ");
+                Log.d(TAG, "Button clicked ");
 //                isUserNameAvailable = true;
 //                mLoginFormView.setVisibility(View.GONE);
 //                progressBar.setVisibility(View.VISIBLE);
 //                reisterTextView.setVisibility(View.VISIBLE);
 //                userNameAvailTextView.setVisibility(View.GONE);
 //
-                checkUserNameAvailableHandler = new Handler() {
-                    @Override
-                    public void handleMessage(Message msg) {
-                        progressBar.setVisibility(View.GONE);
-                        reisterTextView.setVisibility(View.GONE);
-                        mLoginFormView.setVisibility(View.VISIBLE);
-                        userNameAvailTextView.setVisibility(View.VISIBLE);
-
-                        if (isUserNameAvailable) {
-                            Log.d(TAG, "RegisterNew User Handler ");
-                            attempRegister();
-                            mLoginFormView.setVisibility(View.GONE);
-                            progressBar.setVisibility(View.VISIBLE);
-                            reisterTextView.setVisibility(View.VISIBLE);
-                        }
-                        else{
-
-                            Toast.makeText(getApplication(), "Number is already Registered", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                };
+//                checkUserNameAvailableHandler = new Handler() {
+//                    @Override
+//                    public void handleMessage(Message msg) {
+//                        progressBar.setVisibility(View.GONE);
+//                        reisterTextView.setVisibility(View.GONE);
+//                        mLoginFormView.setVisibility(View.VISIBLE);
+//                        userNameAvailTextView.setVisibility(View.VISIBLE);
+//
+//                        if (isUserNameAvailable) {
+//                            Log.d(TAG, "RegisterNew User Handler ");
+//                            attempRegister();
+//                            mLoginFormView.setVisibility(View.GONE);
+//                            progressBar.setVisibility(View.VISIBLE);
+//                            reisterTextView.setVisibility(View.VISIBLE);
+//                        }
+//                        else{
+//
+//                            Toast.makeText(getApplication(), "Number is already Registered", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                };
 
                 attempRegister();
 
@@ -182,7 +181,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             @Override
             public void handleMessage(Message msg) {
                 Log.d(TAG, "RegisterNew User Handler ");
-                reisterTextView.setText("Huh Account Created... Builing contact list, please wait");
+                reisterTextView.setText("Account Created... Building contacts, please wait");
 
                 createHuhContacts();
             }
@@ -279,6 +278,9 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     }
 
     private void attempRegister() {
+        Log.d(TAG, "attemptRegister() ");
+        isUserNameAvailable = true;
+
         // Reset errors.
         mJidView.setError(null);
         mPasswordView.setError(null);
@@ -319,26 +321,61 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             //showProgress(true);
             //This is where the login login is fired up.
 
-           // checkUserNameAvailable();
-            Log.d(TAG, " AFTER CHECK username available " + isUserNameAvailable);
+            Log.d(TAG, "Begin check if username available, before check: " + isUserNameAvailable);
+            checkUserNameAvailable();
 
             mLoginFormView.setVisibility(View.INVISIBLE);
             progressBar.setVisibility(View.VISIBLE);
             reisterTextView.setVisibility(View.VISIBLE);
 
-            if(isUserNameAvailable) {
-                Log.d(TAG, "HERE WE BEGIN REGISTRATION");
+            checkUserNameAvailableHandler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    Log.d(TAG, "RegisterNew User Handler ");
+                    Log.d(TAG, " AFTER CHECK username available " + isUserNameAvailable);
 
-            try {
-                registerNewUser();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XMPPException e) {
-                e.printStackTrace();
-            } catch (SmackException e) {
-                e.printStackTrace();
-            }
-            }
+                    progressBar.setVisibility(View.GONE);
+                    reisterTextView.setVisibility(View.GONE);
+                    mLoginFormView.setVisibility(View.VISIBLE);
+                    userNameAvailTextView.setVisibility(View.VISIBLE);
+
+                    if (isUserNameAvailable) {
+                        Log.d(TAG, "HERE WE BEGIN REGISTRATION");
+
+                        try {
+                            registerNewUser();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (XMPPException e) {
+                            e.printStackTrace();
+                        } catch (SmackException e) {
+                            e.printStackTrace();
+                        }
+                        userNameAvailTextView.setVisibility(View.GONE);
+                        mLoginFormView.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.VISIBLE);
+                        reisterTextView.setVisibility(View.VISIBLE);
+                    }
+                    else{
+
+                        Toast.makeText(getApplication(), "Number is already Registered", Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
+
+//            if(isUserNameAvailable) {
+//                Log.d(TAG, "HERE WE BEGIN REGISTRATION");
+//
+//            try {
+//                registerNewUser();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (XMPPException e) {
+//                e.printStackTrace();
+//            } catch (SmackException e) {
+//                e.printStackTrace();
+//            }
+//            }
             Log.d(TAG, "Jid and password are valid, proceed with login");
             //Toast.makeText(getApplicationContext(), TAG + ": Jid and password are valid, proceed with login", Toast.LENGTH_LONG).show();
 
@@ -347,6 +384,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     }
 
     public Boolean checkUserNameAvailable() {
+        Log.d(TAG, "checkUserNameAvailable() ");
 
         Runnable checkUserNameAvailabe = new Runnable() {
             @Override
@@ -416,6 +454,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     }
 
     public boolean registerNewUser() throws IOException, XMPPException, SmackException {
+        Log.d(TAG, "registerNewUser() ");
 
         Runnable registerUserRun = new Runnable() {
             @Override
@@ -459,6 +498,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
                         Log.d(TAG, "CREATE ACCOUNT: XMPPErrorException " + e.getMessage());
                         e.printStackTrace();
                         e.getMessage();
+                        isUserNameAvailable=false;
                         Log.d(TAG, "User already exists");
                     } catch (SmackException.NotConnectedException e) {
                         Log.d(TAG, "CREATE ACCOUNT: NotConnectedException " + e.getMessage());

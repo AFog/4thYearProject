@@ -14,6 +14,8 @@ public class RosterContact implements Serializable{
 
     private String phoneNumber;
 
+    private  boolean isRegisterd;
+
     public RosterContact(String contactJid, String PhonNumber )
     {
         jid = contactJid;

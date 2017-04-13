@@ -48,7 +48,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ContactListActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_contacts"
+            />
+
         <activity
             android:name=".ChatActivity"
             android:screenOrientation="portrait" />
