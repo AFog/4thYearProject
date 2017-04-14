@@ -5,11 +5,15 @@ package com.aaronfogarty.huh;
 
 
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,14 +31,19 @@ import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ChatMessageListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.filter.PacketFilter;
+import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.sasl.provided.SASLDigestMD5Mechanism;
@@ -67,11 +76,11 @@ public class HuhConnection implements ConnectionListener {
 
     private static final String TAG = "HuhConnection";
     private Map<String, String> attributes;
-
     private final Context mApplicationContext;
     private final String mUsername;
     private final String mPassword;
     private final String mServiceName;
+    private String contactJid;
     private XMPPTCPConnection mConnection;
     private BroadcastReceiver uiThreadMessageReceiver;//Receives messages from the ui thread.
     private BroadcastReceiver uiAvailabilityReciever;
@@ -84,12 +93,17 @@ public class HuhConnection implements ConnectionListener {
     private String translatedText;
     private String baseLanguage;
     private static List<RosterContact> huhContacts;
+    private ArrayList<RosterContact> phoneDBNumbers;
     boolean isHuhUser;
+    private Roster roster;
+    private Thread getPhoneContactsThread;
+    private Handler getPhoneContactsHandler;
 
-    public String getTranslatedText(){
+    public String getTranslatedText() {
         return translatedText;
     }
-    public void setTranslatedText(String inputText){
+
+    public void setTranslatedText(String inputText) {
         translatedText = inputText;
     }
 
@@ -121,16 +135,14 @@ public class HuhConnection implements ConnectionListener {
             mUsername = "";
             mServiceName = "";
         }
-
-        Log.d(TAG, "Getting from prefs Username: " + mUsername + "password " + mPassword);
-
+        phoneDBNumbers = new ArrayList<RosterContact>();
+        phoneContacts();
     }
 
     public void connect() throws IOException, XMPPException, SmackException {
         Log.d(TAG, "Connecting to server " + mServiceName);
 
         //Toast.makeText(mApplicationContext,TAG + "Connecting to server " + mServiceName, Toast.LENGTH_LONG).show();
-
         XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder =
                 XMPPTCPConnectionConfiguration.builder();
         builder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
@@ -158,10 +170,9 @@ public class HuhConnection implements ConnectionListener {
         mConnection.addConnectionListener(this);
 
 
-
         mConnection.connect();
         //if authentication successful authenticated(XMPPConnection connection) method called
-        Log.d(TAG,"Is user authenticated: " + mConnection.isAuthenticated());
+        Log.d(TAG, "Is user authenticated: " + mConnection.isAuthenticated());
         mConnection.login();
         hasJustLoggedIn = true;
         //  Log.d(TAG, "**************** hasJustLoggedIn @login: " + hasJustLoggedIn);
@@ -172,31 +183,90 @@ public class HuhConnection implements ConnectionListener {
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
-        Log.d(TAG, "%%%%%%%%%%%%%%Initial Login Presence set to Unavailable. User is available: "  + isAvailable);
+
+        Log.d(TAG, "%%%%%%%%%%%%%%Initial Login Presence set to Unavailable. User is available: " + isAvailable);
+
+        //admitFriendsRequest();
+
+
+        roster = mConnection.getRoster();
+        roster.reload();
+
+        roster.addRosterListener(new RosterListener() {
+            // Ignored events public void entriesAdded(Collection<String> addresses) {}
+            public void entriesDeleted(Collection<String> addresses) {}
+
+            @Override
+            public void entriesAdded(Collection<String> addresses) {
+                System.out.println("entriesAdded Presence changed:\n " );
+                //BOROADCAST
+                //Data within intent to send in a broadcast.
+                Intent intent = new Intent();
+                // sets keyword to listen out for for this broadcast
+                intent.setAction("UpdateContacts");
+                intent.setPackage(mApplicationContext.getPackageName());
+               // intent.putExtra("UpdateContactc", contactJid);
+
+                //Sends out broadcast
+                mApplicationContext.sendBroadcast(intent);
+                Log.d(TAG, "BROADCAST:(connect()) ROSTERLISTENER from broadcast sent to self");
+
+                Collection<RosterEntry> entries = roster.getEntries();
+                for (RosterEntry entry : entries) {
+                    System.out.println("Here: " + entry);
+                }
+                updateHuhContacts(entries);
+            }
+
+            public void entriesUpdated(Collection<String> addresses) {
+                System.out.println("entriesUpdated Presence changed: ");
+
+            }
+            public void presenceChanged(Presence presence) {
+                System.out.println("Presence changed: " + presence.getFrom() + " " + presence);
+            }
+        });
+
+
 
         messageListener = new ChatMessageListener() {
             @Override
             public void processMessage(Chat chat, Message message) {
 
-            //    if(message.getBody() != null){
+                //    if(message.getBody() != null){
                 String incomingMessage = message.getBody();
+                Message.Type incoming = message.getType();
+                incoming.toString();
+                Log.d(TAG, "message.Type() :" + incoming);
+
                 Log.d(TAG, "message.getBody() :" + message.getBody());
                 Log.d(TAG, "message.getFrom() :" + message.getFrom());
-               // Log.d(TAG, "message.getExtension(\"x\",\"jabber:x:delay\") :" + message.getExtension("x", "jabber:x:delay"));
-                Log.d(TAG, "message.getBody() incomingMessage before :" + incomingMessage);
+                // Log.d(TAG, "message.getExtension(\"x\",\"jabber:x:delay\") :" + message.getExtension("x", "jabber:x:delay"));
+                Log.d(TAG, "message.getBody() incomingMessage before :" );
+                Log.d(TAG, "Status For Unavailable " + isAvailable);
 
                 incomingMessage = translateMessageText2(incomingMessage, baseLanguage);
 
+                String unavailableMessage = message.getFrom() + "-*_-" + incomingMessage;
+                String test = unavailableMessage.split("-*_-")[0];
+                test = test.split("/")[0];
+                String test2 = unavailableMessage.split("-*_-")[1];
+
+                Log.d(TAG, "BEFORE OFFLINE ADD TO LIST unavailableMessage: " + unavailableMessage );
+
                 if (hasJustLoggedIn) {
                     //Handles offline messages when reconnected
-                    offlineMessages(message);
+                    offlineMessages(unavailableMessage);
                 }
 
+
+                Log.d(TAG, "TESTING SPLIT from: " + test + " message " + test2 );
+
                 //handles messages when user is unavailable
-                    unavailableMessages(message.getBody());
+                unavailableMessages(unavailableMessage);
 
                 String from = message.getFrom();
-                String contactJid = "";
+                contactJid = "";
                 if (from.contains("/")) {
                     contactJid = from.split("/")[0];
                     Log.d(TAG, "The real jidPhoneNumber is :" + contactJid);
@@ -206,7 +276,7 @@ public class HuhConnection implements ConnectionListener {
 
                 mConnection.setPacketReplyTimeout(0);
 
-                Log.d(TAG, "^^^^^^^^^^^^^**************** iaAvailable before broadcast: " + isAvailable );
+                Log.d(TAG, "^^^^^^^^^^^^^**************** iaAvailable before broadcast: " + isAvailable);
                 if (isAvailable) {
                     broadcastunAvailableArray();
                     unavailableMessages.clear();
@@ -244,6 +314,97 @@ public class HuhConnection implements ConnectionListener {
         reconnectionManager.enableAutomaticReconnection();
     }
 
+
+    public void admitFriendsRequest() {
+        Log.d(TAG, "admitFriendsRequest()");
+
+        mConnection.getRoster().setSubscriptionMode(Roster.SubscriptionMode.manual);
+        mConnection.addPacketListener(new PacketListener() {
+            public void processPacket(Packet paramPacket) {
+                System.out.println("\n\n");
+                if (paramPacket instanceof Presence) {
+                    Presence presence = (Presence) paramPacket;
+                    String email = presence.getFrom();
+                    System.out.println("chat invite status changed by user: : " + email + " calling listner");
+
+                    System.out.println("presence: " + presence.getFrom() + "; type: " + presence.getType() + "; to: " + presence.getTo() + "; " + presence.toXML());
+
+                    Roster roster = mConnection.getRoster();
+                    for (RosterEntry rosterEntry : roster.getEntries()) {
+                        System.out.println("jid: " + rosterEntry.getUser() + "; type: " + rosterEntry.getType() + "; status: " + rosterEntry.getStatus());
+                    }
+
+                    System.out.println("\n\n\n");
+                    if (presence.getType().equals(Presence.Type.subscribe)) {
+                        Presence newp = new Presence(Presence.Type.subscribed);
+                        newp.setMode(Presence.Mode.available);
+                        newp.setPriority(24);
+                        newp.setTo(presence.getFrom());
+
+                        try {
+                            mConnection.sendPacket(newp);
+                        } catch (SmackException.NotConnectedException e) {
+                            e.printStackTrace();
+                        }
+
+                        Presence subscription = new Presence(Presence.Type.subscribe);
+                        subscription.setTo(presence.getFrom());
+                        try {
+                            mConnection.sendPacket(subscription);
+                        } catch (SmackException.NotConnectedException e) {
+                            e.printStackTrace();
+                        }
+
+                    } else if (presence.getType().equals(Presence.Type.unsubscribe)) {
+                        Presence newp = new Presence(Presence.Type.unsubscribed);
+                        newp.setMode(Presence.Mode.available);
+                        newp.setPriority(24);
+                        newp.setTo(presence.getFrom());
+                        try {
+                            mConnection.sendPacket(newp);
+                        } catch (SmackException.NotConnectedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+        }, new PacketFilter() {
+            public boolean accept(Packet packet) {
+                if (packet instanceof Presence) {
+                    Presence presence = (Presence) packet;
+                    if (presence.getType().equals(Presence.Type.subscribed) || presence.getType().equals(Presence.Type.subscribe)
+                            || presence.getType().equals(Presence.Type.unsubscribed) || presence.getType().equals(Presence.Type.unsubscribe)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        mConnection.getRoster().addRosterListener(new RosterListener() {
+            public void presenceChanged(Presence presence) {
+                System.out.println(presence.getFrom() + "presenceChanged");
+
+            }
+
+            public void entriesUpdated(Collection<String> presence) {
+                System.out.println("entriesUpdated");
+
+            }
+
+            public void entriesDeleted(Collection<String> presence) {
+                System.out.println("entriesDeleted");
+
+            }
+
+            public void entriesAdded(Collection<String> presence) {
+                System.out.println("entriesAdded");
+            }
+        });
+
+    }
+
     private void broadCastMessageReceiver() {
         Log.d(TAG, "line 107 & 228 setupUiThreadBroadCastMessageReceiver() ");
 
@@ -269,18 +430,18 @@ public class HuhConnection implements ConnectionListener {
 
     }
 
-    private void broadCastAvailabilityReceiver(){
+    private void broadCastAvailabilityReceiver() {
 
         Log.d(TAG, "setupUiThreadtAvailabilityReceiver() ");
         // inialise BroadcastReceiver to receive messages from the ui thread ChatActivity to check availability.
-         uiAvailabilityReciever = new BroadcastReceiver() {
+        uiAvailabilityReciever = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 //Check if the Intents purpose is to send the message.
                 String action = intent.getAction();
                 if (action.equals(HuhConnectionService.UI_AVAILABLE)) {
                     isAvailable = true;
-                    Log.d(TAG, "Presence set to Available. User is available: "  + isAvailable);
+                    Log.d(TAG, "Presence set to Available. User is available: " + isAvailable);
                     Presence presence = new Presence(Presence.Type.available);
                     try {
                         mConnection.sendPacket(presence);
@@ -288,17 +449,17 @@ public class HuhConnection implements ConnectionListener {
                         e.printStackTrace();
                     }
 
-                    if(isAvailable && hasJustLoggedIn){
+                    if (isAvailable && hasJustLoggedIn) {
                         broadcastOfflineArray();
                         offlineMessages.clear();
                         hasJustLoggedIn = false;
-                        Log.d(TAG, "^^^^^^^^^^^^^ broadcast: " + isAvailable  + " hasJustLoggedIn: " + hasJustLoggedIn);
+                        Log.d(TAG, "^^^^^^^^^^^^^ broadcast: " + isAvailable + " hasJustLoggedIn: " + hasJustLoggedIn);
 
                     }
                 }
-                if(action.equals(HuhConnectionService.UI_UNAVAILABLE)){
+                if (action.equals(HuhConnectionService.UI_UNAVAILABLE)) {
                     isAvailable = false;
-                    Log.d(TAG, "Presence set to Unavailable. User is available: "  + isAvailable);
+                    Log.d(TAG, "Presence set to Unavailable. User is available: " + isAvailable);
                     Presence presence = new Presence(unavailable);
                     try {
                         mConnection.sendPacket(presence);
@@ -381,27 +542,36 @@ public class HuhConnection implements ConnectionListener {
 //    }
 
     //handles messages when user unavailable
-    public void unavailableMessages(String message){
+    public void unavailableMessages(String message) {
         Log.d(TAG, "unavailableMessages()");
         unavailableMessages = new ArrayList<String>();
         unavailableMessages.add(message);
-       // unavailableMessages.add(message.getBody());
-        for (String s:unavailableMessages) {
+        // unavailableMessages.add(message.getBody());
+        for (String s : unavailableMessages) {
             Log.d(TAG, "unavailableMessages ARRAYLIST: " + s);
         }
     }
 
+//    //handles messages when user unavailable
+//    public void offlineMessages(Message message) {
+//        Log.d(TAG, "offlineMessages()");
+//        offlineMessages.add(message.getBody());
+//        //offlineMessages.add(message.getBody());
+//        for (String s : offlineMessages) {
+//            Log.d(TAG, "offlineMessages ARRAYLIST: " + s);
+//        }
+//    }
     //handles messages when user unavailable
-    public void offlineMessages(Message message){
+    public void offlineMessages(String message) {
         Log.d(TAG, "offlineMessages()");
-        offlineMessages.add(message.getBody());
+        offlineMessages.add(message);
         //offlineMessages.add(message.getBody());
-        for (String s:offlineMessages) {
+        for (String s : offlineMessages) {
             Log.d(TAG, "offlineMessages ARRAYLIST: " + s);
         }
     }
 
-    public void broadcastunAvailableArray(){
+    public void broadcastunAvailableArray() {
 
         ///ADDED
         //BOROADCAST
@@ -412,6 +582,7 @@ public class HuhConnection implements ConnectionListener {
         ArraySendintent.setAction(HuhConnectionService.UNAVAILABLE_MESSAGE);
         ArraySendintent.setPackage(mApplicationContext.getPackageName());
         ArraySendintent.putStringArrayListExtra(HuhConnectionService.UNAVAILABLE_MESSAGE_ARRAYLIST, (ArrayList<String>) unavailableMessages);
+        //ArraySendintent.putExtra("FROM_JID", contactJid);
 
         //Sends out broadcast
         mApplicationContext.sendBroadcast(ArraySendintent);
@@ -419,7 +590,7 @@ public class HuhConnection implements ConnectionListener {
         /////
     }
 
-    public void broadcastOfflineArray(){
+    public void broadcastOfflineArray() {
 
         ///ADDED
         //BOROADCAST
@@ -430,6 +601,7 @@ public class HuhConnection implements ConnectionListener {
         ArraySendintent.setAction(HuhConnectionService.OFFLINE_MESSAGE);
         ArraySendintent.setPackage(mApplicationContext.getPackageName());
         ArraySendintent.putStringArrayListExtra(HuhConnectionService.OFFLINE_MESSAGE_ARRAYLIST, (ArrayList<String>) offlineMessages);
+       // ArraySendintent.putExtra("FROM_JID", contactJid);
 
         //Sends out broadcast
         mApplicationContext.sendBroadcast(ArraySendintent);
@@ -495,48 +667,99 @@ public class HuhConnection implements ConnectionListener {
         queue.add(jsObjRequest);
 
         output = getTranslatedText();
-        Log.d(TAG,"INSIDE TRANSLATE output: "+ output);
-        Log.d(TAG,"INSIDE TRANSLATE translatedText: "+translatedText);
-        Log.d(TAG,"INSIDE TRANSLATE getTranlayedText: "+ getTranslatedText());
+        Log.d(TAG, "INSIDE TRANSLATE output: " + output);
+        Log.d(TAG, "INSIDE TRANSLATE translatedText: " + translatedText);
+        Log.d(TAG, "INSIDE TRANSLATE getTranlayedText: " + getTranslatedText());
 
         translatedText = "";
         return output;
     }
 
     //Retrieves Users Roster contacts from Openfire server
-    public ArrayList <RosterContact>  getRosterContacts(){
+    public ArrayList<RosterContact> getRosterContacts() {
         Log.d(TAG, "getRosterContacs()");
 
         mConnection.getRoster();
-        Roster roster =  mConnection.getRoster();
-        Collection <RosterEntry> entries = roster.getEntries();
+        Roster roster = mConnection.getRoster();
+        Collection<RosterEntry> entries = roster.getEntries();
         ArrayList<RosterContact> rosterEntries = new ArrayList<>();
         for (RosterEntry entry : entries) {
-            Log.d(TAG, "Here: " + entry + " \nUser: " + entry.getUser() + "Name" + entry.getName() + "\nStatus " + entry.getStatus() + "\nType " + entry.getType() + "\nGroup " + entry.getGroups() );
+            Log.d(TAG, "Here: " + entry + " \nUser: " + entry.getUser() + "Name" + entry.getName() + "\nStatus " + entry.getStatus() + "\nType " + entry.getType() + "\nGroup " + entry.getGroups());
             RosterContact tempContact = new RosterContact(entry.getName(), entry.getUser());
             rosterEntries.add(tempContact);
         }
         return rosterEntries;
     }
 
-    public void getPhoneContacts(){
-        ArrayList<RosterContact> phoneContacts = new ArrayList<RosterContact>();
+    public void updateHuhContacts(Collection<RosterEntry> newUsers ){
+
+        ArrayList<RosterContact> huhContacts = new ArrayList<RosterContact>();
+
+//        Runnable getPhoneContactsDB = new Runnable() {
+//            @Override
+//            public void run() {
+//                phoneContacts();
+//            }
+//
+//        };
+//        getPhoneContactsThread = new Thread(getPhoneContactsDB);
+//        getPhoneContactsThread.start();
+//
+//        getPhoneContactsHandler = new Handler() {
+//            @Override
+//            public void handleMessage(android.os.Message msg) {
+//                Log.d(TAG, "getPhoneContactsDB  Handler ");
+//                getPhoneContacts();
+//            }
+//        };
+        phoneContacts();
+        getPhoneContacts();
+
+        for (RosterEntry entry : newUsers){
+             String newUserJid = entry.toString().split("@")[0];
+            Log.d(TAG, "Loop1 New user name " + newUserJid);
+
+            for(RosterContact phoneContact : phoneDBNumbers){
+                Log.d(TAG, "Loop1 New user name " + newUserJid + " == " + phoneContact.getphoneNumber());
+
+                if(phoneContact.getphoneNumber().equals(newUserJid)){
+                    huhContacts.add(phoneContact);
+                    Log.d(TAG, "Loop2 Add user name " + newUserJid + " == " + phoneContact.getphoneNumber());
+                }
+            }
+        }
+
+        try {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mApplicationContext);
+            prefs.edit().putString("huhContacts", ObjectSerializer.serialize((Serializable) huhContacts)).commit();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        for (RosterContact c : huhContacts) {
+            Log.d(TAG, "AFTER UPDATE: New huhContacts: Phone" + c.getphoneNumber() + " Name: " + c.getJid());
+        }
+
+    }
+
+    public void getPhoneContacts() {
+        Log.d(TAG, "getPhoneContactsFromprefs()");
+        phoneDBNumbers = new ArrayList<RosterContact>();
         // load Phone Contacts from preference
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mApplicationContext);
         try {
-            phoneContacts = (ArrayList<RosterContact>) ObjectSerializer.deserialize(prefs.getString("PhoneContacts", ObjectSerializer.serialize(new ArrayList<RosterContact>())));
+            phoneDBNumbers = (ArrayList<RosterContact>) ObjectSerializer.deserialize(prefs.getString("PhoneContacts", ObjectSerializer.serialize(new ArrayList<RosterContact>())));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        for (RosterContact c:phoneContacts) {
-        Log.d(TAG, "returned roster contacts: \nUser: " + c.getJid() + "\nPhoneNumber: " + c.getphoneNumber());
+        for (RosterContact c : phoneDBNumbers) {
+            Log.d(TAG, "getPhoneContactsFromprefs getPhoneContacts() User: " + c.getJid() + "PhoneNumber: " + c.getphoneNumber());
 
         }
     }
 
-    public void createHuhContacts(){
+    public void createHuhContacts() {
         Log.d(TAG, "createHuhContacts()");
 
         huhContacts = new ArrayList<>();
@@ -553,12 +776,12 @@ public class HuhConnection implements ConnectionListener {
         }
 
         //check if phone contact exists on the openfire server and adds it to huhContacts ArrayList if it does
-        for (RosterContact c: phoneContacts) {
+        for (RosterContact c : phoneContacts) {
             //isHuhUser = checkIfUserExists(c.getphoneNumber());
             checkIfUserExists2(c.getphoneNumber());
             Log.d(TAG, "Is huh user: " + isHuhUser);
 
-            if(isHuhUser == true) {
+            if (isHuhUser == true) {
                 huhContacts.add(c);
                 Log.d(TAG, "Adding to huhContacts: Phone" + c.getphoneNumber() + " Name: " + c.getJid());
 
@@ -576,37 +799,109 @@ public class HuhConnection implements ConnectionListener {
         }
 
         // saves huHContacts arraylist to preference to be used in ContactModel
-       // SharedPreferences prefs1 = PreferenceManager.getDefaultSharedPreferences(this);
+        // SharedPreferences prefs1 = PreferenceManager.getDefaultSharedPreferences(this);
         try {
             prefs.edit()
-                    .putString("huhContacts", ObjectSerializer.serialize((Serializable)huhContacts))
+                    .putString("huhContacts", ObjectSerializer.serialize((Serializable) huhContacts))
                     .commit();
         } catch (IOException e1) {
             e1.printStackTrace();
         }
 
-        for (RosterContact c: huhContacts) {
-                Log.d(TAG, "huhContacts: Phone" + c.getphoneNumber() + " Name: " + c.getJid());
+        for (RosterContact c : huhContacts) {
+            Log.d(TAG, "huhContacts: Phone" + c.getphoneNumber() + " Name: " + c.getJid());
         }
     }
 
-    public ArrayList<RosterContact> gethuhContacts(){
+    public void phoneContacts() {
+        Log.d(TAG, "phoneContacts(), Getting phone Contacts");
 
-        ArrayList<RosterContact> phoneContacts = new ArrayList<RosterContact>();
+        phoneDBNumbers = new ArrayList<RosterContact>();
+        ContentResolver cr = mApplicationContext.getContentResolver();
+        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null);
+
+        if (cur.getCount() > 0) {
+            while (cur.moveToNext()) {
+                String id = cur.getString(
+                        cur.getColumnIndex(ContactsContract.Contacts._ID));
+                String name = cur.getString(cur.getColumnIndex(
+                        ContactsContract.Contacts.DISPLAY_NAME));
+
+                if (cur.getInt(cur.getColumnIndex(
+                        ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                    Cursor pCur = cr.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                            new String[]{id}, null);
+                    while (pCur.moveToNext()) {
+                        String phoneNo = pCur.getString(pCur.getColumnIndex(
+                                ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                        if (phoneNo.length() > 10) {
+
+                            //Log.d(TAG, "Fixing length Name: " + name + ", Phone No: " + phoneNo);
+                            phoneNo = phoneNo.replace("+353", "0");
+                            phoneNo = phoneNo.replace(" ", "");
+                            phoneNo = phoneNo.replaceAll("\\s+", "");
+                            // Log.d(TAG, "Fixed length Name: " + name + ", Phone No: " + phoneNo);
+
+                        }
+                        RosterContact tempContact = new RosterContact(name, phoneNo);
+                        if (!phoneDBNumbers.contains(tempContact)) {
+                            phoneDBNumbers.add(tempContact);
+                            //Log.d(TAG, "Name: " + name + ", Phone No: " + phoneNo);
+                        }
+                    }
+                    pCur.close();
+                }
+            }
+        }
+        Log.d(TAG, "phoneContacts(), Saving phone Contacts");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mApplicationContext);
+        try {
+            prefs.edit()
+                    .putString("PhoneContacts", ObjectSerializer.serialize(phoneDBNumbers))
+                    .commit();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    public void savePhnoneNumbersList(ArrayList<RosterContact> t) {
+        Log.d(TAG, "Saveing phonenumbers to arraylist to preference");
+
+        // saves phonenumbers arraylist to preference
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mApplicationContext);
+        try {
+            prefs.edit()
+                    .putString("PhoneContacts", ObjectSerializer.serialize(phoneDBNumbers))
+                    .commit();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        getPhoneContactsHandler.sendEmptyMessage(0);
+    }
+
+    public ArrayList<RosterContact> gethuhContacts() {
+        Log.d(TAG, "gethuhContacts() ");
+
+        ArrayList<RosterContact> huhContacts = new ArrayList<RosterContact>();
         // load Phone Contacts from preference
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mApplicationContext);
         try {
-            phoneContacts = (ArrayList<RosterContact>) ObjectSerializer.deserialize(prefs.getString("huhContacts", ObjectSerializer.serialize(new ArrayList<RosterContact>())));
+            huhContacts = (ArrayList<RosterContact>) ObjectSerializer.deserialize(prefs.getString("huhContacts", ObjectSerializer.serialize(new ArrayList<RosterContact>())));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return phoneContacts;
+        return huhContacts;
 
     }
 
-    public void displayhuhContacts(){
+    public void displayhuhContacts() {
         Log.d(TAG, "displayHuhContacts()");
         for (RosterContact rc : huhContacts) {
             Log.d(TAG, "creathuhContacts() huhcontacts: \nUser: " + rc.getJid() + "\nPhoneNumber: " + rc.getphoneNumber());
@@ -614,30 +909,30 @@ public class HuhConnection implements ConnectionListener {
         }
     }
 
-    public Boolean checkIfUserExists(String user){
-        Log.d(TAG, "CHECKING IF USER EXISTS: "  + user + "@win-h6g4cdqot7e");
+    public Boolean checkIfUserExists(String user) {
+        Log.d(TAG, "CHECKING IF USER EXISTS: " + user + "@win-h6g4cdqot7e");
         try {
 
-        UserSearchManager search = new UserSearchManager(mConnection);
-        Form searchForm = null;
+            UserSearchManager search = new UserSearchManager(mConnection);
+            Form searchForm = null;
             searchForm = search
                     .getSearchForm("search." + mConnection.getServiceName());
-        Form answerForm = searchForm.createAnswerForm();
-        answerForm.setAnswer("Username", true);
-        answerForm.setAnswer("search", user);
-        ReportedData data = search
-                .getSearchResults(answerForm, "search." + mConnection.getServiceName());
+            Form answerForm = searchForm.createAnswerForm();
+            answerForm.setAnswer("Username", true);
+            answerForm.setAnswer("search", user);
+            ReportedData data = search
+                    .getSearchResults(answerForm, "search." + mConnection.getServiceName());
 
-        if (data.getRows() != null) {
-            for (ReportedData.Row row: data.getRows()) {
-                for (String value: row.getValues("jidPhoneNumber")) {
-                    Log.i("USER EXISTS", " " + value);
-                    return true;
+            if (data.getRows() != null) {
+                for (ReportedData.Row row : data.getRows()) {
+                    for (String value : row.getValues("jidPhoneNumber")) {
+                        Log.i("USER EXISTS", " " + value);
+                        return true;
 
+                    }
                 }
+                // Toast.makeText( mApplicationContext,"Username Exists", Toast.LENGTH_SHORT).show();
             }
-           // Toast.makeText( mApplicationContext,"Username Exists", Toast.LENGTH_SHORT).show();
-        }
 
         } catch (SmackException.NoResponseException e) {
             e.printStackTrace();
@@ -652,7 +947,7 @@ public class HuhConnection implements ConnectionListener {
 
     }
 
-    public void checkIfUserExists2(String user){
+    public void checkIfUserExists2(String user) {
         UserSearchManager search = new UserSearchManager(mConnection);
         Form searchForm = null;
         try {
@@ -682,19 +977,18 @@ public class HuhConnection implements ConnectionListener {
         }
 
         if (data.getRows() != null) {
-            for (ReportedData.Row row: data.getRows()) {
-                for (String value: row.getValues("jid")) {
+            for (ReportedData.Row row : data.getRows()) {
+                for (String value : row.getValues("jid")) {
                     Log.i("Iteartor values......", " " + value);
                     isHuhUser = true;
 
                 }
             }
-          //  Toast.makeText(mApplicationContext, "Username Exists", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(mApplicationContext, "Username Exists", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void getAllXmppUsers()
-    {
+    public void getAllXmppUsers() {
         try {
             UserSearchManager manager = new UserSearchManager(mConnection);
             String searchFormString = "search." + mConnection.getServiceName();
@@ -786,9 +1080,9 @@ public class HuhConnection implements ConnectionListener {
         }
 
         output = getTranslatedText();
-        Log.d(TAG,"INSIDE TRANSLATE output: "+ output);
-        Log.d(TAG,"INSIDE TRANSLATE translatedText: "+translatedText);
-        Log.d(TAG,"INSIDE TRANSLATE getTranlayedText: "+ getTranslatedText());
+//        Log.d(TAG, "INSIDE TRANSLATE output: " + output);
+//        Log.d(TAG, "INSIDE TRANSLATE translatedText: " + translatedText);
+        Log.d(TAG, "INSIDE TRANSLATE getTranslatedText: " + getTranslatedText());
 
         translatedText = "";
         return output;
@@ -874,7 +1168,7 @@ public class HuhConnection implements ConnectionListener {
     public void connectionClosedOnError(Exception e) {
         HuhConnectionService.sConnectionState = ConnectionState.DISCONNECTED;
         Log.d(TAG, "ConnectionClosedOnError, error " + e.toString());
-
+//TODO try restart service here
 //        try {
 //            if (mConnection != null) {
 //                mConnection.disconnect();

@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,11 +61,13 @@ public class ChatActivity extends AppCompatActivity {
     List<String> unavailableMessages;
     List<String> offlineMessages;
     private String translatedText;
+    private String unavailablefromJid;
 
-    public String getTranslatedText(){
+    public String getTranslatedText() {
         return translatedText;
     }
-    public void setTranslatedText(String inputText){
+
+    public void setTranslatedText(String inputText) {
         translatedText = inputText;
     }
 
@@ -102,7 +105,6 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-
         mSendButton = mChatView.getSendButton();
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +125,7 @@ public class ChatActivity extends AppCompatActivity {
                     sendBroadcast(intent);
 
                     //Saves message to internal storage
-                    writeToChatHistoryList(userJid,contactJid, mChatView.getTypedString(), true);
+                    writeToChatHistoryList(userJid, contactJid, mChatView.getTypedString(), true);
                     writeToPersonHistory(mChatView.getTypedString());
                     //Update the chat view.
                     mChatView.sendMessage();
@@ -143,8 +145,7 @@ public class ChatActivity extends AppCompatActivity {
         contactJidDis = intent.getStringExtra("EXTRA_CONTACT_DISPLAY");
         Log.d(TAG, "broadcast contact from listview: " + contactJidDis);
 
-        if( contactJidDis != null)
-        {
+        if (contactJidDis != null) {
             displayJid = contactJidDis.split("@")[0];
         }
 
@@ -153,7 +154,7 @@ public class ChatActivity extends AppCompatActivity {
         Log.d(TAG, "(onCreate) Creating a file name for chatHistory. FILENAME: " + FILENAME);
         setTitle(displayJid);
 
-       // processUnavailableMessages();
+        // processUnavailableMessages();
         processOfflineMessages();
         unregisterReceiver(offlineBroadcastReceiver);
 
@@ -183,8 +184,8 @@ public class ChatActivity extends AppCompatActivity {
         getApplication().sendBroadcast(i);
         Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast that we are Available to HuhConnection broadCastAvailabilityReceiver()");
 
-       processUnavailableMessages();
-       processOfflineMessages();
+        processUnavailableMessages();
+        processOfflineMessages();
 ///START
         Runnable r = new Runnable() {
             @Override
@@ -195,19 +196,20 @@ public class ChatActivity extends AppCompatActivity {
 
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() " );
+                        Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() ");
                         String action = intent.getAction();
                         switch (action) {
                             case HuhConnectionService.NEW_MESSAGE:
                                 String from = intent.getStringExtra(HuhConnectionService.BUNDLE_FROM_JID);
                                 //body = translateMessageText(intent.getStringExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY),"fr");
                                 String body = intent.getStringExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY);
+                                Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() MESSAGE: " + from + "  ContactJid is " + contactJid);
                                 Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() MESSAGE: " + body);
                                 messageLog = body;
 
-                                // String transtext = translateMessageText(body,"ja");
-                                //   Log.d(TAG, "_____________________________---------------------______________________transtext :" + transtext);
-
+                                Log.d(TAG, "TEST Got a message from jidPhoneNumber :" + from);
+                                //TODO: Replace this with your own logic
+                                //add this check to unavailable and offline
                                 if (from.equals(contactJid)) {
                                     //String transtext = translateMessageText(body,"fr");
 
@@ -256,7 +258,7 @@ public class ChatActivity extends AppCompatActivity {
     //Saves message to internal storage
     public void writeToChatHistoryList(String sender, String receiver, String msg, boolean isMine) {
 
-        HuhMessage m = new HuhMessage(sender,receiver, msg, isMine);
+        HuhMessage m = new HuhMessage(sender, receiver, msg, isMine);
         ChatHistoryList.add(m);
         try {
             // Save the list of entries to internal storage
@@ -267,8 +269,8 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    public void writeToPersonHistory(String msg){
-        Log.d(TAG,"saving message to personal history");
+    public void writeToPersonHistory(String msg) {
+        Log.d(TAG, "saving message to personal history");
 
         personChatHistoryList.add(msg);
         try {
@@ -279,6 +281,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
+
     //Reads message from internal storage
     public void readFromChatHistoryList() {
         try {
@@ -287,13 +290,14 @@ public class ChatActivity extends AppCompatActivity {
             // Display the items from the list retrieved.
             for (HuhMessage entry : cachedEntries) {
                 //Log.d(TAG, "line 231" + entry.sender);
-               // Log.d(TAG, "INSIDES ReadList line 233" + entry.sender);
-                if(entry.isMine == true){
+                // Log.d(TAG, "INSIDES ReadList line 233" + entry.sender);
+                if (entry.isMine == true) {
                     ChatMessage cm = new ChatMessage(entry.body, 12, ChatMessage.Status.SENT);
                     mChatView.sendMessage(cm);
                 }
-                if (entry.isMine == false){
-                    mChatView.receiveMessage("Sender: " + entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
+                if (entry.isMine == false) {
+                    // mChatView.receiveMessage("Sender: " +entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
+                    mChatView.receiveMessage(entry.body);
                 }
 
             }
@@ -348,11 +352,11 @@ public class ChatActivity extends AppCompatActivity {
         return file.exists();
     }
 
-    public void processUnavailableMessages(){
+    public void processUnavailableMessages() {
         Log.d(TAG, "processUnavailableMessages()");
 
         //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
-       // unavailableMessages = new ArrayList<String>();
+        // unavailableMessages = new ArrayList<String>();
 
         unavailableBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -362,23 +366,45 @@ public class ChatActivity extends AppCompatActivity {
 
                 switch (action) {
                     case HuhConnectionService.UNAVAILABLE_MESSAGE:
+
                         unavailableMessages = intent.getStringArrayListExtra(UNAVAILABLE_MESSAGE_ARRAYLIST);
+                        unavailablefromJid = intent.getStringArrayListExtra(UNAVAILABLE_MESSAGE_ARRAYLIST).get(0);
+                        if (!unavailableMessages.isEmpty()) {
+                            //String fromJid = intent.getStringExtra("FROM_JID");
+                            //Log.d(TAG, "processUnavailableMessages() fromJid: " + fromJid);
+                            Log.d(TAG, "processUnavailableMessages() from: " + unavailablefromJid);
 
-                        //if (from.equals(contactJid)) {
-                            for (String body : unavailableMessages) {
+                            unavailablefromJid = unavailablefromJid.split("-*_-")[0];
+                            unavailablefromJid = unavailablefromJid.split("/")[0];
 
-                                Log.d(TAG, "processUnavailableMessages() message: " + body);
+                            Log.d(TAG, "processUnavailableMessages() AFTER SPLIT from: " + unavailablefromJid + " CONTACT JID " + contactJid);
 
-                                //writeMessageToChatHistory(body);
-                                //Saves message to internal storage
-                                writeToChatHistoryList(contactJid, userJid, body, false);
-                                //mChatView.receiveMessage("processUnavailableMessages: " + body);
+                            if (unavailablefromJid.equals(contactJid)) {
+                                for (String body : unavailableMessages) {
+                                    body = body.split("-*_-")[1];
+                                    Log.d(TAG, "processUnavailableMessages() from: " + unavailablefromJid);
+                                    Log.d(TAG, "processUnavailableMessages() message: " + body);
+
+                                    //writeMessageToChatHistory(body);
+                                    //Saves message to internal storage
+                                    writeToChatHistoryList(contactJid, userJid, body, false);
+                                    //mChatView.receiveMessage("processUnavailableMessages: " + body);
+                                }
+
+                            } else {
+                                if (!unavailableMessages.isEmpty()) {
+                                    for (String body : unavailableMessages) {
+                                        body = body.split("-*_-")[1];
+                                        Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
+                                        Log.d(TAG, "processOfflineMessages() message: " + body);
+                                        //Saves message to internal storage for other contact
+                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, body, false);
+                                    }
+                                    Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
+                                }
+                                Log.d(TAG, "processUnavailableMessages() AFTER NOT THE SAME Got a message from jidPhoneNumber :" + unavailablefromJid);
                             }
-
-//                        } else {
-//                            Log.d(TAG, "Got a message from jidPhoneNumber :" + from);
-//                        }
-
+                        }
                 }
 
             }
@@ -388,7 +414,7 @@ public class ChatActivity extends AppCompatActivity {
         registerReceiver(unavailableBroadcastReceiver, filter);
     }
 
-    public void processOfflineMessages(){
+    public void processOfflineMessages() {
         Log.d(TAG, "processOfflineMessages()");
 
         //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
@@ -399,27 +425,53 @@ public class ChatActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 Log.d(TAG, "processOfflineMessages()++++++++++++++++++++++++++++++working");
-if(intent.hasExtra(UNAVAILABLE_MESSAGE_ARRAYLIST)){
-    Log.d(TAG, "processOfflineMessages()++++++++++++++YESSSSSS");
 
-}
                 switch (action) {
                     case HuhConnectionService.OFFLINE_MESSAGE:
                         offlineMessages = intent.getStringArrayListExtra(OFFLINE_MESSAGE_ARRAYLIST);
+                        if (!offlineMessages.isEmpty()) {
+                            unavailablefromJid = intent.getStringArrayListExtra(OFFLINE_MESSAGE_ARRAYLIST).get(0);
 
-                            if (!offlineMessages.isEmpty()) {
-                                for (String body : offlineMessages) {
+                            //String fromJid = intent.getStringExtra("FROM_JID");
+                            Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
 
-                                    Log.d(TAG, "processOfflineMessages() message: " + body);
+                            unavailablefromJid = unavailablefromJid.split("-*_-")[0];
+                            unavailablefromJid = unavailablefromJid.split("/")[0];
 
-                                    //writeMessageToChatHistory(body);
-                                    //Saves message to internal storage
-                                    writeToChatHistoryList(contactJid, userJid, body, false);
-                                    mChatView.receiveMessage("processOfflineMessages: " + body);
+                            Log.d(TAG, "processOfflineMessages() AFTER SPLIT from: " + unavailablefromJid + " CONTACT JID " + contactJid);
+
+                            if (unavailablefromJid.equals(contactJid)) {
+
+                                if (!offlineMessages.isEmpty()) {
+                                    for (String body : offlineMessages) {
+                                        body = body.split("-*_-")[1];
+                                        Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
+                                        Log.d(TAG, "processOfflineMessages() message: " + body);
+
+                                        //writeMessageToChatHistory(body);
+                                        //Saves message to internal storage
+                                        writeToChatHistoryList(contactJid, userJid, body, false);
+                                        mChatView.receiveMessage("processOfflineMessages: " + body);
+                                    }
                                 }
-                            }
+                            } else {
 
+//                                if (!offlineMessages.isEmpty()) {
+//                                    for (String body : offlineMessages) {
+//                                        body = body.split("-*_-")[1];
+//                                        Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
+//                                        Log.d(TAG, "processOfflineMessages() message: " + body);
+//                                        //Saves message to internal storage for other contact
+//                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, body, false);
+//                                    }
+//                                    Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
+//                                }
+                                Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
+
+                            }
+                        }
                 }
+
 
             }
         };
@@ -428,63 +480,105 @@ if(intent.hasExtra(UNAVAILABLE_MESSAGE_ARRAYLIST)){
         registerReceiver(offlineBroadcastReceiver, filter);
     }
 
+    public void differentContactUnavailableMessages(String userJid, String otherContactJid, String msg) {
+
+
+    }
+
+    public void writeToOtherContactChatHistoryList(String userJid, String otherContactJid, String msg, boolean isMine) {
+        Log.d(TAG, "writeToOtherContactChatHistoryList()");
+        String fileToretrieve = "Chat.History" + userJid + otherContactJid;
+        List<HuhMessage> otherContactHistory = new ArrayList<>();
+
+        try {
+            // Retrieve the list from internal storage
+            otherContactHistory = (List<HuhMessage>) readObject(this, fileToretrieve);
+        } catch (ClassNotFoundException | IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        // Display the items from the list retrieved.
+        for (HuhMessage entry : otherContactHistory) {
+            //Log.d(TAG, "line 231" + entry.sender);
+            // Log.d(TAG, "INSIDES ReadList line 233" + entry.sender);
+            if (entry.isMine == true) {
+                Log.d(TAG, "Sender: " + entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
+            }
+            if (entry.isMine == false) {
+                Log.d(TAG, "Sender: " + entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
+            }
+
+        }
+
+        HuhMessage m = new HuhMessage(userJid, otherContactJid, msg, isMine);
+        otherContactHistory.add(m);
+
+        try {
+            // Save the list of entries to internal storage
+            ChatActivity.writeObject(this, fileToretrieve, otherContactHistory);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+    }
+
     public String translateMessageText(String text, String toLanguage) {
 
-        String output ="";
-            RequestQueue queue = Volley.newRequestQueue(this);
-            String url = "https://iueh1tvfn3.execute-api.us-west-2.amazonaws.com/tranlateenpointbeta/";
-            Log.d("translateText()", "");
+        String output = "";
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "https://iueh1tvfn3.execute-api.us-west-2.amazonaws.com/tranlateenpointbeta/";
+        Log.d("translateText()", "");
 
-            JSONObject jsonBody = new JSONObject();
-            try {
-                jsonBody.put("translatedText", text);
-                jsonBody.put("targetLanguage", toLanguage);
-                jsonBody.put("sourceLanguage", toLanguage);
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("translatedText", text);
+            jsonBody.put("targetLanguage", toLanguage);
+            jsonBody.put("sourceLanguage", toLanguage);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String requestBody = jsonBody.toString();
-            Log.d("RequestBody", requestBody);
-            //
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String requestBody = jsonBody.toString();
+        Log.d("RequestBody", requestBody);
+        //
 
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest
-                    (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.POST, url, jsonBody, new Response.Listener<JSONObject>() {
 
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                Log.d("translateText", "response: " + response.toString());
-                                JSONObject jsonObject = new JSONObject(response.toString());
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d("translateText", "response: " + response.toString());
+                            JSONObject jsonObject = new JSONObject(response.toString());
 
-                                String translatedText = response.getString("translatedText");
-                                // String tolanguage = response.get("targetLanguage").toString();
-                                String sourceLanguage = response.getString("detectedSourceLanguage");
-                                setTranslatedText(translatedText);
-                                Log.d("translateText()", "get response: " + translatedText + " detectedSourceLanguage: " + sourceLanguage);
+                            String translatedText = response.getString("translatedText");
+                            // String tolanguage = response.get("targetLanguage").toString();
+                            String sourceLanguage = response.getString("detectedSourceLanguage");
+                            setTranslatedText(translatedText);
+                            Log.d("translateText()", "get response: " + translatedText + " detectedSourceLanguage: " + sourceLanguage);
 
-                            } catch (JSONException e) {
-                                Log.d("Trans JSON ex: ", e.getMessage());
-                            } catch (Exception e) {
-                                Log.d("Translation Exception ", e.getMessage());
-                                e.printStackTrace();
-                            }
-
+                        } catch (JSONException e) {
+                            Log.d("Trans JSON ex: ", e.getMessage());
+                        } catch (Exception e) {
+                            Log.d("Translation Exception ", e.getMessage());
+                            e.printStackTrace();
                         }
-                    }, new Response.ErrorListener() {
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.i("Trans Exception ", error.getMessage());
+                    }
+                }, new Response.ErrorListener() {
 
-                        }
-                    });
-            //
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Trans Exception ", error.getMessage());
 
-            queue.add(jsObjRequest);
+                    }
+                });
+        //
 
-            output = getTranslatedText();
-            translatedText = "";
+        queue.add(jsObjRequest);
+
+        output = getTranslatedText();
+        translatedText = "";
 
 
         return output;

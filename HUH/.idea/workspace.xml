@@ -12,19 +12,12 @@
   <component name="ChangeListManager">
     <list default="true" id="bf282e25-8e8a-4612-9427-ea9d05c0d4d5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ChatActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ChatActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactListActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactListActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactsListActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactsListActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/HuhConnection.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/HuhConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/LanguageSelectActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/LanguageSelectActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/LoginActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/LoginActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/PersonalityInsightsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/PersonalityInsightsActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RegistrationActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RegistrationActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RosterContact.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RosterContact.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_contact_list.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_contact_list.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/list_item_contact.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/list_item_contact.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
     </list>
     <ignored path="HUH.iws" />
@@ -57,87 +50,91 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="RegistrationActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RegistrationActivity.java">
+      <file leaf-file-name="HuhConnection.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/HuhConnection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="176" column="0" selection-start-line="176" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
+            <state relative-caret-position="-1247">
+              <caret line="189" column="0" selection-start-line="189" selection-start-column="0" selection-end-line="189" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#5571#5616#0" expanded="false" />
-                <element signature="method#goMain#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#startServiceAndLogin#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#phoneContacts#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#savePhnoneNumbersList#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#checkUserNameAvailable#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#registerNewUser#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#createHuhContacts#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#checkIfUserExists2#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#saveCredentialsAndGoToLogin#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#populateAutoComplete#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#mayRequestContacts#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="docComment;method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="docComment;method#isEmailValid#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#isEmailValid#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#isPasswordValid#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="docComment;method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#goToXMPPConnect#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#getRosterContacts#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#connect#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#checkIfUserExists#0;class#RegistrationActivity#0" expanded="false" />
-                <element signature="method#connected#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="e#3908#3909#0" expanded="true" />
+                <element signature="e#4000#4001#0" expanded="true" />
+                <element signature="class#LoggedInState#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#HuhConnection#0;class#HuhConnection#0" expanded="false" />
+                <element signature="e#9217#12371#0" expanded="true" />
+                <element signature="e#12370#12371#0" expanded="true" />
+                <element signature="method#admitFriendsRequest#0;class#HuhConnection#0" expanded="false" />
+                <element signature="e#13254#15793#0" expanded="true" />
+                <element signature="e#15792#15793#0" expanded="true" />
+                <element signature="e#15795#16380#0" expanded="true" />
+                <element signature="e#16379#16380#0" expanded="true" />
+                <element signature="method#broadCastMessageReceiver#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#broadCastAvailabilityReceiver#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#sendMessage#0;class#HuhConnection#0" expanded="false" />
+                <element signature="e#20787#20828#0" expanded="false" />
+                <element signature="method#unavailableMessages#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#broadcastunAvailableArray#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#broadcastOfflineArray#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#translateMessageText#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#getRosterContacts#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#updateHuhContacts#0;class#HuhConnection#0" expanded="false" />
+                <element signature="e#29589#29604#0" expanded="true" />
+                <element signature="e#29609#29665#0" expanded="false" />
+                <element signature="method#getPhoneContacts#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#createHuhContacts#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#phoneContacts#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#savePhnoneNumbersList#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#gethuhContacts#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#displayhuhContacts#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#checkIfUserExists#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#checkIfUserExists2#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#getAllXmppUsers#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#disconnect#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#showContactListActivityWhenAuthenticated#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#connected#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#authenticated#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#connectionClosed#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#connectionClosedOnError#0;class#HuhConnection#0" expanded="false" />
+                <element signature="method#reconnectingIn#0;class#HuhConnection#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="activity_registration.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml">
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
+      <file leaf-file-name="ChatActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ChatActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="137">
-              <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
+            <state relative-caret-position="242">
+              <caret line="462" column="98" selection-start-line="462" selection-start-column="98" selection-end-line="462" selection-end-column="98" />
               <folding>
-                <element signature="e#2610#2631#0" expanded="true" />
-                <element signature="e#3193#3221#0" expanded="true" />
+                <element signature="e#2244#2245#0" expanded="true" />
+                <element signature="e#2336#2337#0" expanded="true" />
+                <element signature="class#3233:3669" expanded="false" />
+                <element signature="method#userIsTyping#0;class#3233:3669" expanded="false" />
+                <element signature="method#userHasStoppedTyping#0;class#3233:3669" expanded="false" />
+                <element signature="e#3872#3922#0" expanded="false" />
+                <element signature="e#4168#4200#0" expanded="false" />
+                <element signature="method#onPause#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#writeObject#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#readObject#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#writeToChatHistoryList#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#writeToPersonHistory#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#readFromChatHistoryList#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#chatHistory#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#personChatHistory#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#fileExistance#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#writeToOtherContactChatHistoryList#0;class#ChatActivity#0" expanded="false" />
+                <element signature="method#translateMessageText#0;class#ChatActivity#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="strings.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <file leaf-file-name="ChatMessage.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.devcenter.square/android-ui-library/0.1/827e030da603b1f78d2a8e39e02b60b91189c81a/android-ui-library-0.1-sources.jar!/co/devcenter/androiduilibrary/models/ChatMessage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="281">
-              <caret line="42" column="18" selection-start-line="42" selection-start-column="18" selection-end-line="42" selection-end-column="18" />
+            <state relative-caret-position="135">
+              <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RosterContact.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RosterContact.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-188">
-              <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LanguageSelectActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/LanguageSelectActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="49" column="48" selection-start-line="49" selection-start-column="48" selection-end-line="49" selection-end-column="48" />
-              <folding>
-                <element signature="e#1535#2166#0" expanded="true" />
-                <element signature="e#2165#2166#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -145,12 +142,19 @@
       <file leaf-file-name="ContactsListActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactsListActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="915">
-              <caret line="80" column="17" selection-start-line="80" selection-start-column="17" selection-end-line="80" selection-end-column="17" />
-              <folding>
-                <element signature="e#3549#4701#0" expanded="true" />
-                <element signature="e#4700#4701#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="300">
+              <caret line="70" column="26" selection-start-line="70" selection-start-column="26" selection-end-line="70" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SASLAuthentication.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-core/4.1.0-alpha6/8873b9ce0109bf22942926f3aee3422269950776/smack-core-4.1.0-alpha6-sources.jar!/org/jivesoftware/smack/SASLAuthentication.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="58" column="33" selection-start-line="58" selection-start-column="33" selection-end-line="58" selection-end-column="33" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -158,8 +162,8 @@
       <file leaf-file-name="LoginActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/LoginActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-233">
-              <caret line="226" column="53" selection-start-line="226" selection-start-column="53" selection-end-line="226" selection-end-column="53" />
+            <state relative-caret-position="148">
+              <caret line="60" column="11" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="11" />
               <folding>
                 <element signature="e#2042#2110#0" expanded="false" />
                 <element signature="method#onCreate#0;class#LoginActivity#0" expanded="false" />
@@ -180,58 +184,86 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-          <provider editor-type-id="android-manifest">
-            <state />
-          </provider>
+      <file leaf-file-name="RegistrationActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RegistrationActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="23" column="56" selection-start-line="23" selection-start-column="56" selection-end-line="23" selection-end-column="56" />
+            <state relative-caret-position="276">
+              <caret line="515" column="28" selection-start-line="515" selection-start-column="27" selection-end-line="515" selection-end-column="28" />
               <folding>
-                <element signature="e#2215#2248#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#6278#6611#0" expanded="true" />
+                <element signature="e#6610#6611#0" expanded="true" />
+                <element signature="method#goMain#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#startServiceAndLogin#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#phoneContacts#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#savePhnoneNumbersList#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#attempRegister#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#checkUserNameAvailable#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#registerNewUser#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#checkIfUserExists2#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#saveCredentialsAndGoToLogin#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#populateAutoComplete#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#mayRequestContacts#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="docComment;method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="docComment;method#isPhoneNumberValid#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#isPhoneNumberValid#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#isConfirmPhoneNumberValid#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#isPasswordValid#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="docComment;method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#goToXMPPConnect#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#getRosterContacts#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#connect#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#checkIfUserExists#0;class#RegistrationActivity#0" expanded="false" />
+                <element signature="method#connected#0;class#RegistrationActivity#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="activity_contacts_list.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_contacts_list.xml">
+      <file leaf-file-name="PersonalityInsightsActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/PersonalityInsightsActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="109" column="31" selection-start-line="109" selection-start-column="31" selection-end-line="109" selection-end-column="31" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2058#2289#0" expanded="true" />
+                <element signature="e#2288#2289#0" expanded="true" />
+                <element signature="e#8611#8627#0" expanded="true" />
+                <element signature="method#readObject#0;class#PersonalityInsightsActivity#0" expanded="false" />
+                <element signature="method#readFromChatHistoryList#0;class#PersonalityInsightsActivity#0" expanded="false" />
+                <element signature="method#getUserHistoryFileName#0;class#PersonalityInsightsActivity#0" expanded="false" />
+                <element signature="method#setPersonalityResponseString#0;class#PersonalityInsightsActivity#0" expanded="false" />
+                <element signature="e#10747#10748#0" expanded="true" />
+                <element signature="e#10788#10789#0" expanded="true" />
+                <element signature="e#10982#10983#0" expanded="true" />
+                <element signature="e#11027#11028#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="activity_personality_insights.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_personality_insights.xml">
           <provider editor-type-id="android-designer2">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="41" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="41" />
+            <state relative-caret-position="75">
+              <caret line="5" column="40" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ChatActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ChatActivity.java">
+      <file leaf-file-name="RosterContact.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RosterContact.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
-              <folding>
-                <element signature="class#3159:3595" expanded="false" />
-                <element signature="method#userIsTyping#0;class#3159:3595" expanded="false" />
-                <element signature="method#userHasStoppedTyping#0;class#3159:3595" expanded="false" />
-                <element signature="e#3799#3849#0" expanded="false" />
-                <element signature="e#4095#4127#0" expanded="false" />
-                <element signature="method#onPause#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#onResume#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#writeObject#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#readObject#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#writeToChatHistoryList#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#writeToPersonHistory#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#chatHistory#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#personChatHistory#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#fileExistance#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#processUnavailableMessages#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#processOfflineMessages#0;class#ChatActivity#0" expanded="false" />
-                <element signature="method#translateMessageText#0;class#ChatActivity#0" expanded="false" />
-              </folding>
+            <state relative-caret-position="360">
+              <caret line="32" column="5" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -2625,7 +2657,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/captures/com.aaronfogarty.huh_2017.04.01_20.32.txt" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/TranslationSpinner.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/Contact.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ObjectSerializer.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_translation_spinner.xml" />
@@ -2638,26 +2669,27 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_loading.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_jidlogin.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_language_select.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/languagesArray.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/content_main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/PersonalityInsightsActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/HuhConnection.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactListActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_contact_list.xml" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/list_item_contact.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/LanguageSelectActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactsListActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ChatActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/LoginActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RosterContact.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RegistrationActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/TranslationSpinner.java" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/PersonalityInsightsActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RegistrationActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactsListActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/HuhConnection.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ChatActivity.java" />
       </list>
     </option>
   </component>
@@ -2700,19 +2732,9 @@
               <option name="myItemId" value="HUH" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="HUH" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+              <option name="myItemId" value="Gradle Scripts" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidBuildScriptsGroupNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -2727,10 +2749,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layout" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -3154,7 +3172,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35611907" sideWeight="0.5192425" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35611907" sideWeight="0.48075747" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37155458" sideWeight="0.48075747" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27794746" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296582" sideWeight="0.492674" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296582" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -3163,7 +3181,7 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.384785" sideWeight="0.509768" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1478314" sideWeight="0.49342105" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4277839" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23042999" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24969475" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -3195,84 +3213,19 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="64" />
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/PersonalityInsightsActivity.java</url>
+          <line>152</line>
+          <properties />
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="74" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/test/java/com/aaronfogarty/huh/ExampleUnitTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ObjectSerializer.java" />
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-core/4.1.0-alpha6/8873b9ce0109bf22942926f3aee3422269950776/smack-core-4.1.0-alpha6-sources.jar!/org/jivesoftware/smack/packet/Packet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1545">
-          <caret line="140" column="7" selection-start-line="140" selection-start-column="7" selection-end-line="140" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_translation_spinner.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="631">
-          <caret line="48" column="32" selection-start-line="48" selection-start-column="32" selection-end-line="48" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/TranslationSpinner.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="52" column="36" selection-start-line="52" selection-start-column="36" selection-end-line="52" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RegistrationActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="29">
-          <caret line="58" column="20" selection-start-line="58" selection-start-column="20" selection-end-line="58" selection-end-column="20" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#5571#5616#0" expanded="false" />
-            <element signature="method#goMain#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#startServiceAndLogin#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#phoneContacts#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#savePhnoneNumbersList#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#checkUserNameAvailable#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#registerNewUser#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#createHuhContacts#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#checkIfUserExists2#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#saveCredentialsAndGoToLogin#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#populateAutoComplete#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#mayRequestContacts#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="docComment;method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="docComment;method#isEmailValid#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#isEmailValid#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#isPasswordValid#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="docComment;method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#goToXMPPConnect#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#getRosterContacts#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#connect#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#checkIfUserExists#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#connected#0;class#RegistrationActivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml" />
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/Contact.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -3329,13 +3282,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/registration_loadscreen.xml" />
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-core/4.1.0-alpha6/8873b9ce0109bf22942926f3aee3422269950776/smack-core-4.1.0-alpha6-sources.jar!/org/jivesoftware/smack/SASLAuthentication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="58" column="31" selection-start-line="58" selection-start-column="13" selection-end-line="58" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-core/4.1.0-alpha6/8873b9ce0109bf22942926f3aee3422269950776/smack-core-4.1.0-alpha6-sources.jar!/org/jivesoftware/smack/filter/IQReplyFilter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="498">
@@ -3347,14 +3293,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="423">
           <caret line="645" column="37" selection-start-line="645" selection-start-column="37" selection-end-line="645" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/HuhConnectionService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="116" column="0" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3401,17 +3339,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_personality_insights.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="40" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -3420,17 +3347,6 @@
         <state relative-caret-position="229">
           <caret line="37" column="30" selection-start-line="37" selection-start-column="30" selection-end-line="37" selection-end-column="30" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/PersonalityInsightsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="73" column="35" selection-start-line="73" selection-start-column="35" selection-end-line="73" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#getUserHistoryFileName#0;class#PersonalityInsightsActivity#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3471,44 +3387,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/HuhConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="80" column="36" selection-start-line="80" selection-start-column="36" selection-end-line="80" selection-end-column="36" />
-          <folding>
-            <element signature="class#LoggedInState#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#HuhConnection#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#connect#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#broadCastMessageReceiver#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#broadCastAvailabilityReceiver#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#sendMessage#0;class#HuhConnection#0" expanded="false" />
-            <element signature="e#13867#13908#0" expanded="false" />
-            <element signature="method#unavailableMessages#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#offlineMessages#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#broadcastunAvailableArray#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#broadcastOfflineArray#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#translateMessageText#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#getRosterContacts#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#getPhoneContacts#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#createHuhContacts#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#gethuhContacts#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#displayhuhContacts#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#checkIfUserExists#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#checkIfUserExists2#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#getAllXmppUsers#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#disconnect#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#showContactListActivityWhenAuthenticated#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#connected#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#authenticated#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#connectionClosed#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#connectionClosedOnError#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#reconnectingIn#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#reconnectionSuccessful#0;class#HuhConnection#0" expanded="false" />
-            <element signature="method#reconnectionFailed#0;class#HuhConnection#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_contact_list.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -3532,8 +3410,8 @@
           <folding>
             <element signature="method#ContactModel#0;class#ContactModel#0" expanded="false" />
             <element signature="method#populateWithInitialContacts#0;class#ContactModel#0" expanded="false" />
-            <element signature="e#1795#1796#0" expanded="true" />
-            <element signature="e#1827#1828#0" expanded="true" />
+            <element signature="e#1795#1796#0" expanded="false" />
+            <element signature="e#1827#1828#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3564,17 +3442,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-480">
           <caret line="9" column="46" selection-start-line="9" selection-start-column="46" selection-end-line="9" selection-end-column="46" />
-          <folding>
-            <element signature="e#1766#2202#0" expanded="true" />
-            <element signature="e#2201#2202#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="549">
-          <caret line="88" column="8" selection-start-line="88" selection-start-column="8" selection-end-line="88" selection-end-column="8" />
           <folding />
         </state>
       </provider>
@@ -3595,53 +3462,189 @@
         <state relative-caret-position="360">
           <caret line="49" column="48" selection-start-line="49" selection-start-column="48" selection-end-line="49" selection-end-column="48" />
           <folding>
-            <element signature="e#1535#2166#0" expanded="true" />
-            <element signature="e#2165#2166#0" expanded="true" />
+            <element signature="e#1535#2166#0" expanded="false" />
+            <element signature="e#2165#2166#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ChatActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
+        <state relative-caret-position="116">
+          <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mcxiaoke.volley/library/1.0.19/2bac9e638b022ca09262960f83e8c9da93d80468/library-1.0.19-sources.jar!/com/android/volley/toolbox/JsonObjectRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1185">
+          <caret line="101" column="30" selection-start-line="101" selection-start-column="24" selection-end-line="101" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
           <folding>
-            <element signature="class#3159:3595" expanded="false" />
-            <element signature="method#userIsTyping#0;class#3159:3595" expanded="false" />
-            <element signature="method#userHasStoppedTyping#0;class#3159:3595" expanded="false" />
-            <element signature="e#3799#3849#0" expanded="false" />
-            <element signature="e#4095#4127#0" expanded="false" />
-            <element signature="method#onPause#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#onResume#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#writeObject#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#readObject#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#writeToChatHistoryList#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#writeToPersonHistory#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#chatHistory#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#personChatHistory#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#fileExistance#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#processUnavailableMessages#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#processOfflineMessages#0;class#ChatActivity#0" expanded="false" />
-            <element signature="method#translateMessageText#0;class#ChatActivity#0" expanded="false" />
+            <element signature="e#2610#2631#0" expanded="true" />
+            <element signature="e#3193#3221#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactsListActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/TranslationSpinner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="915">
-          <caret line="80" column="17" selection-start-line="80" selection-start-column="17" selection-end-line="80" selection-end-column="17" />
+        <state relative-caret-position="1500">
+          <caret line="156" column="19" selection-start-line="156" selection-start-column="19" selection-end-line="156" selection-end-column="19" />
           <folding>
-            <element signature="e#3549#4701#0" expanded="true" />
-            <element signature="e#4700#4701#0" expanded="true" />
+            <element signature="e#5742#7330#0" expanded="false" />
+            <element signature="e#7329#7330#0" expanded="false" />
+            <element signature="e#7332#7574#0" expanded="false" />
+            <element signature="e#7573#7574#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mcxiaoke.volley/library/1.0.19/2bac9e638b022ca09262960f83e8c9da93d80468/library-1.0.19-sources.jar!/com/android/volley/toolbox/RequestFuture.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="143">
+          <caret line="66" column="32" selection-start-line="66" selection-start-column="32" selection-end-line="66" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="71" column="32" selection-start-line="71" selection-start-column="32" selection-end-line="71" selection-end-column="32" />
+          <folding>
+            <element signature="e#2215#2248#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RosterContact.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="32" column="5" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="81" column="61" selection-start-line="81" selection-start-column="61" selection-end-line="81" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-core/4.1.0-alpha6/8873b9ce0109bf22942926f3aee3422269950776/smack-core-4.1.0-alpha6-sources.jar!/org/jivesoftware/smack/packet/Message.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1125">
+          <caret line="254" column="12" selection-start-line="254" selection-start-column="12" selection-end-line="254" selection-end-column="12" />
+          <folding>
+            <element signature="e#3406#3407#0" expanded="false" />
+            <element signature="e#3433#3434#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-core/4.1.0-alpha6/8873b9ce0109bf22942926f3aee3422269950776/smack-core-4.1.0-alpha6-sources.jar!/org/jivesoftware/smack/packet/Packet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2610">
+          <caret line="223" column="11" selection-start-line="223" selection-start-column="11" selection-end-line="223" selection-end-column="11" />
+          <folding>
+            <element signature="e#4901#4902#0" expanded="false" />
+            <element signature="e#4928#4929#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-core/4.1.0-alpha6/8873b9ce0109bf22942926f3aee3422269950776/smack-core-4.1.0-alpha6-sources.jar!/org/jivesoftware/smack/Roster.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-158">
+          <caret line="220" column="16" selection-start-line="220" selection-start-column="16" selection-end-line="220" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-core/4.1.0-alpha6/8873b9ce0109bf22942926f3aee3422269950776/smack-core-4.1.0-alpha6-sources.jar!/org/jivesoftware/smack/SASLAuthentication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="58" column="33" selection-start-line="58" selection-start-column="33" selection-end-line="58" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RegistrationActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="515" column="28" selection-start-line="515" selection-start-column="27" selection-end-line="515" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#6278#6611#0" expanded="true" />
+            <element signature="e#6610#6611#0" expanded="true" />
+            <element signature="method#goMain#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#startServiceAndLogin#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#phoneContacts#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#savePhnoneNumbersList#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#attempRegister#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#checkUserNameAvailable#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#registerNewUser#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#checkIfUserExists2#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#saveCredentialsAndGoToLogin#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#populateAutoComplete#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#mayRequestContacts#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="docComment;method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="docComment;method#isPhoneNumberValid#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#isPhoneNumberValid#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#isConfirmPhoneNumberValid#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#isPasswordValid#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="docComment;method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#goToXMPPConnect#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#getRosterContacts#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#connect#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#checkIfUserExists#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="method#connected#0;class#RegistrationActivity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/HuhConnectionService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1826">
+          <caret line="157" column="18" selection-start-line="157" selection-start-column="16" selection-end-line="157" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_personality_insights.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="40" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/LoginActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-233">
-          <caret line="226" column="53" selection-start-line="226" selection-start-column="53" selection-end-line="226" selection-end-column="53" />
+        <state relative-caret-position="148">
+          <caret line="60" column="11" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="11" />
           <folding>
             <element signature="e#2042#2110#0" expanded="false" />
             <element signature="method#onCreate#0;class#LoginActivity#0" expanded="false" />
@@ -3661,79 +3664,114 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RosterContact.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/PersonalityInsightsActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-188">
-          <caret line="12" column="23" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_registration.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
-          <folding>
-            <element signature="e#2610#2631#0" expanded="true" />
-            <element signature="e#3193#3221#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="42" column="18" selection-start-line="42" selection-start-column="18" selection-end-line="42" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider editor-type-id="android-manifest">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="23" column="56" selection-start-line="23" selection-start-column="56" selection-end-line="23" selection-end-column="56" />
-          <folding>
-            <element signature="e#2215#2248#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/RegistrationActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="176" column="0" selection-start-line="176" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
+        <state relative-caret-position="30">
+          <caret line="109" column="31" selection-start-line="109" selection-start-column="31" selection-end-line="109" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5571#5616#0" expanded="false" />
-            <element signature="method#goMain#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#startServiceAndLogin#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#phoneContacts#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#savePhnoneNumbersList#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#checkUserNameAvailable#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#registerNewUser#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#createHuhContacts#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#checkIfUserExists2#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#saveCredentialsAndGoToLogin#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#populateAutoComplete#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#mayRequestContacts#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="docComment;method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#onRequestPermissionsResult#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="docComment;method#isEmailValid#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#isEmailValid#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#isPasswordValid#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="docComment;method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#showProgress#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#goToXMPPConnect#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#getRosterContacts#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#connect#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#checkIfUserExists#0;class#RegistrationActivity#0" expanded="false" />
-            <element signature="method#connected#0;class#RegistrationActivity#0" expanded="false" />
+            <element signature="e#2058#2289#0" expanded="true" />
+            <element signature="e#2288#2289#0" expanded="true" />
+            <element signature="e#8611#8627#0" expanded="true" />
+            <element signature="method#readObject#0;class#PersonalityInsightsActivity#0" expanded="false" />
+            <element signature="method#readFromChatHistoryList#0;class#PersonalityInsightsActivity#0" expanded="false" />
+            <element signature="method#getUserHistoryFileName#0;class#PersonalityInsightsActivity#0" expanded="false" />
+            <element signature="method#setPersonalityResponseString#0;class#PersonalityInsightsActivity#0" expanded="false" />
+            <element signature="e#10747#10748#0" expanded="true" />
+            <element signature="e#10788#10789#0" expanded="true" />
+            <element signature="e#10982#10983#0" expanded="true" />
+            <element signature="e#11027#11028#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ContactsListActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="70" column="26" selection-start-line="70" selection-start-column="26" selection-end-line="70" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/co.devcenter.square/android-ui-library/0.1/827e030da603b1f78d2a8e39e02b60b91189c81a/android-ui-library-0.1-sources.jar!/co/devcenter/androiduilibrary/models/ChatMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="19" column="35" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/HuhConnection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1247">
+          <caret line="189" column="0" selection-start-line="189" selection-start-column="0" selection-end-line="189" selection-end-column="0" />
+          <folding>
+            <element signature="e#3908#3909#0" expanded="true" />
+            <element signature="e#4000#4001#0" expanded="true" />
+            <element signature="class#LoggedInState#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#HuhConnection#0;class#HuhConnection#0" expanded="false" />
+            <element signature="e#9217#12371#0" expanded="true" />
+            <element signature="e#12370#12371#0" expanded="true" />
+            <element signature="method#admitFriendsRequest#0;class#HuhConnection#0" expanded="false" />
+            <element signature="e#13254#15793#0" expanded="true" />
+            <element signature="e#15792#15793#0" expanded="true" />
+            <element signature="e#15795#16380#0" expanded="true" />
+            <element signature="e#16379#16380#0" expanded="true" />
+            <element signature="method#broadCastMessageReceiver#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#broadCastAvailabilityReceiver#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#sendMessage#0;class#HuhConnection#0" expanded="false" />
+            <element signature="e#20787#20828#0" expanded="false" />
+            <element signature="method#unavailableMessages#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#broadcastunAvailableArray#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#broadcastOfflineArray#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#translateMessageText#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#getRosterContacts#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#updateHuhContacts#0;class#HuhConnection#0" expanded="false" />
+            <element signature="e#29589#29604#0" expanded="true" />
+            <element signature="e#29609#29665#0" expanded="false" />
+            <element signature="method#getPhoneContacts#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#createHuhContacts#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#phoneContacts#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#savePhnoneNumbersList#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#gethuhContacts#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#displayhuhContacts#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#checkIfUserExists#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#checkIfUserExists2#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#getAllXmppUsers#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#disconnect#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#showContactListActivityWhenAuthenticated#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#connected#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#authenticated#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#connectionClosed#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#connectionClosedOnError#0;class#HuhConnection#0" expanded="false" />
+            <element signature="method#reconnectingIn#0;class#HuhConnection#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/aaronfogarty/huh/ChatActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="462" column="98" selection-start-line="462" selection-start-column="98" selection-end-line="462" selection-end-column="98" />
+          <folding>
+            <element signature="e#2244#2245#0" expanded="true" />
+            <element signature="e#2336#2337#0" expanded="true" />
+            <element signature="class#3233:3669" expanded="false" />
+            <element signature="method#userIsTyping#0;class#3233:3669" expanded="false" />
+            <element signature="method#userHasStoppedTyping#0;class#3233:3669" expanded="false" />
+            <element signature="e#3872#3922#0" expanded="false" />
+            <element signature="e#4168#4200#0" expanded="false" />
+            <element signature="method#onPause#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#writeObject#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#readObject#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#writeToChatHistoryList#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#writeToPersonHistory#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#readFromChatHistoryList#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#chatHistory#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#personChatHistory#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#fileExistance#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#writeToOtherContactChatHistoryList#0;class#ChatActivity#0" expanded="false" />
+            <element signature="method#translateMessageText#0;class#ChatActivity#0" expanded="false" />
           </folding>
         </state>
       </provider>

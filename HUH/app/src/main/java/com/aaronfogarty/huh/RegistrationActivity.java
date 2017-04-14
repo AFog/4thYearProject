@@ -72,7 +72,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     boolean isHuhUser;
     Roster roster;
     UserSearchManager search;
-    private String jidPhoneNumber;
+    private String jidPhoneNumber, jidConfirmPhoneNumber;
     private String password;
     private Thread registerUserTread;
     private Thread createHuhContactsThread;
@@ -97,6 +97,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     private TextView userNameAvailTextView;
     private ProgressBar progressBar;
     private AutoCompleteTextView mJidView;
+    private AutoCompleteTextView mJidConfirmView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -118,6 +119,8 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         userNameAvailTextView = (TextView) findViewById(R.id.userNotAvailableText);
 
         mJidView = (AutoCompleteTextView) findViewById(R.id.registerJid);
+        mJidConfirmView = (AutoCompleteTextView) findViewById(R.id.registerJidConfirm);
+
         //get permisssion to use phone contacts
         populateAutoComplete();
 
@@ -142,34 +145,6 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Button clicked ");
-//                isUserNameAvailable = true;
-//                mLoginFormView.setVisibility(View.GONE);
-//                progressBar.setVisibility(View.VISIBLE);
-//                reisterTextView.setVisibility(View.VISIBLE);
-//                userNameAvailTextView.setVisibility(View.GONE);
-//
-//                checkUserNameAvailableHandler = new Handler() {
-//                    @Override
-//                    public void handleMessage(Message msg) {
-//                        progressBar.setVisibility(View.GONE);
-//                        reisterTextView.setVisibility(View.GONE);
-//                        mLoginFormView.setVisibility(View.VISIBLE);
-//                        userNameAvailTextView.setVisibility(View.VISIBLE);
-//
-//                        if (isUserNameAvailable) {
-//                            Log.d(TAG, "RegisterNew User Handler ");
-//                            attempRegister();
-//                            mLoginFormView.setVisibility(View.GONE);
-//                            progressBar.setVisibility(View.VISIBLE);
-//                            reisterTextView.setVisibility(View.VISIBLE);
-//                        }
-//                        else{
-//
-//                            Toast.makeText(getApplication(), "Number is already Registered", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                };
-
                 attempRegister();
 
             }
@@ -283,10 +258,12 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
         // Reset errors.
         mJidView.setError(null);
+        mJidConfirmView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
         jidPhoneNumber = mJidView.getText().toString();
+        jidConfirmPhoneNumber = mJidConfirmView.getText().toString();
         password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -294,7 +271,6 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
         //Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            Log.d(TAG, "password; " + password);
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -306,11 +282,23 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             mJidView.setError(getString(R.string.error_field_required));
             focusView = mJidView;
             cancel = true;
-        } else if (!isEmailValid(jidPhoneNumber)) {
+        } else if (!isPhoneNumberValid(jidPhoneNumber)) {
             mJidView.setError(getString(R.string.error_invalid_jid));
             focusView = mJidView;
             cancel = true;
         }
+
+        // Check for a valid jidConfirmPhoneNumber.
+        if (TextUtils.isEmpty(jidConfirmPhoneNumber)) {
+            mJidConfirmView.setError(getString(R.string.error_field_required));
+            focusView = mJidConfirmView;
+            cancel = true;
+        } else if (!isConfirmPhoneNumberValid(jidConfirmPhoneNumber)) {
+            mJidConfirmView.setError(getString(R.string.error_invalid_jid_confirm));
+            focusView = mJidConfirmView;
+            cancel = true;
+        }
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -662,7 +650,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
                 for (String value : row.getValues("jid")) {
                     Log.i("Iteartor values......", " " + value);
                     isHuhUser = true;
-
+//TODO try put row.getvalues into a list
                 }
             }
             //  Toast.makeText(mApplicationContext, "Username Exists", Toast.LENGTH_SHORT).show();
@@ -747,10 +735,24 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
      * errors are presented and no actual login attempt is made.
      */
 
-    private boolean isEmailValid(String email) {
+    private boolean isPhoneNumberValid(String email) {
         //TODO: Replace this with your own logic
         // return email.contains("@");
         return jidPhoneNumber.length() == 10;
+
+    }
+
+    private boolean isConfirmPhoneNumberValid(String email) {
+        //TODO: Replace this with your own logic
+        Boolean isValid = true;
+        if( jidConfirmPhoneNumber.length() != 10)   {
+            isValid = false;
+        }
+
+        if(!jidConfirmPhoneNumber.equals(jidPhoneNumber)){
+            isValid = false;
+        }
+        return isValid;
 
     }
 
