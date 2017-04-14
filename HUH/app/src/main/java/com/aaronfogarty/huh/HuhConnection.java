@@ -261,9 +261,9 @@ public class HuhConnection implements ConnectionListener {
 
 
                 Log.d(TAG, "TESTING SPLIT from: " + test + " message " + test2 );
+                    //handles messages when user is unavailable
+                  //  unavailableMessages(unavailableMessage);
 
-                //handles messages when user is unavailable
-                unavailableMessages(unavailableMessage);
 
                 String from = message.getFrom();
                 contactJid = "";
@@ -277,10 +277,10 @@ public class HuhConnection implements ConnectionListener {
                 mConnection.setPacketReplyTimeout(0);
 
                 Log.d(TAG, "^^^^^^^^^^^^^**************** iaAvailable before broadcast: " + isAvailable);
-                if (isAvailable) {
-                    broadcastunAvailableArray();
-                    unavailableMessages.clear();
-                }
+//                if (isAvailable) {
+//                    broadcastunAvailableArray();
+//                    unavailableMessages.clear();
+//                }
 
                 //String body = translateMessageText(message.getBody(), baseLanguage);
                 //BOROADCAST

@@ -175,48 +175,48 @@ public class LoginActivity extends AppCompatActivity  {
      */
     private void attemptLogin() {
         // Reset errors.
-        mJidView.setError(null);
-        mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String jid = mJidView.getText().toString();
-        jid = jid +"@win-h6g4cdqot7e";
-        String password = mPasswordView.getText().toString();
-
-        String userNames = mJidView.getText().toString();
-        userNames = userNames.replace("huh", "");
-        userNames = userNames.replace(" ", "");
-        userNames = userNames.replaceAll("\\s+", "");
-
-        Log.d(TAG,"Logging in with Jid: " + jid);
-        //Toast.makeText(getApplicationContext(), TAG + ": Logging in with Jid: " + jidPhoneNumber, Toast.LENGTH_LONG).show();
-        Log.d(TAG,"Logging in with Name:" + mJidView.getText() + "Logging in with Password: " + password);
-
-        boolean cancel = false;
-        View focusView = null;
-
-//        // Check for a valid password, if the user entered one.
-//        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-//            mPasswordView.setError(getString(R.string.error_invalid_password));
-//            focusView = mPasswordView;
-//            cancel = true;
-//        }
+//        mJidView.setError(null);
+//        mPasswordView.setError(null);
 //
-//        // Check for a valid email address.
-//        if (TextUtils.isEmpty(email)) {
-//            mJidView.setError(getString(R.string.error_field_required));
-//            focusView = mJidView;
-//            cancel = true;
-//        } else if (!isEmailValid(email)) {
-//            mJidView.setError(getString(R.string.error_invalid_jid));
-//            focusView = mJidView;
-//            cancel = true;
-//        }
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-           // focusView.requestFocus();
-        } else {
+//        // Store values at the time of the login attempt.
+//        String jid = mJidView.getText().toString();
+//        jid = jid +"@win-h6g4cdqot7e";
+//        String password = mPasswordView.getText().toString();
+//
+//        String userNames = mJidView.getText().toString();
+//        userNames = userNames.replace("huh", "");
+//        userNames = userNames.replace(" ", "");
+//        userNames = userNames.replaceAll("\\s+", "");
+//
+//        Log.d(TAG,"Logging in with Jid: " + jid);
+//        //Toast.makeText(getApplicationContext(), TAG + ": Logging in with Jid: " + jidPhoneNumber, Toast.LENGTH_LONG).show();
+//        Log.d(TAG,"Logging in with Name:" + mJidView.getText() + "Logging in with Password: " + password);
+//
+//        boolean cancel = false;
+//        View focusView = null;
+//
+////        // Check for a valid password, if the user entered one.
+////        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+////            mPasswordView.setError(getString(R.string.error_invalid_password));
+////            focusView = mPasswordView;
+////            cancel = true;
+////        }
+////
+////        // Check for a valid email address.
+////        if (TextUtils.isEmpty(email)) {
+////            mJidView.setError(getString(R.string.error_field_required));
+////            focusView = mJidView;
+////            cancel = true;
+////        } else if (!isEmailValid(email)) {
+////            mJidView.setError(getString(R.string.error_invalid_jid));
+////            focusView = mJidView;
+////            cancel = true;
+////        }
+//        if (cancel) {
+//            // There was an error; don't attempt login and focus the first
+//            // form field with an error.
+//           // focusView.requestFocus();
+//        } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             //showProgress(true);<<---FOR NOW WE DON'T WANT TO SEE THIS PROGRESS THING.
@@ -231,7 +231,7 @@ public class LoginActivity extends AppCompatActivity  {
             //Save the credentials and login
             saveCredentialsAndLogin();
 
-        }
+       // }
     }
 
     private void saveCredentialsAndLogin() {
