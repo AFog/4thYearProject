@@ -125,7 +125,7 @@ public class ChatActivity extends AppCompatActivity {
                     sendBroadcast(intent);
 
                     //Saves message to internal storage
-                    writeToChatHistoryList(userJid, contactJid,  "NORM SEND: " + mChatView.getTypedString(), true);
+                    writeToChatHistoryList(userJid, contactJid, mChatView.getTypedString(), true, System.currentTimeMillis());
                     writeToPersonHistory(mChatView.getTypedString());
                     //Update the chat view.
                     mChatView.sendMessage();
@@ -209,16 +209,18 @@ public class ChatActivity extends AppCompatActivity {
                                 Log.d(TAG, "TEST Got a message from jidPhoneNumber :" + from + "FILENAME: " + FILENAME);
                                 //TODO: Replace this with your own logic
                                 //add this check to unavailable and offline
+
+
                                 if (from.equals(contactJid)) {
                                     //String transtext = translateMessageText(body,"fr");
 
                                     //writeMessageToChatHistory(body);
                                     //Saves message to internal storage
-                                    writeToChatHistoryList(contactJid, "NORM RECIEVE: " + userJid, body, false);
+                                    writeToChatHistoryList(contactJid, userJid, body, false, System.currentTimeMillis());
                                     mChatView.receiveMessage(body);
                                 } else {
                                     Log.d(TAG, "NOT THE CURRENT USER Got a message from jidPhoneNumber :" + from);
-                                    writeToOtherContactChatHistoryList(userJid, from, "OTHER RECIEVE: " + body, false);
+                                    writeToOtherContactChatHistoryList(userJid, from, body, false, System.currentTimeMillis());
                                 }
 
                                 return;
@@ -256,26 +258,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     //Saves message to internal storage
-    public void writeToChatHistoryList(String sender, String receiver, String msg, boolean isMine) {
+    public void writeToChatHistoryList(String sender, String receiver, String msg, boolean isMine, long timestampIn) {
         Log.d(TAG, "£££££££££ writeToChatHistoryList(): from" + sender + " to : " + receiver);
-        HuhMessage m = new HuhMessage(sender, receiver, msg, isMine);
+        HuhMessage m = new HuhMessage(sender, receiver, msg, isMine, timestampIn);
         ChatHistoryList.add(m);
         try {
             // Save the list of entries to internal storage
             ChatActivity.writeObject(this, FILENAME, ChatHistoryList);
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-        }
-
-    }
-
-    public void writeToPersonHistory(String msg) {
-        Log.d(TAG, "saving message to personal history");
-
-        personChatHistoryList.add(msg);
-        try {
-            // Save the list of entries to internal storage
-            ChatActivity.writeObject(this, PERSONHISTORYFILE, personChatHistoryList);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -291,13 +280,13 @@ public class ChatActivity extends AppCompatActivity {
             for (HuhMessage entry : cachedEntries) {
                 //Log.d(TAG, "line 231" + entry.sender);
                 // Log.d(TAG, "INSIDES ReadList line 233" + entry.sender);
-                if (entry.isMine == true) {
-                    ChatMessage cm = new ChatMessage(entry.body, 12, ChatMessage.Status.SENT);
+                if (entry.isMine() == true) {
+                    ChatMessage cm = new ChatMessage(entry.getBody(), entry.getTimestamp(), ChatMessage.Status.SENT);
                     mChatView.sendMessage(cm);
                 }
-                if (entry.isMine == false) {
+                if (entry.isMine() == false) {
                     // mChatView.receiveMessage("Sender: " +entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
-                    mChatView.receiveMessage(entry.body);
+                    mChatView.receiveMessage(entry.getBody());
                 }
 
             }
@@ -347,6 +336,19 @@ public class ChatActivity extends AppCompatActivity {
         readFromChatHistoryList();
     }
 
+    public void writeToPersonHistory(String msg) {
+        Log.d(TAG, "saving message to personal history");
+
+        personChatHistoryList.add(msg);
+        try {
+            // Save the list of entries to internal storage
+            ChatActivity.writeObject(this, PERSONHISTORYFILE, personChatHistoryList);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+    }
+
     public boolean fileExistance(String fname) {
         File file = getBaseContext().getFileStreamPath(fname);
         return file.exists();
@@ -387,7 +389,7 @@ public class ChatActivity extends AppCompatActivity {
 
                                     //writeMessageToChatHistory(body);
                                     //Saves message to internal storage
-                                    writeToChatHistoryList(contactJid, userJid, "History unavailable: " + body, false);
+                                    writeToChatHistoryList(contactJid, userJid, "History unavailable: " + body, false, System.currentTimeMillis());
                                     mChatView.receiveMessage("processUnavailableMessages: " + body);
                                 }
 
@@ -398,7 +400,7 @@ public class ChatActivity extends AppCompatActivity {
                                         Log.d(TAG, "processUnavailableMessages() from: " + unavailablefromJid);
                                         Log.d(TAG, "processUnavailableMessages() message: " + body);
                                         //Saves message to internal storage for other contact
-                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, "processunavail" + body, false);
+                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, "processunavail" + body, false, System.currentTimeMillis());
                                     }
                                     Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
                                 }
@@ -447,7 +449,7 @@ public class ChatActivity extends AppCompatActivity {
 
                                             //writeMessageToChatHistory(body);
                                             //Saves message to internal storage
-                                            writeToChatHistoryList(contactJid, userJid, "NORM OFFLINE " + body, false);
+                                            writeToChatHistoryList(contactJid, userJid,  body, false, System.currentTimeMillis());
                                             mChatView.receiveMessage("processOfflineMessages: " + body);
 
                                     }
@@ -458,7 +460,7 @@ public class ChatActivity extends AppCompatActivity {
                                         Log.d(TAG, "processOfflineMessages()OTHER from: " + unavailablefromJid);
                                         Log.d(TAG, "processOfflineMessages()OTHER message: " + body);
                                         //Saves message to internal storage for other contact
-                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, "OTHER OFFLINE " +  body, false);
+                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, body, false, System.currentTimeMillis());
 
                                     Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
                                 }
@@ -513,7 +515,7 @@ public class ChatActivity extends AppCompatActivity {
 
                                         //writeMessageToChatHistory(body);
                                         //Saves message to internal storage
-                                        writeToChatHistoryList(contactJid, userJid, body, false);
+                                        writeToChatHistoryList(contactJid, userJid, body, false, System.currentTimeMillis());
                                         mChatView.receiveMessage("processOfflineMessages: " + body);
                                     }
                                 }
@@ -543,7 +545,7 @@ public class ChatActivity extends AppCompatActivity {
         registerReceiver(offlineBroadcastReceiver, filter);
     }
 
-    public void writeToOtherContactChatHistoryList(String userJid, String otherContactJid, String msg, boolean isMine) {
+    public void writeToOtherContactChatHistoryList(String userJid, String otherContactJid, String msg, boolean isMine, long timestampIn) {
         Log.d(TAG, "£££££££££ writeToOtherContactChatHistoryList(): from" + otherContactJid + " to : " + userJid);
         String fileToretrieve = "Chat.History" + userJid + otherContactJid;
         Log.d(TAG, "FILE NAME " + fileToretrieve);
@@ -570,7 +572,7 @@ public class ChatActivity extends AppCompatActivity {
 //
 //        }
 
-        HuhMessage m = new HuhMessage(userJid, otherContactJid, "OTHERHISTORY "+msg, isMine);
+        HuhMessage m = new HuhMessage(userJid, otherContactJid, msg, isMine,timestampIn );
         otherContactHistory.add(m);
 
         try {
