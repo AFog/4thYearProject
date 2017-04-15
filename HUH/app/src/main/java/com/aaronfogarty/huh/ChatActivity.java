@@ -125,7 +125,7 @@ public class ChatActivity extends AppCompatActivity {
                     sendBroadcast(intent);
 
                     //Saves message to internal storage
-                    writeToChatHistoryList(userJid, contactJid, mChatView.getTypedString(), true);
+                    writeToChatHistoryList(userJid, contactJid,  "NORM SEND: " + mChatView.getTypedString(), true);
                     writeToPersonHistory(mChatView.getTypedString());
                     //Update the chat view.
                     mChatView.sendMessage();
@@ -167,7 +167,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mBroadcastReceiver);
-        unregisterReceiver(unavailableBroadcastReceiver);
+       // unregisterReceiver(unavailableBroadcastReceiver);
         unregisterReceiver(offlineBroadcastReceiver);
 
         Intent i = new Intent(HuhConnectionService.UI_UNAVAILABLE);
@@ -184,7 +184,7 @@ public class ChatActivity extends AppCompatActivity {
         getApplication().sendBroadcast(i);
         Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast that we are Available to HuhConnection broadCastAvailabilityReceiver()");
 
-        processUnavailableMessages();
+        //processUnavailableMessages();
         processOfflineMessages();
 ///START
         Runnable r = new Runnable() {
@@ -196,15 +196,14 @@ public class ChatActivity extends AppCompatActivity {
 
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() ");
+                       // Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() ");
                         String action = intent.getAction();
                         switch (action) {
                             case HuhConnectionService.NEW_MESSAGE:
                                 String from = intent.getStringExtra(HuhConnectionService.BUNDLE_FROM_JID);
                                 //body = translateMessageText(intent.getStringExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY),"fr");
                                 String body = intent.getStringExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY);
-                                Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() MESSAGE: " + from + "  ContactJid is " + contactJid);
-                                Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() MESSAGE: " + body);
+                                Log.d(TAG, "BROADCAST RECEIVED:(onResume()) recieving messages from huhConnection processMessage() from: " + from + "\nContactJid is " + contactJid +"\nMESSAGE: " + body + "\nFILENAME: " + FILENAME);
                                 messageLog = body;
 
                                 Log.d(TAG, "TEST Got a message from jidPhoneNumber :" + from + "FILENAME: " + FILENAME);
@@ -215,11 +214,11 @@ public class ChatActivity extends AppCompatActivity {
 
                                     //writeMessageToChatHistory(body);
                                     //Saves message to internal storage
-                                    writeToChatHistoryList(contactJid, userJid, body, false);
+                                    writeToChatHistoryList(contactJid, "NORM RECIEVE: " + userJid, body, false);
                                     mChatView.receiveMessage(body);
                                 } else {
                                     Log.d(TAG, "NOT THE CURRENT USER Got a message from jidPhoneNumber :" + from);
-                                    writeToOtherContactChatHistoryList(userJid, from, body, false);
+                                    writeToOtherContactChatHistoryList(userJid, from, "OTHER RECIEVE: " + body, false);
                                 }
 
                                 return;
@@ -258,7 +257,7 @@ public class ChatActivity extends AppCompatActivity {
 
     //Saves message to internal storage
     public void writeToChatHistoryList(String sender, String receiver, String msg, boolean isMine) {
-
+        Log.d(TAG, "£££££££££ writeToChatHistoryList(): from" + sender + " to : " + receiver);
         HuhMessage m = new HuhMessage(sender, receiver, msg, isMine);
         ChatHistoryList.add(m);
         try {
@@ -399,7 +398,7 @@ public class ChatActivity extends AppCompatActivity {
                                         Log.d(TAG, "processUnavailableMessages() from: " + unavailablefromJid);
                                         Log.d(TAG, "processUnavailableMessages() message: " + body);
                                         //Saves message to internal storage for other contact
-                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, body, false);
+                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, "processunavail" + body, false);
                                     }
                                     Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
                                 }
@@ -433,17 +432,14 @@ public class ChatActivity extends AppCompatActivity {
                         if (!offlineMessages.isEmpty()) {
 
                             for(int i = 0; i < offlineMessages.size(); i ++){
-
-                                Log.d(TAG, "processOfflineMessages() int i = : " + i);
                                 unavailablefromJid = intent.getStringArrayListExtra(OFFLINE_MESSAGE_ARRAYLIST).get(i);
                                 Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
-
                                 unavailablefromJid = unavailablefromJid.split("-*_-")[0];
                                 unavailablefromJid = unavailablefromJid.split("/")[0];
                                 Log.d(TAG, "processOfflineMessages() AFTER SPLIT from: " + unavailablefromJid + " CURRENT CONTACT JID " + contactJid);
                                 String body = offlineMessages.get(i);
-                                if (unavailablefromJid.equals(contactJid)) {
 
+                                if (unavailablefromJid.equals(contactJid)) {
                                     if (!offlineMessages.isEmpty()) {
                                             body = body.split("-*_-")[1];
                                             Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
@@ -451,7 +447,7 @@ public class ChatActivity extends AppCompatActivity {
 
                                             //writeMessageToChatHistory(body);
                                             //Saves message to internal storage
-                                            writeToChatHistoryList(contactJid, userJid, body, false);
+                                            writeToChatHistoryList(contactJid, userJid, "NORM OFFLINE " + body, false);
                                             mChatView.receiveMessage("processOfflineMessages: " + body);
 
                                     }
@@ -462,11 +458,10 @@ public class ChatActivity extends AppCompatActivity {
                                         Log.d(TAG, "processOfflineMessages()OTHER from: " + unavailablefromJid);
                                         Log.d(TAG, "processOfflineMessages()OTHER message: " + body);
                                         //Saves message to internal storage for other contact
-                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, body, false);
+                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, "OTHER OFFLINE " +  body, false);
 
                                     Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
                                 }
-                                    Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
 
                                 }
 
@@ -549,8 +544,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void writeToOtherContactChatHistoryList(String userJid, String otherContactJid, String msg, boolean isMine) {
-
-        Log.d(TAG, "writeToOtherContactChatHistoryList()");
+        Log.d(TAG, "£££££££££ writeToOtherContactChatHistoryList(): from" + otherContactJid + " to : " + userJid);
         String fileToretrieve = "Chat.History" + userJid + otherContactJid;
         Log.d(TAG, "FILE NAME " + fileToretrieve);
 
@@ -564,17 +558,17 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         // Display the items from the list retrieved.
-        for (HuhMessage entry : otherContactHistory) {
-            //Log.d(TAG, "line 231" + entry.sender);
-            // Log.d(TAG, "INSIDES ReadList line 233" + entry.sender);
-            if (entry.isMine == true) {
-                Log.d(TAG, "Sender: " + entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
-            }
-            if (entry.isMine == false) {
-                Log.d(TAG, "Sender: " + entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
-            }
-
-        }
+//        for (HuhMessage entry : otherContactHistory) {
+//            //Log.d(TAG, "line 231" + entry.sender);
+//            // Log.d(TAG, "INSIDES ReadList line 233" + entry.sender);
+//            if (entry.isMine == true) {
+//                Log.d(TAG, "Sender: " + entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
+//            }
+//            if (entry.isMine == false) {
+//                Log.d(TAG, "Sender: " + entry.sender + "\nReceiver: " + entry.receiver + "\nbody: " + entry.body + "\nTime: " + System.currentTimeMillis());
+//            }
+//
+//        }
 
         HuhMessage m = new HuhMessage(userJid, otherContactJid, "OTHERHISTORY "+msg, isMine);
         otherContactHistory.add(m);
