@@ -56,7 +56,7 @@ public class PersonalityInsightsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_personality_insights);
         FILENAME = getUserHistoryFileName();
         readFromChatHistoryList();
-        getPersonalityInsight();
+        //getPersonalityInsight();
 
         //when registration completes create contacts
         personInsightHandler = new Handler() {

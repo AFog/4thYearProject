@@ -133,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 } else {
                     Log.d(TAG, "Client not connected to server ,Message not sent!");
-                    Toast.makeText(getApplicationContext(), "Client not connected to server ,Message not sent!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Client not connected to server ,Message not sent! ...Reconnecting", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -259,7 +259,7 @@ public class ChatActivity extends AppCompatActivity {
     //Saves message to internal storage
     public void writeToChatHistoryList(String sender, String receiver, String msg, boolean isMine) {
 
-        HuhMessage m = new HuhMessage(sender, receiver, "CHATHISTORY "+msg, isMine);
+        HuhMessage m = new HuhMessage(sender, receiver, msg, isMine);
         ChatHistoryList.add(m);
         try {
             // Save the list of entries to internal storage
@@ -549,14 +549,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void writeToOtherContactChatHistoryList(String userJid, String otherContactJid, String msg, boolean isMine) {
-//       Runnable r = new Runnable() {
-//           @Override
-//           public void run() {
-//
-//           }
-//       };
-//       Thread t = new Thread(r);
-//        t.start();
 
         Log.d(TAG, "writeToOtherContactChatHistoryList()");
         String fileToretrieve = "Chat.History" + userJid + otherContactJid;

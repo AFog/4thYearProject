@@ -4,6 +4,7 @@
 package com.aaronfogarty.huh;
 
 
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -98,6 +100,9 @@ public class HuhConnection implements ConnectionListener {
     private Roster roster;
     private Thread getPhoneContactsThread;
     private Handler getPhoneContactsHandler;
+    Notification.Builder notification;
+    private static final int uniqueID = 12312;
+
 
     public String getTranslatedText() {
         return translatedText;
@@ -137,6 +142,7 @@ public class HuhConnection implements ConnectionListener {
         }
         phoneDBNumbers = new ArrayList<RosterContact>();
         phoneContacts();
+
     }
 
     public void connect() throws IOException, XMPPException, SmackException {
@@ -241,6 +247,9 @@ public class HuhConnection implements ConnectionListener {
 
                 Log.d(TAG, "message.getBody() :" + message.getBody());
                 Log.d(TAG, "message.getFrom() :" + message.getFrom());
+
+
+
                 // Log.d(TAG, "message.getExtension(\"x\",\"jabber:x:delay\") :" + message.getExtension("x", "jabber:x:delay"));
                 Log.d(TAG, "message.getBody() incomingMessage before :" );
                 Log.d(TAG, "Status For Unavailable " + isAvailable);
@@ -313,6 +322,7 @@ public class HuhConnection implements ConnectionListener {
         reconnectionManager.setEnabledPerDefault(true);
         reconnectionManager.enableAutomaticReconnection();
     }
+
 
 
     public void admitFriendsRequest() {
@@ -561,6 +571,7 @@ public class HuhConnection implements ConnectionListener {
 //            Log.d(TAG, "offlineMessages ARRAYLIST: " + s);
 //        }
 //    }
+
     //handles messages when user unavailable
     public void offlineMessages(String message) {
         Log.d(TAG, "offlineMessages()");
@@ -720,11 +731,9 @@ public class HuhConnection implements ConnectionListener {
             Log.d(TAG, "Loop1 New user name " + newUserJid);
 
             for(RosterContact phoneContact : phoneDBNumbers){
-                Log.d(TAG, "Loop1 New user name " + newUserJid + " == " + phoneContact.getphoneNumber());
 
                 if(phoneContact.getphoneNumber().equals(newUserJid)){
                     huhContacts.add(phoneContact);
-                    Log.d(TAG, "Loop2 Add user name " + newUserJid + " == " + phoneContact.getphoneNumber());
                 }
             }
         }
@@ -1095,6 +1104,7 @@ public class HuhConnection implements ConnectionListener {
         try {
             if (mConnection != null) {
                 mConnection.disconnect();
+                reconnectingIn(1);
             }
 
         } catch (SmackException.NotConnectedException e) {
@@ -1141,26 +1151,6 @@ public class HuhConnection implements ConnectionListener {
     public void connectionClosed() {
         HuhConnectionService.sConnectionState = ConnectionState.DISCONNECTED;
         Log.d(TAG, "Connectionclosed()");
-        //Toast.makeText(mApplicationContext,TAG + ": Connectionclosed ", Toast.LENGTH_LONG).show();
-//        try {
-//            if (mConnection != null) {
-//                mConnection.disconnect();
-//            }
-//            // mConnection = null;
-//            // Unregister the message broadcast receiver.
-//            if (uiThreadMessageReceiver != null) {
-//                mApplicationContext.unregisterReceiver(uiThreadMessageReceiver);
-//                uiThreadMessageReceiver = null;
-//            }
-//
-//            connect();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        } catch (XMPPException e1) {
-//            e1.printStackTrace();
-//        } catch (SmackException e1) {
-//            e1.printStackTrace();
-//        }
 
     }
 
@@ -1169,33 +1159,18 @@ public class HuhConnection implements ConnectionListener {
         HuhConnectionService.sConnectionState = ConnectionState.DISCONNECTED;
         Log.d(TAG, "ConnectionClosedOnError, error " + e.toString());
 //TODO try restart service here
-//        try {
-//            if (mConnection != null) {
-//                mConnection.disconnect();
-//            }
-//
-//
-//       // mConnection = null;
-//        // Unregister the message broadcast receiver.
-//        if (uiThreadMessageReceiver != null) {
-//            mApplicationContext.unregisterReceiver(uiThreadMessageReceiver);
-//            uiThreadMessageReceiver = null;
-//        }
-//
-//            connect();
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        } catch (XMPPException e1) {
-//            e1.printStackTrace();
-//        } catch (SmackException e1) {
-//            e1.printStackTrace();
-//        }
+//        Log.d(TAG, "Stopping Service, error ");
+//        mApplicationContext.stopService(new Intent(mApplicationContext, HuhConnectionService.class));
+        Log.d(TAG, "Re-starting Service");
+       // mApplicationContext.stopService(new Intent(mApplicationContext, HuhConnectionService.class));
+
+
     }
 
     @Override
     public void reconnectingIn(int seconds) {
         HuhConnectionService.sConnectionState = ConnectionState.CONNECTING;
-        Log.d(TAG, "ReconnectingIn()");
+        Log.d(TAG, "ReconnectingIn()" + seconds + " seconds");
 
     }
 
@@ -1203,6 +1178,7 @@ public class HuhConnection implements ConnectionListener {
     public void reconnectionSuccessful() {
         HuhConnectionService.sConnectionState = ConnectionState.CONNECTED;
         Log.d(TAG, "ReconnectionSuccessful()");
+        Toast.makeText(mApplicationContext,TAG + ": Authenticated Successfully ", Toast.LENGTH_LONG).show();
 
 
     }
@@ -1211,7 +1187,6 @@ public class HuhConnection implements ConnectionListener {
     public void reconnectionFailed(Exception e) {
         HuhConnectionService.sConnectionState = ConnectionState.DISCONNECTED;
         Log.d(TAG, "ReconnectionFailed()");
-
 
     }
 
