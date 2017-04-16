@@ -74,13 +74,11 @@ public class HuhConnectionService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate()");
-       // Toast.makeText(getApplicationContext(), TAG + ": onCreate()", Toast.LENGTH_LONG).show();
 
     }
 
     private void initConnection() {
         Log.d(TAG, "initConnection()");
-        //Toast.makeText(getApplicationContext(), TAG + ": initConnection()", Toast.LENGTH_LONG).show();
 
         if (mConnection == null) {
             mConnection = new HuhConnection(this);

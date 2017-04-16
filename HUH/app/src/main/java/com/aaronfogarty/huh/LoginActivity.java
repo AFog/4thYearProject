@@ -3,6 +3,7 @@ package com.aaronfogarty.huh;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -235,6 +236,13 @@ public class LoginActivity extends AppCompatActivity  {
     }
 
     private void saveCredentialsAndLogin() {
+
+        if(isMyServiceRunning(HuhConnectionService.class)){
+            Log.d(TAG,"Stopping service");
+
+            this.stopService(new Intent(this, HuhConnectionService.class));
+        }
+
         //retrieves contacts from phone and save to shared prefs
         //phoneContacts();
         /////
@@ -256,7 +264,15 @@ public class LoginActivity extends AppCompatActivity  {
         finish();
 
     }
-
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
     public void phoneContacts(){
         Log.d(TAG,"Getting phone Contacts" );
 

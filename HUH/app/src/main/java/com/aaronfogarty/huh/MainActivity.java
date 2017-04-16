@@ -1,7 +1,10 @@
 package com.aaronfogarty.huh;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,7 +30,38 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.d(TAG, "onCreate()");
+        Log.d(TAG, "Is the huh service running? " + isMyServiceRunning(HuhConnectionService.class));
 
+        Boolean isRegistered = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_user_registered", false);
+
+    if(isRegistered){
+        Log.d(TAG, "user is registered ");
+        if(!isMyServiceRunning(HuhConnectionService.class)){
+            Log.d(TAG," Service not running");
+            this.stopService(new Intent(this, HuhConnectionService.class));
+            Log.d(TAG,"StartService called from Main.");
+            //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+            Intent i1 = new Intent(this,HuhConnectionService.class);
+            startService(i1);
+            //finish();
+        }
+        else{
+            Log.d(TAG," Service is running");
+            if (HuhConnectionService.getState().equals(HuhConnection.ConnectionState.DISCONNECTED)) {
+                Log.d(TAG,"Server Disconnected");
+                this.stopService(new Intent(this, HuhConnectionService.class));
+                Log.d(TAG,"StartService called from Main.");
+                //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+                Intent i1 = new Intent(this,HuhConnectionService.class);
+                startService(i1);
+//            finish();
+            }
+        }
+    }
+    else{
+        Log.d(TAG, "user is not registered ");
+
+    }
        /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +92,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void goToTranslate(View view){
@@ -95,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ContactsListActivity.class);
         startActivity(intent);
+
     }
     public void goToRegisterView(View view){
 
@@ -113,4 +158,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PersonalityInsightsActivity.class);
         startActivity(intent);
     }
+
 }

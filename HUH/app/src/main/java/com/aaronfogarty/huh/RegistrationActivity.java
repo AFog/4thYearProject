@@ -125,16 +125,16 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.registerPassword);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attempRegister();
-                    return true;
-                }
-                return false;
-            }
-        });
+//        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+//                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+//                    attempRegister();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
@@ -269,15 +269,30 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         boolean cancel = false;
         View focusView = null;
 
-        //Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+//        //Check for a valid password, if the user entered one.
+//        Log.d(TAG, "Password check: " + password + "|");
+//        if (!TextUtils.isEmpty(password)) {
+//            mPasswordView.setError(getString(R.string.error_invalid_password));
+//            focusView = mPasswordView;
+//            cancel = true;
+//        }
+//        else
+        if(!isPasswordValid(password)){
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
+        if(!hasUpperCaseValue(password)){
+            mPasswordView.setError(getString(R.string.error_invalid_password_case));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+        if(!hasNumber(password)){
+            mPasswordView.setError(getString(R.string.error_invalid_password_number));
+            focusView = mPasswordView;
+            cancel = true;
+        }
 
-
-        // Check for a valid jidPhoneNumber.
         if (TextUtils.isEmpty(jidPhoneNumber)) {
             mJidView.setError(getString(R.string.error_field_required));
             focusView = mJidView;
@@ -287,7 +302,6 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             focusView = mJidView;
             cancel = true;
         }
-
         // Check for a valid jidConfirmPhoneNumber.
         if (TextUtils.isEmpty(jidConfirmPhoneNumber)) {
             mJidConfirmView.setError(getString(R.string.error_field_required));
@@ -351,19 +365,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
                 }
             };
 
-//            if(isUserNameAvailable) {
-//                Log.d(TAG, "HERE WE BEGIN REGISTRATION");
-//
-//            try {
-//                registerNewUser();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            } catch (XMPPException e) {
-//                e.printStackTrace();
-//            } catch (SmackException e) {
-//                e.printStackTrace();
-//            }
-//            }
+
             Log.d(TAG, "Jid and password are valid, proceed with login");
             //Toast.makeText(getApplicationContext(), TAG + ": Jid and password are valid, proceed with login", Toast.LENGTH_LONG).show();
 
@@ -561,10 +563,6 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
                 //check if phone contact exists on the openfire server and adds it to huhContacts ArrayList if it does
                 for (RosterContact c : phoneNumbers) {
-                    Log.d(TAG, "Checking phone Numbers exist " + c.getphoneNumber() + " Name: " + c.getJid());
-
-                }
-                for (RosterContact c : phoneNumbers) {
                     //isHuhUser = checkIfUserExists(c.getphoneNumber());
                     checkIfUserExists2(c.getphoneNumber());
                     Log.d(TAG, "Is huh user: " + isHuhUser + "PhoneNumber" + c.getphoneNumber());
@@ -737,10 +735,18 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
     private boolean isPhoneNumberValid(String email) {
         //TODO: Replace this with your own logic
-        // return email.contains("@");
-        return jidPhoneNumber.length() == 10;
+        Boolean isValid = true;
+        if( jidPhoneNumber.length() != 10)   {
+            isValid = false;
+        }
 
-    }
+        if(!jidPhoneNumber.equals(jidPhoneNumber)) {
+            isValid = false;
+        }
+       // return jidPhoneNumber.length() != 10;
+            return isValid;
+
+        }
 
     private boolean isConfirmPhoneNumberValid(String email) {
         //TODO: Replace this with your own logic
@@ -762,21 +768,39 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         if(password.isEmpty()){
             isValid = false;
         }
-        if(password.length() < 4){
+        if(password.length() < 8){
             return false;
         }
-        if(password.length() == 0){
+        if(password.length() < 0){
             isValid = false;
         }
-        if(password == null){
-            isValid = false;
-        }
+//        if(password == null){
+//            isValid = false;
+//        }
         if(password.equals("null")){
+            isValid = false;
+        }
+        if(password.equals("")){
             isValid = false;
         }
         return isValid ;
     }
-
+    private static boolean hasUpperCaseValue(String s) {
+        for(char c : s.toCharArray()) {
+            if(Character.isUpperCase(c)) {
+                return  true;
+            }
+        }
+        return false;
+    }
+    private static boolean hasNumber(String s) {
+        for(char c : s.toCharArray()) {
+            if(Character.isDigit(c)) {
+                return  true;
+            }
+        }
+        return false;
+    }
     /**
      * Shows the progress UI and hides the login form.
      */

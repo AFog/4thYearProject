@@ -21,7 +21,9 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_jid">Phone Number is invalid</string>
     <string name="error_invalid_jid_confirm">Phone Number does not match</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_password">This password must contain 8 or more characters</string>
+    <string name="error_invalid_password_case">Password must contain at least one Uppercase</string>
+    <string name="error_invalid_password_number">Password must contain at least one Number</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email

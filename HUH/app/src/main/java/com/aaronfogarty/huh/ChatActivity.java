@@ -1,5 +1,6 @@
 package com.aaronfogarty.huh;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class ChatActivity extends AppCompatActivity {
     private BroadcastReceiver mBroadcastReceiver;
     private BroadcastReceiver unavailableBroadcastReceiver;
     private BroadcastReceiver offlineBroadcastReceiver;
+    private BroadcastReceiver connectionErrorBroadcastReceiver;
     private String messageLog;
     private String userJid;
     private String FILENAME;
@@ -71,18 +73,18 @@ public class ChatActivity extends AppCompatActivity {
         translatedText = inputText;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate() ");
+        Log.d(TAG, "onCreate() Is the huh service running? " + isMyServiceRunning(HuhConnectionService.class));
 
         setContentView(R.layout.activity_chat);
 
         Intent i = new Intent(HuhConnectionService.UI_UNAVAILABLE);
         i.setPackage(getApplication().getPackageName());
         getApplication().sendBroadcast(i);
-        Log.d(TAG, "BROADCAST: (onCreate()Sent the broadcast that we are Unvailable to HuhConnection broadCastAvailabilityReceiver()");
+      // TODO Log.d(TAG, "BROADCAST: (onCreate()Sent the broadcast that we are Unvailable to HuhConnection broadCastAvailabilityReceiver()");
 
         // Reading from SharedPreferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -125,6 +127,7 @@ public class ChatActivity extends AppCompatActivity {
                     sendBroadcast(intent);
 
                     //Saves message to internal storage
+                    Log.d(TAG, "SEND SAVE NORM");
                     writeToChatHistoryList(userJid, contactJid, mChatView.getTypedString(), true, System.currentTimeMillis());
                     writeToPersonHistory(mChatView.getTypedString());
                     //Update the chat view.
@@ -141,9 +144,9 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         //initialise contactJid
         contactJid = intent.getStringExtra("EXTRA_CONTACT_JID");
-        Log.d(TAG, "broadcast contact from listview: " + contactJid);
+      //  Log.d(TAG, "broadcast contact from listview: " + contactJid);
         contactJidDis = intent.getStringExtra("EXTRA_CONTACT_DISPLAY");
-        Log.d(TAG, "broadcast contact from listview: " + contactJidDis);
+     //   Log.d(TAG, "broadcast contact from listview: " + contactJidDis);
 
         if (contactJidDis != null) {
             displayJid = contactJidDis.split("@")[0];
@@ -151,7 +154,7 @@ public class ChatActivity extends AppCompatActivity {
 
         FILENAME = "Chat.History" + userJid + contactJid;
         PERSONHISTORYFILE = "Chat.History" + userJid;
-        Log.d(TAG, "(onCreate) Creating a file name for chatHistory. FILENAME: " + FILENAME);
+        Log.d(TAG, "(onCreate) Naming a file for chatHistory. FILENAME: " + FILENAME);
         setTitle(displayJid);
 
         // processUnavailableMessages();
@@ -166,6 +169,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause() Is the huh service running? " + isMyServiceRunning(HuhConnectionService.class));
         unregisterReceiver(mBroadcastReceiver);
        // unregisterReceiver(unavailableBroadcastReceiver);
         unregisterReceiver(offlineBroadcastReceiver);
@@ -173,16 +177,18 @@ public class ChatActivity extends AppCompatActivity {
         Intent i = new Intent(HuhConnectionService.UI_UNAVAILABLE);
         i.setPackage(getApplication().getPackageName());
         getApplication().sendBroadcast(i);
-        Log.d(TAG, "BROADCAST: (onPause)Sent the broadcast that we are Unvailable to HuhConnection broadCastAvailabilityReceiver()");
+       //TODO Log.d(TAG, "BROADCAST: (onPause)Sent the broadcast that we are Unvailable to HuhConnection broadCastAvailabilityReceiver()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume() Is the huh service running? " + isMyServiceRunning(HuhConnectionService.class));
+
         Intent i = new Intent(HuhConnectionService.UI_AVAILABLE);
         i.setPackage(getApplication().getPackageName());
         getApplication().sendBroadcast(i);
-        Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast that we are Available to HuhConnection broadCastAvailabilityReceiver()");
+       //TODO Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast that we are Available to HuhConnection broadCastAvailabilityReceiver()");
 
         //processUnavailableMessages();
         processOfflineMessages();
@@ -216,10 +222,12 @@ public class ChatActivity extends AppCompatActivity {
 
                                     //writeMessageToChatHistory(body);
                                     //Saves message to internal storage
+                                    Log.d(TAG, "RECIEVE SAVE NORM");
                                     writeToChatHistoryList(contactJid, userJid, body, false, System.currentTimeMillis());
                                     mChatView.receiveMessage(body);
                                 } else {
-                                    Log.d(TAG, "NOT THE CURRENT USER Got a message from jidPhoneNumber :" + from);
+                                    Log.d(TAG, "NOT THE CURRENT USER Got a message from jidPhoneNumber :" + from + "\nOTHER on recieve");
+                                    Log.d(TAG, "RECIEVE SAVE OTHER");
                                     writeToOtherContactChatHistoryList(userJid, from, body, false, System.currentTimeMillis());
                                 }
 
@@ -274,6 +282,7 @@ public class ChatActivity extends AppCompatActivity {
     //Reads message from internal storage
     public void readFromChatHistoryList() {
         try {
+            Log.d(TAG, "readFromChatHistoryList()");
             // Retrieve the list from internal storage
             cachedEntries = (List<HuhMessage>) readObject(this, FILENAME);
             // Display the items from the list retrieved.
@@ -308,6 +317,7 @@ public class ChatActivity extends AppCompatActivity {
                 // Retrieve the list from internal storage
                 ChatHistoryList = (List<HuhMessage>) readObject(this, FILENAME);
                 Log.d(TAG, "Initialising ChatHistory with file " + FILENAME);
+
             }
 
         } catch (ClassNotFoundException | IOException e) {
@@ -333,7 +343,6 @@ public class ChatActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        readFromChatHistoryList();
     }
 
     public void writeToPersonHistory(String msg) {
@@ -389,7 +398,8 @@ public class ChatActivity extends AppCompatActivity {
 
                                     //writeMessageToChatHistory(body);
                                     //Saves message to internal storage
-                                    writeToChatHistoryList(contactJid, userJid, "History unavailable: " + body, false, System.currentTimeMillis());
+                                    Log.d(TAG, "RECIEVE SAVE NORM - UNAVAILABLE");
+                                    writeToChatHistoryList(contactJid, userJid, body, false, System.currentTimeMillis());
                                     mChatView.receiveMessage("processUnavailableMessages: " + body);
                                 }
 
@@ -400,11 +410,11 @@ public class ChatActivity extends AppCompatActivity {
                                         Log.d(TAG, "processUnavailableMessages() from: " + unavailablefromJid);
                                         Log.d(TAG, "processUnavailableMessages() message: " + body);
                                         //Saves message to internal storage for other contact
-                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, "processunavail" + body, false, System.currentTimeMillis());
+                                        Log.d(TAG, "RECIEVE SAVE OTHER - UNAVAILABLE");
+                                        writeToOtherContactChatHistoryList(userJid, unavailablefromJid, body, false, System.currentTimeMillis());
                                     }
                                     Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
                                 }
-                                Log.d(TAG, "processUnavailableMessages() AFTER NOT THE SAME Got a message from jidPhoneNumber :" + unavailablefromJid);
                             }
                         }
                 }
@@ -426,14 +436,14 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
-                Log.d(TAG, "processOfflineMessages()++++++++++++++++++++++++++++++working");
 
                 switch (action) {
                     case HuhConnectionService.OFFLINE_MESSAGE:
                         offlineMessages = intent.getStringArrayListExtra(OFFLINE_MESSAGE_ARRAYLIST);
                         if (!offlineMessages.isEmpty()) {
+                            Log.d(TAG, "processOfflineMessages()++++++++++++++++++++++++++++++working");
 
-                            for(int i = 0; i < offlineMessages.size(); i ++){
+                            for(int i = 1; i < offlineMessages.size(); i ++){
                                 unavailablefromJid = intent.getStringArrayListExtra(OFFLINE_MESSAGE_ARRAYLIST).get(i);
                                 Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
                                 unavailablefromJid = unavailablefromJid.split("-*_-")[0];
@@ -443,27 +453,29 @@ public class ChatActivity extends AppCompatActivity {
 
                                 if (unavailablefromJid.equals(contactJid)) {
                                     if (!offlineMessages.isEmpty()) {
-                                            body = body.split("-*_-")[1];
-                                            Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
-                                            Log.d(TAG, "processOfflineMessages() message: " + body);
+                                        body = body.split("-*_-")[1];
+                                        Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
+                                        Log.d(TAG, "processOfflineMessages() message: " + body);
 
-                                            //writeMessageToChatHistory(body);
-                                            //Saves message to internal storage
-                                            writeToChatHistoryList(contactJid, userJid,  body, false, System.currentTimeMillis());
-                                            mChatView.receiveMessage("processOfflineMessages: " + body);
+                                        //writeMessageToChatHistory(body);
+                                        //Saves message to internal storage
+                                        Log.d(TAG, "RECIEVE SAVE NORM - OFFLINE");
+                                        writeToChatHistoryList(contactJid, userJid, body, false, System.currentTimeMillis());
+                                        mChatView.receiveMessage("processOfflineMessages: " + body);
 
                                     }
                                 } else {
 
-                                if (!offlineMessages.isEmpty()) {
+                                    if (!offlineMessages.isEmpty()) {
                                         body = body.split("-*_-")[1];
                                         Log.d(TAG, "processOfflineMessages()OTHER from: " + unavailablefromJid);
                                         Log.d(TAG, "processOfflineMessages()OTHER message: " + body);
                                         //Saves message to internal storage for other contact
+                                        Log.d(TAG, "RECIEVE SAVE OTHER - OFFLINE");
                                         writeToOtherContactChatHistoryList(userJid, unavailablefromJid, body, false, System.currentTimeMillis());
 
-                                    Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
-                                }
+                                        Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
+                                    }
 
                                 }
 
@@ -478,6 +490,71 @@ public class ChatActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(HuhConnectionService.OFFLINE_MESSAGE);
         registerReceiver(offlineBroadcastReceiver, filter);
     }
+
+//    split public void processOfflineMessages() {
+//        Log.d(TAG, "processOfflineMessages()");
+//
+//        //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
+//        offlineMessages = new ArrayList<String>();
+//
+//        offlineBroadcastReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                String action = intent.getAction();
+//
+//                switch (action) {
+//                    case HuhConnectionService.OFFLINE_MESSAGE:
+//                        offlineMessages = intent.getStringArrayListExtra(OFFLINE_MESSAGE_ARRAYLIST);
+//                        if (!offlineMessages.isEmpty()) {
+//                            Log.d(TAG, "processOfflineMessages()++++++++++++++++++++++++++++++working");
+//
+//                            for(int i = 0; i < offlineMessages.size(); i ++){
+//                                unavailablefromJid = intent.getStringArrayListExtra(OFFLINE_MESSAGE_ARRAYLIST).get(i);
+//                                Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
+//                                unavailablefromJid = unavailablefromJid.split("-*_-")[0];
+//                                unavailablefromJid = unavailablefromJid.split("/")[0];
+//                                Log.d(TAG, "processOfflineMessages() AFTER SPLIT from: " + unavailablefromJid + " CURRENT CONTACT JID " + contactJid);
+//                                String body = offlineMessages.get(i);
+//
+//                                if (unavailablefromJid.equals(contactJid)) {
+//                                    if (!offlineMessages.isEmpty()) {
+//                                            body = body.split("-*_-")[1];
+//                                            Log.d(TAG, "processOfflineMessages() from: " + unavailablefromJid);
+//                                            Log.d(TAG, "processOfflineMessages() message: " + body);
+//
+//                                            //writeMessageToChatHistory(body);
+//                                            //Saves message to internal storage
+//                                        Log.d(TAG, "RECIEVE SAVE NORM - OFFLINE");
+//                                        writeToChatHistoryList(contactJid, userJid, body, false, System.currentTimeMillis());
+//                                            mChatView.receiveMessage("processOfflineMessages: " + body);
+//
+//                                    }
+//                                } else {
+//
+//                                if (!offlineMessages.isEmpty()) {
+//                                        body = body.split("-*_-")[1];
+//                                        Log.d(TAG, "processOfflineMessages()OTHER from: " + unavailablefromJid);
+//                                        Log.d(TAG, "processOfflineMessages()OTHER message: " + body);
+//                                        //Saves message to internal storage for other contact
+//                                    Log.d(TAG, "RECIEVE SAVE OTHER - OFFLINE");
+//                                    writeToOtherContactChatHistoryList(userJid, unavailablefromJid, body, false, System.currentTimeMillis());
+//
+//                                    Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
+//                                }
+//
+//                                }
+//
+//                            }
+//                        }
+//                }
+//
+//
+//            }
+//        };
+//
+//        IntentFilter filter = new IntentFilter(HuhConnectionService.OFFLINE_MESSAGE);
+//        registerReceiver(offlineBroadcastReceiver, filter);
+//    }
 
     public void processOfflineMessagesoriginal() {
         Log.d(TAG, "processOfflineMessages()");
@@ -645,4 +722,30 @@ public class ChatActivity extends AppCompatActivity {
 
         return output;
     }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void connectionclosedReciever(){
+        connectionErrorBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                Log.d(TAG, "RECIEVER ConnectionClosedOnError");
+
+                switch (action) {
+                    case "ConnectionClosedOnError":
+                }
+            }
+        };
+    }
+
+
 }

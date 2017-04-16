@@ -187,6 +187,7 @@ public class HuhConnection implements ConnectionListener {
         try {
             mConnection.sendPacket(presence);
         } catch (SmackException.NotConnectedException e) {
+            Log.d(TAG, "Connection error herereererer " + isAvailable);
             e.printStackTrace();
         }
 
@@ -229,7 +230,7 @@ public class HuhConnection implements ConnectionListener {
 
             }
             public void presenceChanged(Presence presence) {
-                System.out.println("Presence changed: " + presence.getFrom() + " " + presence);
+               // System.out.println("Presence changed: " + presence.getFrom() + " " + presence);
             }
         });
 
@@ -239,6 +240,10 @@ public class HuhConnection implements ConnectionListener {
             @Override
             public void processMessage(Chat chat, Message message) {
 
+                baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+                        .getString("language", "en");
+                Log.d(TAG, "messageListener Language: " + baseLanguage);
+
                 //    if(message.getBody() != null){
                 String incomingMessage = message.getBody();
                 Message.Type incoming = message.getType();
@@ -247,8 +252,6 @@ public class HuhConnection implements ConnectionListener {
 
                 Log.d(TAG, "message.getBody() :" + message.getBody());
                 Log.d(TAG, "message.getFrom() :" + message.getFrom());
-
-
 
                 // Log.d(TAG, "message.getExtension(\"x\",\"jabber:x:delay\") :" + message.getExtension("x", "jabber:x:delay"));
                 Log.d(TAG, "message.getBody() incomingMessage before :" );
@@ -260,6 +263,11 @@ public class HuhConnection implements ConnectionListener {
                 String test = unavailableMessage.split("-*_-")[0];
                 test = test.split("/")[0];
                 String test2 = unavailableMessage.split("-*_-")[1];
+
+                Log.d(TAG, "unavailable: " + unavailableMessage );
+                Log.d(TAG, "After split from: " + test + "message: " + test2 );
+
+
 
                 Log.d(TAG, "BEFORE OFFLINE ADD TO LIST unavailableMessage: " + unavailableMessage );
 
@@ -318,9 +326,9 @@ public class HuhConnection implements ConnectionListener {
             }
         });
 
-        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
-        reconnectionManager.setEnabledPerDefault(true);
-        reconnectionManager.enableAutomaticReconnection();
+//        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
+//        reconnectionManager.setEnabledPerDefault(true);
+//        reconnectionManager.enableAutomaticReconnection();
     }
 
 
@@ -451,7 +459,7 @@ public class HuhConnection implements ConnectionListener {
                 String action = intent.getAction();
                 if (action.equals(HuhConnectionService.UI_AVAILABLE)) {
                     isAvailable = true;
-                    Log.d(TAG, "Presence set to Available. User is available: " + isAvailable);
+                    //TODO Log.d(TAG, "Presence set to Available. User is available: " + isAvailable);
                     Presence presence = new Presence(Presence.Type.available);
                     try {
                         mConnection.sendPacket(presence);
@@ -469,7 +477,7 @@ public class HuhConnection implements ConnectionListener {
                 }
                 if (action.equals(HuhConnectionService.UI_UNAVAILABLE)) {
                     isAvailable = false;
-                    Log.d(TAG, "Presence set to Unavailable. User is available: " + isAvailable);
+                   //TODO Log.d(TAG, "Presence set to Unavailable. User is available: " + isAvailable);
                     Presence presence = new Presence(unavailable);
                     try {
                         mConnection.sendPacket(presence);
@@ -1033,8 +1041,9 @@ public class HuhConnection implements ConnectionListener {
 
     public String translateMessageText2(String text, String toLanguage) {
 
-        baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
-                .getString("language", "en");
+//        baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+//                .getString("language", "en");
+//        Log.d(TAG, "translateMessageText2 Language: " + baseLanguage);
 
         String output = "";
 
@@ -1157,13 +1166,36 @@ public class HuhConnection implements ConnectionListener {
     @Override
     public void connectionClosedOnError(Exception e) {
         HuhConnectionService.sConnectionState = ConnectionState.DISCONNECTED;
-        Log.d(TAG, "ConnectionClosedOnError, error " + e.toString());
+        Log.d(TAG, "ConnectionClosedOnError, error ");
+       // Log.d(TAG, "ConnectionClosedOnError, error " + e.toString());
+        while (HuhConnectionService.sConnectionState == ConnectionState.DISCONNECTED) {
+            Log.d(TAG, "Trying to reconnect ");
+            try {
+            connect();
+        } catch (IOException e1) {
+                e1.printStackTrace();
+        } catch (XMPPException e1) {
+                e1.printStackTrace();
+        } catch (SmackException e1) {
+                e1.printStackTrace();
+        }
+
+        }
 //TODO try restart service here
 //        Log.d(TAG, "Stopping Service, error ");
 //        mApplicationContext.stopService(new Intent(mApplicationContext, HuhConnectionService.class));
-        Log.d(TAG, "Re-starting Service");
+        //Log.d(TAG, "Re-starting Service");
        // mApplicationContext.stopService(new Intent(mApplicationContext, HuhConnectionService.class));
 
+        //BOROADCAST that connection has closed
+        //Data within intent to send in a broadcast.
+        Intent intentConnectionClosed = new Intent();
+        // sets keyword to listen out for for this broadcast
+        intentConnectionClosed.setAction("ConnectionClosedOnError");
+        intentConnectionClosed.setPackage(mApplicationContext.getPackageName());
+        //Sends out broadcast
+        mApplicationContext.sendBroadcast(intentConnectionClosed);
+        Log.d(TAG, "BROADCAST ConnectionClosedOnError ");
 
     }
 
