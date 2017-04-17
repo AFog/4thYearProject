@@ -291,7 +291,7 @@ public class HuhConnection implements ConnectionListener {
                     contactJid = from;
                 }
 
-                mConnection.setPacketReplyTimeout(0);
+               // mConnection.setPacketReplyTimeout(0);
 
                 Log.d(TAG, "^^^^^^^^^^^^^**************** iaAvailable before broadcast: " + isAvailable);
 //                if (isAvailable) {
@@ -326,9 +326,9 @@ public class HuhConnection implements ConnectionListener {
             }
         });
 
-//        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
-//        reconnectionManager.setEnabledPerDefault(true);
-//        reconnectionManager.enableAutomaticReconnection();
+        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
+        reconnectionManager.setEnabledPerDefault(true);
+        reconnectionManager.enableAutomaticReconnection();
     }
 
 
@@ -1168,19 +1168,19 @@ public class HuhConnection implements ConnectionListener {
         HuhConnectionService.sConnectionState = ConnectionState.DISCONNECTED;
         Log.d(TAG, "ConnectionClosedOnError, error ");
        // Log.d(TAG, "ConnectionClosedOnError, error " + e.toString());
-        while (HuhConnectionService.sConnectionState == ConnectionState.DISCONNECTED) {
-            Log.d(TAG, "Trying to reconnect ");
-            try {
-            connect();
-        } catch (IOException e1) {
-                e1.printStackTrace();
-        } catch (XMPPException e1) {
-                e1.printStackTrace();
-        } catch (SmackException e1) {
-                e1.printStackTrace();
-        }
-
-        }
+//        while (HuhConnectionService.sConnectionState == ConnectionState.DISCONNECTED) {
+//            Log.d(TAG, "Trying to reconnect ");
+//            try {
+//            connect();
+//        } catch (IOException e1) {
+//                e1.printStackTrace();
+//        } catch (XMPPException e1) {
+//                e1.printStackTrace();
+//        } catch (SmackException e1) {
+//                e1.printStackTrace();
+//        }
+//
+//        }
 //TODO try restart service here
 //        Log.d(TAG, "Stopping Service, error ");
 //        mApplicationContext.stopService(new Intent(mApplicationContext, HuhConnectionService.class));
@@ -1210,8 +1210,16 @@ public class HuhConnection implements ConnectionListener {
     public void reconnectionSuccessful() {
         HuhConnectionService.sConnectionState = ConnectionState.CONNECTED;
         Log.d(TAG, "ReconnectionSuccessful()");
-        Toast.makeText(mApplicationContext,TAG + ": Authenticated Successfully ", Toast.LENGTH_LONG).show();
 
+        //BOROADCAST that connection has reconnected
+        //Data within intent to send in a broadcast.
+        Intent intentConnectionClosed = new Intent();
+        // sets keyword to listen out for for this broadcast
+        intentConnectionClosed.setAction("reconnectionSuccessful");
+        intentConnectionClosed.setPackage(mApplicationContext.getPackageName());
+        //Sends out broadcast
+        mApplicationContext.sendBroadcast(intentConnectionClosed);
+        Log.d(TAG, "BROADCAST ConnectionClosedOnError ");
 
     }
 

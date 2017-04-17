@@ -20,7 +20,7 @@
         android:layout_marginTop="5dp"
         android:layout_above="@+id/registration_progress"
         android:text="This number is already registered with Huh"
-        android:textColor="@color/text_color"
+        android:textColor="@color/text_color_warning"
         android:visibility="gone"
         />
 

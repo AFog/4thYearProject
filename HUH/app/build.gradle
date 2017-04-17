@@ -87,7 +87,7 @@ dependencies {
     // compile 'com.google.code.gson:gson:2.4'
     //compile 'com.google.android.gms:play-services-appindexing:10.0.1'
 
-    compile 'com.android.volley:volley:1.0.0'
+    //compile 'com.android.volley:volley:1.0.0'
     compile 'com.google.android.gms:play-services:10.0.1'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.android.support:appcompat-v7:25.1.1'
@@ -99,7 +99,7 @@ dependencies {
     compile 'org.igniterealtime.smack:smack-debug:4.1.0-alpha6'
     compile 'org.igniterealtime.smack:smack-sasl-provided:4.1.0-alpha6'
     compile 'org.apache.commons:commons-lang3:3.5'
-    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:25.1.1'
     compile 'co.devcenter.square:android-ui-library:0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'

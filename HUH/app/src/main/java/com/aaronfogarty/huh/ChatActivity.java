@@ -111,7 +111,6 @@ public class ChatActivity extends AppCompatActivity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //Only send the message if the client is connected
                 //to the server.
                 if (HuhConnectionService.getState().equals(HuhConnection.ConnectionState.CONNECTED)) {
@@ -154,6 +153,7 @@ public class ChatActivity extends AppCompatActivity {
 
         FILENAME = "Chat.History" + userJid + contactJid;
         PERSONHISTORYFILE = "Chat.History" + userJid;
+        Log.d(TAG, "(onCreate) Naming a file for person chatHistory. FILENAME: " + PERSONHISTORYFILE);
         Log.d(TAG, "(onCreate) Naming a file for chatHistory. FILENAME: " + FILENAME);
         setTitle(displayJid);
 
@@ -742,6 +742,10 @@ public class ChatActivity extends AppCompatActivity {
 
                 switch (action) {
                     case "ConnectionClosedOnError":
+                        Toast.makeText(getApplicationContext(), "Client not connected to server ,Message not sent! ...Reconnecting", Toast.LENGTH_LONG).show();
+
+                    case "reconnectionSuccessful":
+                        Toast.makeText(getApplicationContext(), "Client not connected to server ,Message not sent! ...Reconnecting", Toast.LENGTH_LONG).show();
                 }
             }
         };

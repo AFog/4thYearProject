@@ -51,7 +51,9 @@ import org.jivesoftware.smackx.search.ReportedData;
 import org.jivesoftware.smackx.search.UserSearchManager;
 import org.jivesoftware.smackx.xdata.Form;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,8 +80,8 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     private Thread createHuhContactsThread;
     private Thread checkUserNameAvailableThread;
     private BroadcastReceiver mBroadcastReceiver;
-    private String mUsername = "admin";
-    private String mPassword = "admin";
+    private String mUsername;
+    private String mPassword;
     private String mServiceName = "ec2-35-162-128-9.us-west-2.compute.amazonaws.com";
     private XMPPTCPConnection mConnection;
     private Map<String, String> attributes;
@@ -101,13 +103,15 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-
+    private String PERSONHISTORYFILE;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         //mApplicationContext = getApplicationContext();
         //initialise huhContacts
+        mUsername = this.getString(R.string.opl);
+        mPassword = this.getString(R.string.opp);
         huhContacts = new ArrayList<>();
         isUserNameAvailable = true;
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -343,6 +347,9 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
                     if (isUserNameAvailable) {
                         Log.d(TAG, "HERE WE BEGIN REGISTRATION");
+                        userNameAvailTextView.setVisibility(View.INVISIBLE);
+
+                        createPersonHistory(jidPhoneNumber);
 
                         try {
                             registerNewUser();
@@ -381,8 +388,6 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             public void run() {
 
                 try {
-
-
                     Log.d(TAG, "Connecting to server " + mServiceName);
                     XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder =
                             XMPPTCPConnectionConfiguration.builder();
@@ -835,6 +840,31 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    public static void writeObject(Context context, String file, Object object) throws IOException {
+        FileOutputStream fos = context.openFileOutput(file, Context.MODE_PRIVATE);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(object);
+        oos.close();
+        fos.close();
+    }
+
+
+    public void createPersonHistory(String filename) {
+        Log.d(TAG, "saving message to personal history");
+        List<String> personChatHistoryList = new ArrayList<String>();
+        personChatHistoryList.add("first message");
+        try {
+
+
+            PERSONHISTORYFILE = "Chat.History" + jidPhoneNumber;
+            // Save the list of entries to internal storage
+            ChatActivity.writeObject(this, PERSONHISTORYFILE, personChatHistoryList);
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
     }
 
     public void goToXMPPConnect(View view) {

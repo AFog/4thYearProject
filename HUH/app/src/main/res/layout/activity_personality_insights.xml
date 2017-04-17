@@ -1,9 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.aaronfogarty.huh.PersonalityInsightsActivity">
 
-</android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/noHistoryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Sorry, \n You do not have enough messages to build a personality profile just yet! \nKeep on chatting!"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/insightimageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/personality"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="56dp"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/personInsightsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:text="TextView"
+        android:visibility="gone"
+        android:layout_below="@+id/noHistoryText"
+        android:layout_toRightOf="@+id/noHistoryText"
+        android:layout_toEndOf="@+id/noHistoryText"
+        android:layout_marginLeft="27dp"
+        android:layout_marginStart="27dp"
+        android:maxLines = "200"
+        />
+
+    <TextView
+        android:id="@+id/personInsightsPrcnt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/personInsightsText"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:text="TextView"
+        android:visibility="gone"
+        android:maxLines = "200"
+        />
+
+    <TextView
+        android:id="@+id/wordCountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="23dp"
+        android:visibility="gone"
+        android:text="TextView" />
+
+    <ProgressBar
+        android:id="@+id/progressBarInsights"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/insightimageView"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_marginTop="79dp" />
+
+</RelativeLayout>
