@@ -42,8 +42,7 @@ public class HuhConnectionService extends Service {
     public static HuhConnection.LoggedInState sLoggedInState;
     private boolean mActive;//Stores whether or not the thread is active
     private Thread mThread;
-    private Handler mTHandler;//We use this handler to post messages to
-    //the background thread.
+    private Handler mTHandler;//This handler posts messages to the background thread.
     private HuhConnection mConnection;
 
     // must be implemented for service, not used
@@ -145,7 +144,6 @@ public class HuhConnectionService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand()" + mActive);
         //Toast.makeText(getApplicationContext(), TAG + ": onStartCommand()", Toast.LENGTH_LONG).show();
-
         //starts service thread
         start();
         return Service.START_STICKY;

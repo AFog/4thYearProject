@@ -678,6 +678,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
                 .putString("xmpp_jid", mJidView.getText().toString())
                 .putString("xmpp_password", password)
                 .putString("language", "en")
+                .putString("sourcelanguage","en")
                 .putBoolean("xmpp_logged_in", true)
                 .putBoolean("xmpp_user_registered", true)
                 .commit();

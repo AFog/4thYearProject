@@ -28,6 +28,7 @@ configurations {
 
 
 
+
 dependencies {
 
     //Volley Dependencies
@@ -39,8 +40,7 @@ dependencies {
 //    compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
 //    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
     //compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
-   // compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.0'
-
+    // compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.0'
 
     //Smack Dependencies
 

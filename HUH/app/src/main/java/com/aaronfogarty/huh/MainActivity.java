@@ -153,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void goToSourceLanguages(View view){
+
+        Intent intent = new Intent(this, SourceLanguageSelectActivity.class);
+        startActivity(intent);
+    }
     public void goToPersonView(View view){
 
         Intent intent = new Intent(this, PersonalityInsightsActivity.class);

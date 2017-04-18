@@ -64,6 +64,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -97,6 +99,7 @@ public class HuhConnection implements ConnectionListener {
     private static List<String> offlineMessages;
     private String translatedText;
     private String baseLanguage;
+    private String sourceLanguage;
     private static List<RosterContact> huhContacts;
     private ArrayList<RosterContact> phoneDBNumbers;
     boolean isHuhUser;
@@ -136,6 +139,8 @@ public class HuhConnection implements ConnectionListener {
                 .getString("xmpp_password", null);
         baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("language", "en");
+        sourceLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+                .getString("sourcelanguage", "en");
 
         if (jid != null) {
             mUsername = jid.split("@")[0];
@@ -151,7 +156,7 @@ public class HuhConnection implements ConnectionListener {
     }
 
     public void connect() throws IOException, XMPPException, SmackException {
-        Log.d(TAG, "Connecting to server " + mServiceName + "Password " + mPassword);
+        Log.d(TAG, "Connecting to server " + mServiceName );
 
         //Toast.makeText(mApplicationContext,TAG + "Connecting to server " + mServiceName, Toast.LENGTH_LONG).show();
         XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder =
@@ -249,6 +254,10 @@ public class HuhConnection implements ConnectionListener {
                         .getString("language", "en");
                 Log.d(TAG, "messageListener Language: " + baseLanguage);
 
+                sourceLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+                        .getString("sourcelanguage", "en");
+                Log.d(TAG, "messageListener sourceLanguage: " + sourceLanguage);
+
                 //    if(message.getBody() != null){
                 incomingMessage = message.getBody();
                 Message.Type incoming = message.getType();
@@ -262,7 +271,7 @@ public class HuhConnection implements ConnectionListener {
                 Log.d(TAG, "message.getBody() incomingMessage before :" );
                 Log.d(TAG, "Status For Unavailable " + isAvailable);
 
-                incomingMessage = translateMessageText2(incomingMessage, baseLanguage);
+                incomingMessage = translateMessageText2(incomingMessage, baseLanguage, sourceLanguage);
 
                 String unavailableMessage = message.getFrom() + "-*_-" + incomingMessage;
                 String test = unavailableMessage.split("-*_-")[0];
@@ -1042,11 +1051,23 @@ public class HuhConnection implements ConnectionListener {
             e.printStackTrace();
         }
     }
-    public String translateMessageText2(String text, String toLanguage) {
 
+    public String translateMessageText2(String text, String toLanguage, String fromLanguage) {
+
+        if(toLanguage.equals(fromLanguage)){
+            return text;
+        }
 //        baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
 //                .getString("language", "en");
 //        Log.d(TAG, "translateMessageText2 Language: " + baseLanguage);
+
+//        try {
+//            text = URLEncoder.encode(text, "UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        translateLang = URLEncoder.encode(translateLang, "UTF-8");
+//        inputText =  inputText.replaceAll("%0A","+++");
 
         String output = "";
 
@@ -1058,7 +1079,7 @@ public class HuhConnection implements ConnectionListener {
         try {
             jsonBody.put("translatedText", text);
             jsonBody.put("targetLanguage", toLanguage);
-            jsonBody.put("sourceLanguage", toLanguage);
+            jsonBody.put("sourceLanguage", fromLanguage);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1097,7 +1118,7 @@ public class HuhConnection implements ConnectionListener {
             JSONObject jsonObject = new JSONObject(response.toString());
 
             String translatedText = response.getString("translatedText");
-            String sourceLanguage = response.getString("detectedSourceLanguage");
+            ///String sourceLanguage = response.getString("detectedSourceLanguage");
             setTranslatedText(translatedText);
             Log.d("translateText()", "get response: " + translatedText + " detectedSourceLanguage: " + sourceLanguage);
 

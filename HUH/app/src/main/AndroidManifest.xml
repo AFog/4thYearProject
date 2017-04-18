@@ -48,10 +48,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ContactListActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_contacts"
-            />
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ChatActivity"
             android:screenOrientation="portrait" />
@@ -65,15 +63,19 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".ContactsListActivity"
-                  android:screenOrientation="portrait" />
+        <activity
+            android:name=".ContactsListActivity"
+            android:screenOrientation="portrait" />
         />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".PersonalityInsightsActivity"
-                  android:screenOrientation="portrait" />
+        <activity
+            android:name=".PersonalityInsightsActivity"
+            android:screenOrientation="portrait" />
         />
-        <activity android:name=".LanguageSelectActivity"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".LanguageSelectActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".SourceLanguageSelectActivity"></activity>
     </application>
 
 </manifest>

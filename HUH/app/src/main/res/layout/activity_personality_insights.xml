@@ -11,27 +11,24 @@
         android:id="@+id/noHistoryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:text="Sorry, \n You do not have enough messages to build a personality profile just yet! \nKeep on chatting!"
         android:textAlignment="center"
         android:textSize="24sp"
-        android:layout_alignParentTop="true"
+        android:visibility="visible"
+        android:layout_below="@+id/wordCountText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:visibility="gone"
-        />
+        android:layout_marginTop="21dp" />
 
     <ImageView
         android:id="@+id/insightimageView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="450dp"
         app:srcCompat="@drawable/personality"
+        android:visibility="visible"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="56dp"
-        android:visibility="gone"
-        />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/personInsightsText"
@@ -62,15 +59,15 @@
         android:maxLines = "200"
         />
 
-    <TextView
-        android:id="@+id/wordCountText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="23dp"
-        android:visibility="gone"
-        android:text="TextView" />
+    <!--<TextView-->
+        <!--android:id="@+id/wordCountText"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="23dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:text="TextView" />-->
 
     <ProgressBar
         android:id="@+id/progressBarInsights"
