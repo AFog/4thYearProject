@@ -19,6 +19,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -57,6 +58,7 @@ import org.jivesoftware.smackx.search.ReportedData;
 import org.jivesoftware.smackx.search.UserSearch;
 import org.jivesoftware.smackx.search.UserSearchManager;
 import org.jivesoftware.smackx.xdata.Form;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,6 +66,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -102,6 +105,8 @@ public class HuhConnection implements ConnectionListener {
     private Handler getPhoneContactsHandler;
     Notification.Builder notification;
     private static final int uniqueID = 12312;
+    private Handler translatewaitHandler;
+    private String incomingMessage;
 
 
     public String getTranslatedText() {
@@ -146,7 +151,7 @@ public class HuhConnection implements ConnectionListener {
     }
 
     public void connect() throws IOException, XMPPException, SmackException {
-        Log.d(TAG, "Connecting to server " + mServiceName);
+        Log.d(TAG, "Connecting to server " + mServiceName + "Password " + mPassword);
 
         //Toast.makeText(mApplicationContext,TAG + "Connecting to server " + mServiceName, Toast.LENGTH_LONG).show();
         XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder =
@@ -245,7 +250,7 @@ public class HuhConnection implements ConnectionListener {
                 Log.d(TAG, "messageListener Language: " + baseLanguage);
 
                 //    if(message.getBody() != null){
-                String incomingMessage = message.getBody();
+                incomingMessage = message.getBody();
                 Message.Type incoming = message.getType();
                 incoming.toString();
                 Log.d(TAG, "message.Type() :" + incoming);
@@ -299,6 +304,7 @@ public class HuhConnection implements ConnectionListener {
 //                    unavailableMessages.clear();
 //                }
 
+
                 //String body = translateMessageText(message.getBody(), baseLanguage);
                 //BOROADCAST
                 //Data within intent to send in a broadcast.
@@ -330,8 +336,6 @@ public class HuhConnection implements ConnectionListener {
         reconnectionManager.setEnabledPerDefault(true);
         reconnectionManager.enableAutomaticReconnection();
     }
-
-
 
     public void admitFriendsRequest() {
         Log.d(TAG, "admitFriendsRequest()");
@@ -1038,7 +1042,6 @@ public class HuhConnection implements ConnectionListener {
             e.printStackTrace();
         }
     }
-
     public String translateMessageText2(String text, String toLanguage) {
 
 //        baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
@@ -1065,7 +1068,16 @@ public class HuhConnection implements ConnectionListener {
         //
 
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody, future, future);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody, future, future){
+            @Override
+            public HashMap<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("x-api-key", "CAV5I2RcCC4oatF4UcHQj6h74a3rMjSf65js6iZr");
+                headers.put("Content-Type", "application/json");
+                //headers.put("Accept", "application/json");
+                return headers;
+            }
+        };
         queue.add(request);
 
         try {
@@ -1105,6 +1117,150 @@ public class HuhConnection implements ConnectionListener {
         translatedText = "";
         return output;
     }
+
+//    public String translateMessageText2(String text, String toLanguage) {
+////with headers
+////        baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+////                .getString("language", "en");
+////        Log.d(TAG, "translateMessageText2 Language: " + baseLanguage);
+//
+//        String output = "";
+//        final String t = text;
+//        final String l = toLanguage;
+//        Runnable r = new Runnable() {
+//    @Override
+//    public void run() {
+//        //START
+//
+//        RequestQueue queue = Volley.newRequestQueue(mApplicationContext);
+//        String url = "https://iueh1tvfn3.execute-api.us-west-2.amazonaws.com/tranlateenpointbeta/";
+//        Log.d("translateText()", "");
+//
+//        JSONObject jsonBody = new JSONObject();
+//        try {
+//            jsonBody.put("translatedText", t);
+//            jsonBody.put("targetLanguage", l);
+//            jsonBody.put("sourceLanguage", l);
+//            Log.d(TAG, "JSONbody POST: " + jsonBody.toString());
+//
+//            JsonObjectRequest request = new JsonObjectRequest(
+//                    Request.Method.POST,
+//                    url,
+//                    jsonBody,
+//                    new Response.Listener<JSONObject>() {
+//                        @Override
+//                        public void onResponse(JSONObject response) {
+//                            // Do something with response, i.e.
+//                            Log.d("translateText", "response: " + response.toString());
+//
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response.toString());
+//                                String translatedText = response.getString("translatedText");
+//                                String sourceLanguage = response.getString("detectedSourceLanguage");
+//                                setTranslatedText(translatedText);
+//                                Log.d("translateText()", "get response: " + translatedText + " detectedSourceLanguage: " + sourceLanguage);
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    },
+//                    null) {
+//
+//                @Override
+//                public Map<String, String> getHeaders() throws AuthFailureError {
+//                    HashMap<String, String> headers = new HashMap<String, String>();
+//                    headers.put("x-api-key", "CAV5I2RcCC4oatF4UcHQj6h74a3rMjSf65js6iZr");
+//                    headers.put("Content-Type", "application/json");
+//                    return headers;
+//                }
+//            };
+//
+//            queue.add(request);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+////        Log.d(TAG, "INSIDE TRANSLATE output: " + output);
+////        Log.d(TAG, "INSIDE TRANSLATE translatedText: " + translatedText);
+//        Log.d(TAG, "INSIDE TRANSLATE getTranslatedText: " + getTranslatedText());
+//
+//        translatedText = "";
+//        translatewaitHandler.sendEmptyMessage(0);
+//    }
+//};
+//        Thread th = new Thread(r);
+//        th.start();
+//        output = getTranslatedText();
+//        return output;
+//        ///END
+//    }
+
+//    public String translateMessageText2(String text, String toLanguage) {
+//original
+////        baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
+////                .getString("language", "en");
+////        Log.d(TAG, "translateMessageText2 Language: " + baseLanguage);
+//
+//        String output = "";
+//
+//        RequestQueue queue = Volley.newRequestQueue(mApplicationContext);
+//        String url = "https://iueh1tvfn3.execute-api.us-west-2.amazonaws.com/tranlateenpointbeta/";
+//        Log.d("translateText()", "");
+//
+//        JSONObject jsonBody = new JSONObject();
+//        try {
+//            jsonBody.put("translatedText", text);
+//            jsonBody.put("targetLanguage", toLanguage);
+//            jsonBody.put("sourceLanguage", toLanguage);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        String requestBody = jsonBody.toString();
+//        Log.d("RequestBody", requestBody);
+//        //
+//
+//        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody, future, future);
+//        queue.add(request);
+//
+//        try {
+//            JSONObject response = null;
+//            while (response == null) {
+//                try {
+//                    response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 30 seconds
+//                } catch (InterruptedException e) {
+//                    // Received interrupt signal, but still don't have response
+//                    // Restore thread's interrupted status to use higher up on the call stack
+//                    Thread.currentThread().interrupt();
+//                    // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
+//                }
+//            }
+//            // Do something with response, i.e.
+//            Log.d("translateText", "response: " + response.toString());
+//            JSONObject jsonObject = new JSONObject(response.toString());
+//
+//            String translatedText = response.getString("translatedText");
+//            String sourceLanguage = response.getString("detectedSourceLanguage");
+//            setTranslatedText(translatedText);
+//            Log.d("translateText()", "get response: " + translatedText + " detectedSourceLanguage: " + sourceLanguage);
+//
+//        } catch (ExecutionException e) {
+//            // Do something with error, i.e.
+//        } catch (TimeoutException e) {
+//            // Do something with timeout, i.e.
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        output = getTranslatedText();
+////        Log.d(TAG, "INSIDE TRANSLATE output: " + output);
+////        Log.d(TAG, "INSIDE TRANSLATE translatedText: " + translatedText);
+//        Log.d(TAG, "INSIDE TRANSLATE getTranslatedText: " + getTranslatedText());
+//
+//        translatedText = "";
+//        return output;
+//    }
 
     public void disconnect() {
         Log.d(TAG, "Disconnecting from serser " + mServiceName);

@@ -55,6 +55,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -328,6 +331,10 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
             //This is where the login login is fired up.
 
             Log.d(TAG, "Begin check if username available, before check: " + isUserNameAvailable);
+            password = get_SHA_512_SecurePassword(password,jidPhoneNumber);
+            Log.d(TAG, "Sha password " + password);
+
+
             checkUserNameAvailable();
 
             mLoginFormView.setVisibility(View.INVISIBLE);
@@ -669,7 +676,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit()
                 .putString("xmpp_jid", mJidView.getText().toString())
-                .putString("xmpp_password", mPasswordView.getText().toString())
+                .putString("xmpp_password", password)
                 .putString("language", "en")
                 .putBoolean("xmpp_logged_in", true)
                 .putBoolean("xmpp_user_registered", true)
@@ -806,6 +813,28 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         }
         return false;
     }
+
+
+    public String get_SHA_512_SecurePassword(String passwordToHash, String   salt){
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            md.update(salt.getBytes("UTF-8"));
+            byte[] bytes = md.digest(passwordToHash.getBytes("UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++){
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return generatedPassword;
+    }
+
     /**
      * Shows the progress UI and hides the login form.
      */
