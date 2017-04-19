@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,9 +19,11 @@ import com.android.volley.RequestQueue;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText translateEditText;
-    TextView textview;
-    RequestQueue requestQueue;
+    private EditText translateEditText;
+    private TextView textview;
+    private RequestQueue requestQueue;
+    private Button registrationbutton;
+
     private static final String TAG = "MainActivity";
 
     @Override
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        registrationbutton = (Button) findViewById(R.id.main_register_in_button);
         setSupportActionBar(toolbar);
         Log.d(TAG, "onCreate()");
         Log.d(TAG, "Is the huh service running? " + isMyServiceRunning(HuhConnectionService.class));
@@ -35,28 +39,34 @@ public class MainActivity extends AppCompatActivity {
         Boolean isRegistered = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_user_registered", false);
 
     if(isRegistered){
+        registrationbutton.setVisibility(View.INVISIBLE);
         Log.d(TAG, "user is registered ");
         if(!isMyServiceRunning(HuhConnectionService.class)){
             Log.d(TAG," Service not running");
-            this.stopService(new Intent(this, HuhConnectionService.class));
+            //this.stopService(new Intent(this, HuhConnectionService.class));
             Log.d(TAG,"StartService called from Main.");
             //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
             Intent i1 = new Intent(this,HuhConnectionService.class);
             startService(i1);
             //finish();
         }
-        else{
-            Log.d(TAG," Service is running");
-            if (HuhConnectionService.getState().equals(HuhConnection.ConnectionState.DISCONNECTED)) {
-                Log.d(TAG,"Server Disconnected");
-                this.stopService(new Intent(this, HuhConnectionService.class));
-                Log.d(TAG,"StartService called from Main.");
-                //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
-                Intent i1 = new Intent(this,HuhConnectionService.class);
-                startService(i1);
-//            finish();
-            }
-        }
+        Log.d(TAG," Service is running");
+        Log.d(TAG, "HuConnectionService state:" + HuhConnectionService.getState());
+
+//        else{
+//            Log.d(TAG," Service is running");
+//            Log.d(TAG, "HuConnectionService state:" + HuhConnectionService.getState());
+//
+//            if (HuhConnectionService.getState().equals(HuhConnection.ConnectionState.DISCONNECTED)) {
+//                Log.d(TAG,"Server Disconnected");
+//                this.stopService(new Intent(this, HuhConnectionService.class));
+//                Log.d(TAG,"StartService called from Main.");
+//                //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+//                Intent i1 = new Intent(this,HuhConnectionService.class);
+//                startService(i1);
+////            finish();
+//            }
+//        }
     }
     else{
         Log.d(TAG, "user is not registered ");
@@ -110,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToJIDLogin(View view){
+    public void goToRegistration(View view){
 
         Intent intent = new Intent(this, RegistrationActivity.class);
         startActivity(intent);
@@ -147,17 +157,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void goToLanguages(View view){
+    public void goToSendReceiveLanguages(View view){
 
-        Intent intent = new Intent(this, LanguageSelectActivity.class);
+        Intent intent = new Intent(this, SendRecieveLanguageActivity.class);
         startActivity(intent);
     }
 
-    public void goToSourceLanguages(View view){
-
-        Intent intent = new Intent(this, SourceLanguageSelectActivity.class);
-        startActivity(intent);
-    }
+//    public void goToSourceLanguages(View view){
+//
+//        Intent intent = new Intent(this, SourceLanguageSelectActivity.class);
+//        startActivity(intent);
+//    }
     public void goToPersonView(View view){
 
         Intent intent = new Intent(this, PersonalityInsightsActivity.class);

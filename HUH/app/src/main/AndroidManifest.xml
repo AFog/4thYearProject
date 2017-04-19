@@ -20,6 +20,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -75,7 +76,12 @@
         <activity
             android:name=".LanguageSelectActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".SourceLanguageSelectActivity"></activity>
+        <activity
+            android:name=".SourceLanguageSelectActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SendRecieveLanguageActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

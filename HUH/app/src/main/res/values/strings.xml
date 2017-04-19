@@ -51,6 +51,7 @@
     <string name="registerJidConfirm">Re-enter your phone number</string>
     <string name="opl">admin</string>
     <string name="opp">admin</string>
+    <string name="trnsk">"CAV5I2RcCC4oatF4UcHQj6h74a3rMjSf65js6iZr"</string>
     <string name="pi">Basic MWEwMDAxYTItYzFlYi00NDYxLTk1MGMtNzJmZGNlNWEyNGU0Om42RlJqeDd4dmVxMw==</string>
     <string name="ToSourceLanguageSelect">Source Language</string>
 </resources>

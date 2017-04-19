@@ -110,6 +110,7 @@ public class HuhConnection implements ConnectionListener {
     private static final int uniqueID = 12312;
     private Handler translatewaitHandler;
     private String incomingMessage;
+    private String trnsk;
 
 
     public String getTranslatedText() {
@@ -131,8 +132,11 @@ public class HuhConnection implements ConnectionListener {
 
     public HuhConnection(Context context) {
         Log.d(TAG, "HuhConnection Constructor called.");
+
         //Toast.makeText(context, TAG+"HuhConnection Constructor called", Toast.LENGTH_LONG).show();
         mApplicationContext = context.getApplicationContext();
+        trnsk = mApplicationContext.getString(R.string.pi);
+
         String jid = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
                 .getString("xmpp_jid", null);
         mPassword = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
@@ -274,16 +278,14 @@ public class HuhConnection implements ConnectionListener {
                 incomingMessage = translateMessageText2(incomingMessage, baseLanguage, sourceLanguage);
 
                 String unavailableMessage = message.getFrom() + "-*_-" + incomingMessage;
-                String test = unavailableMessage.split("-*_-")[0];
-                test = test.split("/")[0];
-                String test2 = unavailableMessage.split("-*_-")[1];
-
-                Log.d(TAG, "unavailable: " + unavailableMessage );
-                Log.d(TAG, "After split from: " + test + "message: " + test2 );
-
-
-
-                Log.d(TAG, "BEFORE OFFLINE ADD TO LIST unavailableMessage: " + unavailableMessage );
+//                String test = unavailableMessage.split("-*_-")[0];
+//                test = test.split("/")[0];
+//                String test2 = unavailableMessage.split("-*_-")[1];
+//
+//                Log.d(TAG, "unavailable: " + unavailableMessage );
+//                Log.d(TAG, "After split from: " + test + "message: " + test2 );
+//                Log.d(TAG, "TESTING SPLIT from: " + test + " message " + test2 );
+//                Log.d(TAG, "BEFORE OFFLINE ADD TO LIST unavailableMessage: " + unavailableMessage );
 
                 if (hasJustLoggedIn) {
                     //Handles offline messages when reconnected
@@ -291,7 +293,6 @@ public class HuhConnection implements ConnectionListener {
                 }
 
 
-                Log.d(TAG, "TESTING SPLIT from: " + test + " message " + test2 );
                     //handles messages when user is unavailable
                   //  unavailableMessages(unavailableMessage);
 
@@ -342,7 +343,7 @@ public class HuhConnection implements ConnectionListener {
         });
 
         ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
-        reconnectionManager.setEnabledPerDefault(true);
+        //reconnectionManager.setEnabledPerDefault(true);
         reconnectionManager.enableAutomaticReconnection();
     }
 
@@ -1057,17 +1058,6 @@ public class HuhConnection implements ConnectionListener {
         if(toLanguage.equals(fromLanguage)){
             return text;
         }
-//        baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
-//                .getString("language", "en");
-//        Log.d(TAG, "translateMessageText2 Language: " + baseLanguage);
-
-//        try {
-//            text = URLEncoder.encode(text, "UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        translateLang = URLEncoder.encode(translateLang, "UTF-8");
-//        inputText =  inputText.replaceAll("%0A","+++");
 
         String output = "";
 
@@ -1131,8 +1121,8 @@ public class HuhConnection implements ConnectionListener {
         }
 
         output = getTranslatedText();
-//        Log.d(TAG, "INSIDE TRANSLATE output: " + output);
-//        Log.d(TAG, "INSIDE TRANSLATE translatedText: " + translatedText);
+        Log.d(TAG, "INSIDE TRANSLATE output: " + output);
+        Log.d(TAG, "INSIDE TRANSLATE translatedText: " + translatedText);
         Log.d(TAG, "INSIDE TRANSLATE getTranslatedText: " + getTranslatedText());
 
         translatedText = "";
@@ -1303,6 +1293,10 @@ public class HuhConnection implements ConnectionListener {
         if (uiThreadMessageReceiver != null) {
             mApplicationContext.unregisterReceiver(uiThreadMessageReceiver);
             uiThreadMessageReceiver = null;
+        }
+        if (uiAvailabilityReciever != null) {
+            mApplicationContext.unregisterReceiver(uiAvailabilityReciever);
+            uiAvailabilityReciever = null;
         }
 
     }

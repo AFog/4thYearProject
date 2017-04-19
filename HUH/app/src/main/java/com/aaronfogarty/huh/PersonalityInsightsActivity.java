@@ -95,8 +95,8 @@ public class PersonalityInsightsActivity extends AppCompatActivity {
             progressBar.setVisibility(View.INVISIBLE);
             profileNotReady.setVisibility(View.VISIBLE);
             insightImage.setVisibility(View.VISIBLE);
-            wordCountText.setText(getString(R.string.current_word_count) + word_count);
-            wordCountText.setVisibility(View.VISIBLE);
+//            wordCountText.setText(getString(R.string.current_word_count) + word_count);
+//            wordCountText.setVisibility(View.VISIBLE);
         }
         else {
             getPersonalityInsight();
@@ -143,7 +143,6 @@ public class PersonalityInsightsActivity extends AppCompatActivity {
             String opennessPrcnt1 = open.getString("percentile");
 
 
-
                 //Openness
                 for(int j =0; j < 4 ; j++) {
 
@@ -177,7 +176,7 @@ public class PersonalityInsightsActivity extends AppCompatActivity {
                 profileResultsPrcnt.setVisibility(View.VISIBLE);
                 profileResultsPrcnt.setText(insightsPrcnt);
                 insightImage.setVisibility(View.INVISIBLE);
-                wordCountText.setVisibility(View.INVISIBLE);
+       //         wordCountText.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
 
 
@@ -344,6 +343,25 @@ public class PersonalityInsightsActivity extends AppCompatActivity {
 
     public JSONObject getPersonalityResponseJson(){
         return personalityResponeJson;
+    }
+
+    public JSONObject jsonObjectBuild(String text){
+
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonInnerBody = new JSONObject();
+        JSONObject jsonBody = new JSONObject();
+
+        try {
+            jsonInnerBody.put("content", text);
+            jsonArray.put(jsonInnerBody);
+            jsonBody.put("contentItems", jsonArray);
+           // Log.d(TAG, "JSONbody POST: " + jsonBody.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonBody;
     }
 
 }

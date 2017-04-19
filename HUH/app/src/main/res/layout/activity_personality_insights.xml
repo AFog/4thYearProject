@@ -14,7 +14,7 @@
         android:text="Sorry, \n You do not have enough messages to build a personality profile just yet! \nKeep on chatting!"
         android:textAlignment="center"
         android:textSize="24sp"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_below="@+id/wordCountText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="450dp"
         app:srcCompat="@drawable/personality"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

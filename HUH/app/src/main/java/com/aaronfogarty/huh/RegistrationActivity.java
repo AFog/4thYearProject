@@ -262,6 +262,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
     private void attempRegister() {
         Log.d(TAG, "attemptRegister() ");
         isUserNameAvailable = true;
+        userNameAvailTextView.setVisibility(View.INVISIBLE);
 
         // Reset errors.
         mJidView.setError(null);
@@ -692,7 +693,25 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
         Intent i1 = new Intent(this, HuhConnectionService.class);
         startService(i1);
+//        Intent intent1 = new Intent(this, MainActivity.class);
+//        startActivity(intent1);
         finish();
+    }
+
+    public void saveCredentials(String user, String password) {
+
+        Log.d(TAG, "saveCredentialsAndLogin() called.");
+        //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit()
+                .putString("xmpp_jid", user)
+                .putString("xmpp_password", password)
+                .putString("language", "en")
+                .putString("sourcelanguage","en")
+                .putBoolean("xmpp_logged_in", true)
+                .putBoolean("xmpp_user_registered", true)
+                .commit();
     }
 
     private void populateAutoComplete() {
@@ -775,7 +794,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
     }
 
-    private boolean isPasswordValid(String password) {
+    public boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         Boolean isValid = true;
         if(password.isEmpty()){
@@ -787,18 +806,22 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         if(password.length() < 0){
             isValid = false;
         }
-//        if(password == null){
-//            isValid = false;
-//        }
         if(password.equals("null")){
             isValid = false;
         }
         if(password.equals("")){
             isValid = false;
         }
+        if(!hasNumber(password)){
+            isValid = false;
+        }
+        if(!hasUpperCaseValue(password)){
+            isValid = false;
+        }
         return isValid ;
     }
-    private static boolean hasUpperCaseValue(String s) {
+
+    public static boolean hasUpperCaseValue(String s) {
         for(char c : s.toCharArray()) {
             if(Character.isUpperCase(c)) {
                 return  true;
@@ -806,7 +829,8 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         }
         return false;
     }
-    private static boolean hasNumber(String s) {
+
+    public static boolean hasNumber(String s) {
         for(char c : s.toCharArray()) {
             if(Character.isDigit(c)) {
                 return  true;
@@ -815,13 +839,12 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         return false;
     }
 
-
-    public String get_SHA_512_SecurePassword(String passwordToHash, String   salt){
+    public String get_SHA_512_SecurePassword(String passwordToHash, String salt){
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt.getBytes("UTF-8"));
-            byte[] bytes = md.digest(passwordToHash.getBytes("UTF-8"));
+            md.update(passwordToHash.getBytes("UTF-8"));
+            byte[] bytes = md.digest(salt.getBytes("UTF-8"));
             StringBuilder sb = new StringBuilder();
             for(int i=0; i< bytes.length ;i++){
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
@@ -879,7 +902,6 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
         oos.close();
         fos.close();
     }
-
 
     public void createPersonHistory(String filename) {
         Log.d(TAG, "saving message to personal history");
@@ -995,7 +1017,6 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
     }
 
-
     @Override
     public void connected(XMPPConnection connection) {
         Toast.makeText(mApplicationContext, TAG + "Connecting to server " + mServiceName, Toast.LENGTH_LONG).show();
@@ -1019,7 +1040,7 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
     @Override
     public void reconnectingIn(int seconds) {
-
+    seconds = 4;
     }
 
     @Override
@@ -1032,3 +1053,19 @@ public class RegistrationActivity extends AppCompatActivity implements Connectio
 
     }
 }
+
+
+//
+//if (permission != PackageManager.PERMISSION_GRANTED) {
+//        String[] PERMISSIONS_STORAGE = {
+//        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+//        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+//        };
+//        int REQUEST_EXTERNAL_STORAGE = 1;
+//
+//        ActivityCompat.requestPermissions(
+//        getActivity(),
+//        PERMISSIONS_STORAGE,
+//        REQUEST_EXTERNAL_STORAGE
+//        );
+//        }

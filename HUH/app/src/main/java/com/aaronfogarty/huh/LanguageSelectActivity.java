@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class LanguageSelectActivity extends AppCompatActivity {
     ArrayList<String> languageName = null;
     ArrayList<String>  languageIso = null;
     String[] languages;
+    private TextView baseLangselect;
+    private TextView sourceLangSelect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +58,9 @@ public class LanguageSelectActivity extends AppCompatActivity {
                 }
         );
     }
-    private void saveLanguageSelect(String language) {
+    public void saveLanguageSelect(String language) {
 
-        Log.d("Language select: ","saveLanguageSelect() called.");
+       // Log.d("Language select: ","saveLanguageSelect() called.");
         //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
