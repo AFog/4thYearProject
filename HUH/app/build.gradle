@@ -35,6 +35,9 @@ dependencies {
     testCompile 'org.json:json:20140107'
     testCompile 'org.mockito:mockito-core:1.9.5'
 
+    compile('eu.geekplace.javapinning:java-pinning-jar:1.0.1')
+    compile group: 'com.sun.mail', name: 'javax.mail', version: '1.5.1'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
 
 
 //    compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'

@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,10 +119,45 @@ public class ChatActivity extends AppCompatActivity {
                     Log.d(TAG, "The client is connected to the server,Sending Message");
                     //Send the message to the server
 
+
+                    //START
+//                    String key = "Bar12345Bar12345"; // 128 bit key
+//                    SecureRandom random = new SecureRandom();
+//                    //String initVector = nextSessionId(random); // 16 bytes IV
+//                    String initVector = "RandomInitVector"; // 16 bytes IV
+//                    RandomString r = new RandomString(16);
+//                    String initVector = r.nextString(); // 16 bytes IV
+//                    initVector = initVector.substring(0, Math.min(initVector.length(), 16));
+//
+//                    Log.d(TAG, "initVector " + initVector);
+//                    Encryptor encryptor = new Encryptor();
+//                    String encryptedMessage = encryptor.encrypt(key,initVector,mChatView.getTypedString());
+//                    Log.d(TAG, "encrypted message " + encryptedMessage);
+
+                    //END
+
+                    //START
+//                    RandomString r = new RandomString(16);
+//                    String secretKey = r.nextString(); // 16 bytes IV
+//                    secretKey = secretKey.substring(0, Math.min(secretKey.length(), 16));
+//
+//                    //String secretKey = "ssshhhhhhhhhhh!!!!";
+//                    Log.d(TAG, "secretKey " + secretKey);
+//
+//                    String encryptedString = AES.encrypt(mChatView.getTypedString(), secretKey) ;
+//                    Log.d(TAG, "encrypted message " + encryptedString);
+
+                    String encryptedString = encryptMessage(mChatView.getTypedString());
+
+                    //END
+
+
                     //BOROADCAST
                     Intent intent = new Intent(HuhConnectionService.SEND_MESSAGE);
+//                    intent.putExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY,
+//                            mChatView.getTypedString());
                     intent.putExtra(HuhConnectionService.BUNDLE_MESSAGE_BODY,
-                            mChatView.getTypedString());
+                            encryptedString);
                     intent.putExtra(HuhConnectionService.BUNDLE_TO, contactJid);
                     //Broadcasting to setupUiThreadBroadCastMessageReceiver listening for type HuhConnectionService.SEND_MESSAGE in the HuhConnection class
                     sendBroadcast(intent);
@@ -129,6 +166,9 @@ public class ChatActivity extends AppCompatActivity {
                     Log.d(TAG, "SEND SAVE NORM");
                     writeToChatHistoryList(userJid, contactJid, mChatView.getTypedString(), true, System.currentTimeMillis());
                     writeToPersonHistory(mChatView.getTypedString());
+
+
+
                     //Update the chat view.
                     mChatView.sendMessage();
 
@@ -166,6 +206,21 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    public String encryptMessage(String message){
+        Log.d(TAG, "encryptMessage()");
+        RandomString r = new RandomString(16);
+        String secretKey = r.nextString(); // 16 bytes IV
+        secretKey = secretKey.substring(0, Math.min(secretKey.length(), 16));
+
+        Log.d(TAG, "secretKey " + secretKey);
+        String encryptedString = AES.encrypt(message, secretKey) ;
+        Log.d(TAG, "encrypted message " + encryptedString);
+
+        return encryptedString;
+    }
+    public String nextSessionId(SecureRandom random) {
+        return new BigInteger(65, random).toString(17);
+    }
     @Override
     protected void onPause() {
         super.onPause();
@@ -348,7 +403,7 @@ public class ChatActivity extends AppCompatActivity {
     public void writeToPersonHistory(String msg) {
         Log.d(TAG, "saving message to personal history");
 
-        personChatHistoryList.add(msg);
+        personChatHistoryList.add(msg + " ");
         try {
             // Save the list of entries to internal storage
             ChatActivity.writeObject(this, PERSONHISTORYFILE, personChatHistoryList);
