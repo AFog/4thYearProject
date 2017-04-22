@@ -17,7 +17,7 @@
     <string name="ToJIDLogin">Register</string>
     <string name="prompt_jid">Jabber Id</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_jid">Phone Number is invalid</string>
     <string name="error_invalid_jid_confirm">Phone Number does not match</string>
@@ -32,14 +32,14 @@
     <string name="title_activity_xmppconnect">XMPPConnectActivity</string>
     <string name="ConnectionStatus">Conncetion Status</string>
     <string name="ToXMPPConnectButton">Send Message</string>
-    <string name="title_activity_login">Sign in</string>
-    <string name="title_activity_jidlogin">Sign in</string>
+    <string name="title_activity_login">Register</string>
+    <string name="title_activity_jidlogin">Register</string>
     <string name="ToLoginButton">Login</string>
     <string name="error_invalid_email">Error invalid email</string>
     <string name="ToContactsButton">Contacts</string>
     <string name="goToContactsListViewButton">Chats</string>
     <string name="goToRegisterViewButton">Register</string>
-    <string name="title_activity_registration">Sign in</string>
+    <string name="title_activity_registration">Register</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">emailHere</string>

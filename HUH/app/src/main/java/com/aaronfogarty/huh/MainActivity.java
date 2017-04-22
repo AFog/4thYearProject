@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 
@@ -25,6 +26,64 @@ public class MainActivity extends AppCompatActivity {
     private Button registrationbutton;
 
     private static final String TAG = "MainActivity";
+
+//    public void onWindowFocusChanged (boolean hasFocus) {
+//        Log.d(TAG, "onWindowFocusChanged()");
+//        super.onWindowFocusChanged(hasFocus);
+//        setContentView(R.layout.activity_main);
+//
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        registrationbutton = (Button) findViewById(R.id.main_register_in_button);
+//        setSupportActionBar(toolbar);
+//        Log.d(TAG, "onCreate()");
+//        Log.d(TAG, "Is the huh service running? " + isMyServiceRunning(HuhConnectionService.class));
+//
+//        Boolean isRegistered = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_user_registered", false);
+//
+//        if(isRegistered) {
+//            registrationbutton.setVisibility(View.INVISIBLE);
+//            Log.d(TAG, "user is registered ");
+//            if (!isMyServiceRunning(HuhConnectionService.class)) {
+//                Log.d(TAG, " Service not running");
+//                //this.stopService(new Intent(this, HuhConnectionService.class));
+//                Log.d(TAG, "StartService called from Main.");
+//                //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+//                Intent i1 = new Intent(this, HuhConnectionService.class);
+//                startService(i1);
+//            }
+//            Log.d(TAG, " Service is running");
+//            Log.d(TAG, "HuConnectionService state:" + HuhConnectionService.getState());
+//        }
+//////        else{
+//////            Log.d(TAG," Service is running");
+//////            Log.d(TAG, "HuConnectionService state:" + HuhConnectionService.getState());
+//////
+//////            if (HuhConnectionService.getState().equals(HuhConnection.ConnectionState.DISCONNECTED)) {
+//////                Log.d(TAG,"Server Disconnected");
+//////                this.stopService(new Intent(this, HuhConnectionService.class));
+//////                Log.d(TAG,"StartService called from Main.");
+//////                //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+//////                Intent i1 = new Intent(this,HuhConnectionService.class);
+//////                startService(i1);
+////////            finish();
+//////            }
+//////        }
+////        }
+////        else{
+////            Log.d(TAG, "user is not registered ");
+////
+////        }
+//       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });*/
+//
+//        //Your code to be executed here
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,56 +97,65 @@ public class MainActivity extends AppCompatActivity {
 
         Boolean isRegistered = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_user_registered", false);
 
-    if(isRegistered){
-        registrationbutton.setVisibility(View.INVISIBLE);
-        Log.d(TAG, "user is registered ");
-        if(!isMyServiceRunning(HuhConnectionService.class)){
-            Log.d(TAG," Service not running");
-            //this.stopService(new Intent(this, HuhConnectionService.class));
-            Log.d(TAG,"StartService called from Main.");
-            //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
-            Intent i1 = new Intent(this,HuhConnectionService.class);
-            startService(i1);
-            //finish();
-        }
-        Log.d(TAG," Service is running");
-        Log.d(TAG, "HuConnectionService state:" + HuhConnectionService.getState());
-
-//        else{
-//            Log.d(TAG," Service is running");
-//            Log.d(TAG, "HuConnectionService state:" + HuhConnectionService.getState());
-//
-//            if (HuhConnectionService.getState().equals(HuhConnection.ConnectionState.DISCONNECTED)) {
-//                Log.d(TAG,"Server Disconnected");
-//                this.stopService(new Intent(this, HuhConnectionService.class));
-//                Log.d(TAG,"StartService called from Main.");
-//                //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
-//                Intent i1 = new Intent(this,HuhConnectionService.class);
-//                startService(i1);
-////            finish();
-//            }
-//        }
-    }
-    else{
-        Log.d(TAG, "user is not registered ");
-
-    }
-       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        if (isRegistered) {
+            registrationbutton.setVisibility(View.INVISIBLE);
+            Log.d(TAG, "user is registered ");
+            if (!isMyServiceRunning(HuhConnectionService.class)) {
+                Log.d(TAG, " Service not running");
+                //this.stopService(new Intent(this, HuhConnectionService.class));
+                Log.d(TAG, "StartService called from Main.");
+                //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+                Intent i1 = new Intent(this, HuhConnectionService.class);
+                startService(i1);
+                //finish();
             }
-        });*/
+//        Log.d(TAG," Service is running");
+//        Log.d(TAG, "HuConnectionService state:" + HuhConnectionService.getState());
+//
+////        else{
+////            Log.d(TAG," Service is running");
+////            Log.d(TAG, "HuConnectionService state:" + HuhConnectionService.getState());
+////
+////            if (HuhConnectionService.getState().equals(HuhConnection.ConnectionState.DISCONNECTED)) {
+////                Log.d(TAG,"Server Disconnected");
+////                this.stopService(new Intent(this, HuhConnectionService.class));
+////                Log.d(TAG,"StartService called from Main.");
+////                //Toast.makeText(getApplicationContext(), TAG + ": StartService called from Login.", Toast.LENGTH_LONG).show();
+////                Intent i1 = new Intent(this,HuhConnectionService.class);
+////                startService(i1);
+//////            finish();
+////            }
+////        }
+//    }
+//    else{
+//        Log.d(TAG, "user is not registered ");
+//
+//    }
+//       /* FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });*/
+        }
+
+
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume(");
+        Log.d(TAG, "user is registered ");
+        Boolean isRegistered = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("xmpp_user_registered", false);
+        if(isRegistered){
+            registrationbutton.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -118,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, TranslationSpinner.class);
         startActivity(intent);
+
     }
 
     public void goToRegistration(View view){
@@ -143,12 +212,14 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ContactListActivity.class);
         startActivity(intent);
+
     }
 
     public void goToContactsListView(View view){
 
         Intent intent = new Intent(this, ContactsListActivity.class);
         startActivity(intent);
+
 
     }
     public void goToRegisterView(View view){
@@ -161,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, SendRecieveLanguageActivity.class);
         startActivity(intent);
+
     }
 
 //    public void goToSourceLanguages(View view){
@@ -172,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, PersonalityInsightsActivity.class);
         startActivity(intent);
+
     }
 
 }

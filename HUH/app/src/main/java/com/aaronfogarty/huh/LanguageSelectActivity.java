@@ -60,7 +60,7 @@ public class LanguageSelectActivity extends AppCompatActivity {
     }
     public void saveLanguageSelect(String language) {
 
-       // Log.d("Language select: ","saveLanguageSelect() called.");
+        Log.d("Language select: ","saveLanguageSelect() called.");
         //Toast.makeText(getApplicationContext(), TAG + ": saveCredentialsAndLogin() called.", Toast.LENGTH_LONG).show();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

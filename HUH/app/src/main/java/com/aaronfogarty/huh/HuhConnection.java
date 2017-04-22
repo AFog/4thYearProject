@@ -4,7 +4,8 @@
 package com.aaronfogarty.huh;
 
 
-import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -12,6 +13,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
@@ -19,7 +23,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -44,49 +47,35 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.PacketFilter;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.sasl.SASLMechanism;
 import org.jivesoftware.smack.sasl.provided.SASLDigestMD5Mechanism;
-import org.jivesoftware.smack.sasl.provided.SASLExternalMechanism;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smack.util.TLSUtils;
-import org.jivesoftware.smackx.iqregister.AccountManager;
+import org.jivesoftware.smackx.ping.PingManager;
+import org.jivesoftware.smackx.ping.android.ServerPingWithAlarmManager;
 import org.jivesoftware.smackx.search.ReportedData;
 import org.jivesoftware.smackx.search.UserSearch;
 import org.jivesoftware.smackx.search.UserSearchManager;
 import org.jivesoftware.smackx.xdata.Form;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import javax.crypto.SecretKey;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
-import eu.geekplace.javapinning.JavaPinning;
-
-import static org.jivesoftware.smack.packet.Presence.Type.unavailable;
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static org.jivesoftware.smack.packet.Presence.Type.available;
 
 
 public class HuhConnection implements ConnectionListener {
@@ -101,6 +90,7 @@ public class HuhConnection implements ConnectionListener {
     private XMPPTCPConnection mConnection;
     private BroadcastReceiver uiThreadMessageReceiver;//Receives messages from the ui thread.
     private BroadcastReceiver uiAvailabilityReciever;
+    private BroadcastReceiver reconnectionReceiver;
     private ChatMessageListener messageListener;
     boolean isFlexRetrievalSuppoart;
     private boolean isAvailable;
@@ -116,12 +106,11 @@ public class HuhConnection implements ConnectionListener {
     private Roster roster;
     private Thread getPhoneContactsThread;
     private Handler getPhoneContactsHandler;
-    Notification.Builder notification;
+    NotificationCompat.Builder newMessageNotification;
     private static final int uniqueID = 12312;
     private Handler translatewaitHandler;
     private String incomingMessage;
     private String trnsk;
-
 
     public String getTranslatedText() {
         return translatedText;
@@ -167,19 +156,15 @@ public class HuhConnection implements ConnectionListener {
         phoneDBNumbers = new ArrayList<RosterContact>();
         phoneContacts();
 
+
     }
 
     public void connect() throws IOException, XMPPException, SmackException {
         Log.d(TAG, "Connecting to server " + mServiceName );
 
-        SSLContext sc = null;
-        try {
-            sc = JavaPinning.forPin("CERTPLAIN:308203223082020aa00302010202082241367b19e0c0be300d06092a864886f70d0101050500301a3118301606035504030c0f77696e2d683667346364716f743765301e170d3136313231313136333835355a170d3231313231303136333835355a301a3118301606035504030c0f77696e2d683667346364716f74376530820122300d06092a864886f70d01010105000382010f003082010a028201010082ce847391373eb75b7c540ac3c3fdc913f6c6778fe1178cec16fdc7b67a3d4e6814922464f54be908e1f04f466e19c64c3261c88798796f6c3798bba534e9a3a98eee946c93a958eece175f3248c8edc9a67cd989e6c419eede521101344e46b202967120cb5bf74db1cb47121868d76238247815cadd6b03e291dd10ae239969b07f89bbb623dc2f4577eecf8e7436c33fd9a13a2115b30e7269e3b4d5d601205a937af079881507cf8ef63d6c241695a17e6e482a0b3872d135861d986abebe0a953b3508b3f2b5b571f44e96f523e2ae6249701222c1453d741ad92bcf0d1c8a1355012677fa7ab29c26f5a94fc827e2a0eb04840c560b76cb92757645df0203010001a36c306a30280603551d110421301fa01d06082b06010505070805a0110c0f77696e2d683667346364716f743765301d0603551d0e04160414a5ee4fcd5cb17f241c0b4db20c8c398870a7d5fe301f0603551d23041830168014a5ee4fcd5cb17f241c0b4db20c8c398870a7d5fe300d06092a864886f70d0101050500038201010067a2274f57dd33a676e79a7a800ff557878028aba8ee1d854d7abaf99e67b0fb1079808f9a27100346cdafca7c981f4fb404d93f5e25cd83f637778de953047b54561e27ec1092271b4e651ae66237d6d9cee78dd03303bad82fa26f1458bd4c7bc7909dfa1a016b51f250379d6ea93f3abd39d99e5eacc2487d8bf9570dfbfdd2745e145a0037fccd2f2d2309103b3ca7f770523111f3aba1dcc90a1587ddc5dcd5d60543c37793102069e097f3dabeb661c13599acf83fccfbe8e4fcdd56b15527fc7f3daf5b16a9c96d85ead7cc7f020d3457f8c6b8264ff8ad88c906497a8f5d97e1e36578b6b97618f269ed92e29031ced16349ca06f0a7aac3e8c6cd85");
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+        newMessageNotification = new NotificationCompat.Builder(mApplicationContext);
+        newMessageNotification.setAutoCancel(true);
+
         //Toast.makeText(mApplicationContext,TAG + "Connecting to server " + mServiceName, Toast.LENGTH_LONG).show();
         XMPPTCPConnectionConfiguration.XMPPTCPConnectionConfigurationBuilder builder =
                 XMPPTCPConnectionConfiguration.builder();
@@ -190,12 +175,13 @@ public class HuhConnection implements ConnectionListener {
         //builder.setCustomSSLContext(sc).build();
         builder.setResource("Huh");
 
-        //unavailableMessages = new ArrayList<String>();
+        unavailableMessages = new ArrayList<String>();
         offlineMessages = new ArrayList<String>();
 
         //Set up the ui thread broadcast message receiver.
         broadCastMessageReceiver();
         broadCastAvailabilityReceiver();
+        reconnectionReciever();
 
         SASLMechanism mechanism = new SASLDigestMD5Mechanism();
         SASLAuthentication.registerSASLMechanism(mechanism);
@@ -215,7 +201,7 @@ public class HuhConnection implements ConnectionListener {
         hasJustLoggedIn = true;
         //  Log.d(TAG, "**************** hasJustLoggedIn @login: " + hasJustLoggedIn);
 
-        Presence presence = new Presence(unavailable);
+        Presence presence = new Presence(available);
         try {
             mConnection.sendPacket(presence);
         } catch (SmackException.NotConnectedException e) {
@@ -224,6 +210,10 @@ public class HuhConnection implements ConnectionListener {
         }
 
         Log.d(TAG, "%%%%%%%%%%%%%%Initial Login Presence set to Unavailable. User is available: " + isAvailable);
+
+        PingManager pingManager = PingManager.getInstanceFor(mConnection); pingManager.setPingInterval(5000);
+//        ServerPingWithAlarmManager serverPingWithAlarmManager = ServerPingWithAlarmManager.getInstanceFor(mConnection);
+//        serverPingWithAlarmManager.isEnabled();
 
         roster = mConnection.getRoster();
         roster.reload();
@@ -268,47 +258,12 @@ public class HuhConnection implements ConnectionListener {
             @Override
             public void processMessage(Chat chat, Message message) {
 
-//                baseLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
-//                        .getString("language", "en");
-//                Log.d(TAG, "messageListener Language: " + baseLanguage);
-//
-//                sourceLanguage = PreferenceManager.getDefaultSharedPreferences(mApplicationContext)
-//                        .getString("sourcelanguage", "en");
-//                Log.d(TAG, "messageListener sourceLanguage: " + sourceLanguage);
+       Log.d(TAG, "messageListener sourceLanguage: " + sourceLanguage);
 
                 setLanguages();
-//                EncryptDecryptWithDES encryptDecryptWithDES = new EncryptDecryptWithDES();
-//                encryptDecryptWithDES.generateSecretKeyDES();
-//                String decryptedMessage = message.getBody().split(" + + ")[0];
-//                String key =  message.getBody().split(" + + ")[1];
-//                decryptedMessage = encryptDecryptWithDES.decrypt(decryptedMessage);
-
-             //   String encryptedMessage = message.getBody();
-//                String key = "Bar12345Bar12345"; // 128 bit key
-//                String initVector = "RandomInitVector"; // 16 bytes IV
-//
-////                String temp[];
-////                temp = encryptedMessage.split(" ");
-////                encryptedMessage = temp[1];
-//                //String initVector = temp[0];
-//                Log.d(TAG, "******initVector " + initVector);
-//                Log.d(TAG, "******encryptedMessage " + message.getBody());
-//
-//                Encryptor encryptor = new Encryptor();
-//                String decryptedMessage = encryptor.decrypt(key,initVector,message.getBody());
-//                String temp[];
-//                temp = encryptedMessage.split(" ");
-//                encryptedMessage = temp[1];
-//                String secretKey = temp[0];
-
-//                String encryptedMessage = message.getBody().split(" ")[1];
-//                //final String secretKey = "ssshhhhhhhhhhh!!!!";
-//                final String secretKey = message.getBody().split(" ")[0];
-//                String decryptedString = AES.decrypt(encryptedMessage, secretKey) ;
-//                Log.d(TAG, "******decryptedMessage " + decryptedString);
 
                 String decryptedString = decryptMessage(message);
-                //    if(message.getBody() != null){
+
                 //incomingMessage = message.getBody();
                 incomingMessage = decryptedString;
                 Message.Type incoming = message.getType();
@@ -317,6 +272,8 @@ public class HuhConnection implements ConnectionListener {
 
                 Log.d(TAG, "message.getBody() :" + message.getBody());
                 Log.d(TAG, "message.getFrom() :" + message.getFrom());
+                Log.d(TAG, "message.getPacketID :" + message.getPacketID());
+
 
                 // Log.d(TAG, "message.getExtension(\"x\",\"jabber:x:delay\") :" + message.getExtension("x", "jabber:x:delay"));
                 Log.d(TAG, "message.getBody() incomingMessage before :" );
@@ -339,10 +296,10 @@ public class HuhConnection implements ConnectionListener {
                     offlineMessages(unavailableMessage);
                 }
 
-
+                if(!isAvailable) {
                     //handles messages when user is unavailable
-                  //  unavailableMessages(unavailableMessage);
-
+                    unavailableMessages(unavailableMessage);
+                }
 
                 String from = message.getFrom();
                 contactJid = "";
@@ -353,7 +310,10 @@ public class HuhConnection implements ConnectionListener {
                     contactJid = from;
                 }
 
-               // mConnection.setPacketReplyTimeout(0);
+                sendNotification(contactJid, incomingMessage);
+
+
+                // mConnection.setPacketReplyTimeout(0);
 
                 Log.d(TAG, "^^^^^^^^^^^^^**************** iaAvailable before broadcast: " + isAvailable);
 //                if (isAvailable) {
@@ -392,6 +352,47 @@ public class HuhConnection implements ConnectionListener {
         ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(mConnection);
         //reconnectionManager.setEnabledPerDefault(true);
         reconnectionManager.enableAutomaticReconnection();
+    }
+
+    public void sendNotification(String from, String body){
+
+        String phoneNum = from.split("@")[0];
+        String name = "";
+        Log.d(TAG, "phoneNum " + phoneNum);
+
+//        phoneContacts();
+//        getPhoneContacts();
+
+        for(RosterContact rc: phoneDBNumbers){
+            if(rc.getphoneNumber().equals(phoneNum)){
+                name = rc.getJid();
+                Log.d(TAG, "Name " + name);
+            }
+        }
+        newMessageNotification.setSmallIcon(R.drawable.notification_icon);
+        newMessageNotification.setTicker("HUH");
+        newMessageNotification.setWhen(System.currentTimeMillis());
+        newMessageNotification.setContentTitle( "HUH new message from " + name);
+        newMessageNotification.setContentText(body);
+
+        Intent intent = new Intent (mApplicationContext, MainActivity.class);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(mApplicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        newMessageNotification.setContentIntent(pendingIntent);
+
+        //builds notification and issues it
+        NotificationManager nm = (NotificationManager) mApplicationContext.getSystemService(NOTIFICATION_SERVICE);
+        nm.notify(uniqueID,newMessageNotification.build());
+
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(mApplicationContext, notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String decryptMessage(Message message){
@@ -542,11 +543,15 @@ public class HuhConnection implements ConnectionListener {
                 if (action.equals(HuhConnectionService.UI_AVAILABLE)) {
                     isAvailable = true;
                     //TODO Log.d(TAG, "Presence set to Available. User is available: " + isAvailable);
-                    Presence presence = new Presence(Presence.Type.available);
-                    try {
-                        mConnection.sendPacket(presence);
-                    } catch (SmackException.NotConnectedException e) {
-                        e.printStackTrace();
+//                    Presence presence = new Presence(Presence.Type.available);
+//                    try {
+//                        mConnection.sendPacket(presence);
+//                    } catch (SmackException.NotConnectedException e) {
+//                        e.printStackTrace();
+//                    }
+                    if(!unavailableMessages.isEmpty()) {
+                        broadcastunAvailableArray();
+                        unavailableMessages.clear();
                     }
 
                     if (isAvailable && hasJustLoggedIn) {
@@ -560,12 +565,12 @@ public class HuhConnection implements ConnectionListener {
                 if (action.equals(HuhConnectionService.UI_UNAVAILABLE)) {
                     isAvailable = false;
                    //TODO Log.d(TAG, "Presence set to Unavailable. User is available: " + isAvailable);
-                    Presence presence = new Presence(unavailable);
-                    try {
-                        mConnection.sendPacket(presence);
-                    } catch (SmackException.NotConnectedException e) {
-                        e.printStackTrace();
-                    }
+//                    Presence presence = new Presence(unavailable);
+//                    try {
+//                        mConnection.sendPacket(presence);
+//                    } catch (SmackException.NotConnectedException e) {
+//                        e.printStackTrace();
+//                    }
 
                 }
             }
@@ -644,7 +649,7 @@ public class HuhConnection implements ConnectionListener {
     //handles messages when user unavailable
     public void unavailableMessages(String message) {
         Log.d(TAG, "unavailableMessages()");
-        unavailableMessages = new ArrayList<String>();
+        //unavailableMessages = new ArrayList<String>();
         unavailableMessages.add(message);
         // unavailableMessages.add(message.getBody());
         for (String s : unavailableMessages) {
@@ -1361,10 +1366,12 @@ public class HuhConnection implements ConnectionListener {
         if (uiThreadMessageReceiver != null) {
             mApplicationContext.unregisterReceiver(uiThreadMessageReceiver);
             uiThreadMessageReceiver = null;
+            reconnectionReceiver = null;
         }
         if (uiAvailabilityReciever != null) {
             mApplicationContext.unregisterReceiver(uiAvailabilityReciever);
             uiAvailabilityReciever = null;
+            reconnectionReceiver = null;
         }
 
     }
@@ -1377,6 +1384,25 @@ public class HuhConnection implements ConnectionListener {
         //Toast.makeText(mApplicationContext,TAG + ": Sent the broadcast that we are authenticated ", Toast.LENGTH_LONG).show();
 
     }
+
+    public void reconnectionReciever(){
+        reconnectionReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                Log.d(TAG, "RECIEVER ConnectionClosedOnError");
+
+                switch (action) {
+                    case "ConnectionClosedOnError":
+                        Toast.makeText(mApplicationContext, "Client not connected to server ,Message not sent! ...Reconnecting", Toast.LENGTH_LONG).show();
+
+                    case "reconnectionSuccessful":
+                        Toast.makeText(mApplicationContext, "Client not connected to server ,Message not sent! ...Reconnecting", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+    }
+
 
     @Override
     public void connected(XMPPConnection connection) {
@@ -1406,25 +1432,6 @@ public class HuhConnection implements ConnectionListener {
     public void connectionClosedOnError(Exception e) {
         HuhConnectionService.sConnectionState = ConnectionState.DISCONNECTED;
         Log.d(TAG, "ConnectionClosedOnError, error ");
-       // Log.d(TAG, "ConnectionClosedOnError, error " + e.toString());
-//        while (HuhConnectionService.sConnectionState == ConnectionState.DISCONNECTED) {
-//            Log.d(TAG, "Trying to reconnect ");
-//            try {
-//            connect();
-//        } catch (IOException e1) {
-//                e1.printStackTrace();
-//        } catch (XMPPException e1) {
-//                e1.printStackTrace();
-//        } catch (SmackException e1) {
-//                e1.printStackTrace();
-//        }
-//
-//        }
-//TODO try restart service here
-//        Log.d(TAG, "Stopping Service, error ");
-//        mApplicationContext.stopService(new Intent(mApplicationContext, HuhConnectionService.class));
-        //Log.d(TAG, "Re-starting Service");
-       // mApplicationContext.stopService(new Intent(mApplicationContext, HuhConnectionService.class));
 
         //BOROADCAST that connection has closed
         //Data within intent to send in a broadcast.
@@ -1458,7 +1465,7 @@ public class HuhConnection implements ConnectionListener {
         intentConnectionClosed.setPackage(mApplicationContext.getPackageName());
         //Sends out broadcast
         mApplicationContext.sendBroadcast(intentConnectionClosed);
-        Log.d(TAG, "BROADCAST ConnectionClosedOnError ");
+        Log.d(TAG, "BROADCAST ReconnectionSuccessful ");
 
     }
 

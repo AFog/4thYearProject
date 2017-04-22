@@ -118,38 +118,7 @@ public class ChatActivity extends AppCompatActivity {
                 if (HuhConnectionService.getState().equals(HuhConnection.ConnectionState.CONNECTED)) {
                     Log.d(TAG, "The client is connected to the server,Sending Message");
                     //Send the message to the server
-
-
-                    //START
-//                    String key = "Bar12345Bar12345"; // 128 bit key
-//                    SecureRandom random = new SecureRandom();
-//                    //String initVector = nextSessionId(random); // 16 bytes IV
-//                    String initVector = "RandomInitVector"; // 16 bytes IV
-//                    RandomString r = new RandomString(16);
-//                    String initVector = r.nextString(); // 16 bytes IV
-//                    initVector = initVector.substring(0, Math.min(initVector.length(), 16));
-//
-//                    Log.d(TAG, "initVector " + initVector);
-//                    Encryptor encryptor = new Encryptor();
-//                    String encryptedMessage = encryptor.encrypt(key,initVector,mChatView.getTypedString());
-//                    Log.d(TAG, "encrypted message " + encryptedMessage);
-
-                    //END
-
-                    //START
-//                    RandomString r = new RandomString(16);
-//                    String secretKey = r.nextString(); // 16 bytes IV
-//                    secretKey = secretKey.substring(0, Math.min(secretKey.length(), 16));
-//
-//                    //String secretKey = "ssshhhhhhhhhhh!!!!";
-//                    Log.d(TAG, "secretKey " + secretKey);
-//
-//                    String encryptedString = AES.encrypt(mChatView.getTypedString(), secretKey) ;
-//                    Log.d(TAG, "encrypted message " + encryptedString);
-
                     String encryptedString = encryptMessage(mChatView.getTypedString());
-
-                    //END
 
 
                     //BOROADCAST
@@ -166,7 +135,6 @@ public class ChatActivity extends AppCompatActivity {
                     Log.d(TAG, "SEND SAVE NORM");
                     writeToChatHistoryList(userJid, contactJid, mChatView.getTypedString(), true, System.currentTimeMillis());
                     writeToPersonHistory(mChatView.getTypedString());
-
 
 
                     //Update the chat view.
@@ -197,9 +165,12 @@ public class ChatActivity extends AppCompatActivity {
         Log.d(TAG, "(onCreate) Naming a file for chatHistory. FILENAME: " + FILENAME);
         setTitle(displayJid);
 
-        // processUnavailableMessages();
-        processOfflineMessages();
-        unregisterReceiver(offlineBroadcastReceiver);
+        //onCreate
+//        processUnavailableMessages();
+//        processOfflineMessages();
+
+
+        //unregisterReceiver(offlineBroadcastReceiver);
 
         chatHistory();
         personChatHistory();
@@ -218,6 +189,7 @@ public class ChatActivity extends AppCompatActivity {
 
         return encryptedString;
     }
+
     public String nextSessionId(SecureRandom random) {
         return new BigInteger(65, random).toString(17);
     }
@@ -225,9 +197,12 @@ public class ChatActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "onPause() Is the huh service running? " + isMyServiceRunning(HuhConnectionService.class));
+
+
         unregisterReceiver(mBroadcastReceiver);
-       // unregisterReceiver(unavailableBroadcastReceiver);
+        unregisterReceiver(unavailableBroadcastReceiver);
         unregisterReceiver(offlineBroadcastReceiver);
+
 
         Intent i = new Intent(HuhConnectionService.UI_UNAVAILABLE);
         i.setPackage(getApplication().getPackageName());
@@ -235,22 +210,23 @@ public class ChatActivity extends AppCompatActivity {
        //TODO Log.d(TAG, "BROADCAST: (onPause)Sent the broadcast that we are Unvailable to HuhConnection broadCastAvailabilityReceiver()");
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume() Is the huh service running? " + isMyServiceRunning(HuhConnectionService.class));
-
+        //unregisterReceiver(unavailableBroadcastReceiver);
         Intent i = new Intent(HuhConnectionService.UI_AVAILABLE);
         i.setPackage(getApplication().getPackageName());
         getApplication().sendBroadcast(i);
        //TODO Log.d(TAG, "BROADCAST: (onResume)Sent the broadcast that we are Available to HuhConnection broadCastAvailabilityReceiver()");
 
-        //processUnavailableMessages();
+        processUnavailableMessages();
         processOfflineMessages();
-///START
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
+/////START
+//        Runnable r = new Runnable() {
+//            @Override
+//            public void run() {
                 //Initialise broadcast receiver that will listen for  broadcasts from messageListener(ChatMessageListener) in HuhConnection class
                 mBroadcastReceiver = new BroadcastReceiver() {
                     //String body ="";
@@ -294,12 +270,12 @@ public class ChatActivity extends AppCompatActivity {
 
                 IntentFilter filter = new IntentFilter(HuhConnectionService.NEW_MESSAGE);
                 registerReceiver(mBroadcastReceiver, filter);
-            }
-        };
-
-        Thread t = new Thread(r);
-        t.start();
-
+//            }
+//        };
+//
+//        Thread t = new Thread(r);
+//        t.start();
+//
 
 ///END
     }
@@ -455,7 +431,7 @@ public class ChatActivity extends AppCompatActivity {
                                     //Saves message to internal storage
                                     Log.d(TAG, "RECIEVE SAVE NORM - UNAVAILABLE");
                                     writeToChatHistoryList(contactJid, userJid, body, false, System.currentTimeMillis());
-                                    mChatView.receiveMessage("processUnavailableMessages: " + body);
+                                    mChatView.receiveMessage(body);
                                 }
 
                             } else {
@@ -468,7 +444,7 @@ public class ChatActivity extends AppCompatActivity {
                                         Log.d(TAG, "RECIEVE SAVE OTHER - UNAVAILABLE");
                                         writeToOtherContactChatHistoryList(userJid, unavailablefromJid, body, false, System.currentTimeMillis());
                                     }
-                                    Log.d(TAG, "processOfflineMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
+                                    Log.d(TAG, "processUnavailableMessages() OTHER CONTACT Got a message from jidPhoneNumber :" + unavailablefromJid);
                                 }
                             }
                         }
@@ -516,7 +492,7 @@ public class ChatActivity extends AppCompatActivity {
                                         //Saves message to internal storage
                                         Log.d(TAG, "RECIEVE SAVE NORM - OFFLINE");
                                         writeToChatHistoryList(contactJid, userJid, body, false, System.currentTimeMillis());
-                                        mChatView.receiveMessage("processOfflineMessages: " + body);
+                                        mChatView.receiveMessage( body);
 
                                     }
                                 } else {
